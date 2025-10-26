@@ -100,6 +100,26 @@
     <!-- File input for import (hidden) -->
     <input type="file" id="fileInput" accept=".json,.txt" style="display: none;">
 
+    <!-- Notification container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Confirmation modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="confirmTitle">Confirm</h2>
+                <span class="close-confirm">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage"></p>
+                <div class="modal-actions">
+                    <button id="confirmYes" class="btn btn-primary">Yes</button>
+                    <button id="confirmNo" class="btn btn-secondary">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

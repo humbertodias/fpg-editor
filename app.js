@@ -4,6 +4,7 @@ class LanguageResourceManager {
         this.resources = [];
         this.currentId = 1;
         this.editingId = null;
+        this.confirmCallback = null;
         this.init();
     }
 
@@ -53,6 +54,32 @@ class LanguageResourceManager {
         document.getElementById('fileInput').addEventListener('change', (e) => {
             this.handleFileImport(e);
         });
+
+        // Event delegation for table actions
+        document.getElementById('resourcesBody').addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.classList.contains('btn-edit')) {
+                const id = parseInt(target.dataset.id);
+                this.editResource(id);
+            } else if (target.classList.contains('btn-danger')) {
+                const id = parseInt(target.dataset.id);
+                this.deleteResource(id);
+            }
+        });
+
+        // Confirmation modal
+        document.querySelector('.close-confirm').addEventListener('click', () => this.hideConfirm());
+        document.getElementById('confirmYes').addEventListener('click', () => {
+            if (this.confirmCallback) {
+                this.confirmCallback();
+                this.confirmCallback = null;
+            }
+            this.hideConfirm();
+        });
+        document.getElementById('confirmNo').addEventListener('click', () => {
+            this.confirmCallback = null;
+            this.hideConfirm();
+        });
     }
 
     showModal(resource = null) {
@@ -84,13 +111,49 @@ class LanguageResourceManager {
         this.editingId = null;
     }
 
+    showNotification(message, type = 'success') {
+        const container = document.getElementById('notificationContainer');
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        
+        const icons = {
+            success: '✓',
+            error: '✗',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+        
+        notification.innerHTML = `
+            <span class="notification-icon">${icons[type] || icons.info}</span>
+            <span class="notification-message">${message}</span>
+        `;
+        
+        container.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideInRight 0.3s ease reverse';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    showConfirm(message, callback) {
+        document.getElementById('confirmMessage').textContent = message;
+        document.getElementById('confirmModal').style.display = 'block';
+        this.confirmCallback = callback;
+    }
+
+    hideConfirm() {
+        document.getElementById('confirmModal').style.display = 'none';
+        this.confirmCallback = null;
+    }
+
     saveResource() {
         const key = document.getElementById('resourceKey').value.trim();
         const language = document.getElementById('resourceLanguage').value;
         const value = document.getElementById('resourceValue').value.trim();
 
         if (!key || !language || !value) {
-            alert('Please fill in all fields');
+            this.showNotification('Please fill in all fields', 'error');
             return;
         }
 
@@ -101,6 +164,7 @@ class LanguageResourceManager {
                 resource.key = key;
                 resource.language = language;
                 resource.value = value;
+                this.showNotification('Resource updated successfully', 'success');
             }
         } else {
             // Add new resource
@@ -110,6 +174,7 @@ class LanguageResourceManager {
                 language,
                 value
             });
+            this.showNotification('Resource added successfully', 'success');
         }
 
         this.saveToStorage();
@@ -119,12 +184,13 @@ class LanguageResourceManager {
     }
 
     deleteResource(id) {
-        if (confirm('Are you sure you want to delete this resource?')) {
+        this.showConfirm('Are you sure you want to delete this resource?', () => {
             this.resources = this.resources.filter(r => r.id !== id);
             this.saveToStorage();
             this.renderResources();
             this.updateStats();
-        }
+            this.showNotification('Resource deleted successfully', 'success');
+        });
     }
 
     editResource(id) {
@@ -157,8 +223,8 @@ class LanguageResourceManager {
                 <td><span class="badge">${this.getLanguageName(resource.language)}</span></td>
                 <td>${this.escapeHtml(resource.value)}</td>
                 <td class="actions">
-                    <button class="btn btn-edit" onclick="manager.editResource(${resource.id})">Edit</button>
-                    <button class="btn btn-danger" onclick="manager.deleteResource(${resource.id})">Delete</button>
+                    <button class="btn btn-edit" data-id="${resource.id}">Edit</button>
+                    <button class="btn btn-danger" data-id="${resource.id}">Delete</button>
                 </td>
             </tr>
         `).join('');
@@ -190,7 +256,7 @@ class LanguageResourceManager {
 
     exportResources() {
         if (this.resources.length === 0) {
-            alert('No resources to export');
+            this.showNotification('No resources to export', 'warning');
             return;
         }
 
@@ -209,6 +275,7 @@ class LanguageResourceManager {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+        this.showNotification('Resources exported successfully', 'success');
     }
 
     importResources() {
@@ -225,7 +292,7 @@ class LanguageResourceManager {
                 const data = JSON.parse(e.target.result);
                 
                 if (data.resources && Array.isArray(data.resources)) {
-                    if (confirm(`Import ${data.resources.length} resources? This will add to existing resources.`)) {
+                    this.showConfirm(`Import ${data.resources.length} resources? This will add to existing resources.`, () => {
                         // Find the maximum ID to avoid conflicts
                         const maxId = Math.max(
                             this.currentId,
@@ -246,13 +313,13 @@ class LanguageResourceManager {
                         this.saveToStorage();
                         this.renderResources();
                         this.updateStats();
-                        alert('Resources imported successfully!');
-                    }
+                        this.showNotification('Resources imported successfully!', 'success');
+                    });
                 } else {
-                    alert('Invalid file format. Expected JSON with resources array.');
+                    this.showNotification('Invalid file format. Expected JSON with resources array.', 'error');
                 }
             } catch (error) {
-                alert('Error parsing file: ' + error.message);
+                this.showNotification('Error parsing file: ' + error.message, 'error');
             }
         };
         reader.readAsText(file);
