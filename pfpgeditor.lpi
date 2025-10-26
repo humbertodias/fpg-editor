@@ -166,7 +166,7 @@
       <SharedMatrixOptions Count="2">
         <Item1 ID="525257142652" Modes="DefaultWin32,DebugWin32" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item2 ID="315224791454" Modes="DefaultQT,DebugQT" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
-        <Item3 ID="315224791455" Modes="DefaultMac" Type="IDEMacro" MacroName="LCLWidgetType" Value="cocoa"/>
+        <Item3 ID="315224791455" Modes="DefaultCocoa,DebugCocoa" Type="IDEMacro" MacroName="LCLWidgetType" Value="cocoa"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
