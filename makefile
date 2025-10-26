@@ -4,7 +4,7 @@ APP = fpg-editor
 
 # Build commands
 #BUILD_LINUX   = lazbuild --ws=qt6 --build-mode=DebugQT $(LPI)
-BUILD_LINUX   = lazbuild --cpu=x86_64 --widgetset=gtk3 --verbose pfpgeditor.lpi
+BUILD_LINUX   = lazbuild --cpu=x86_64 --widgetset=gtk2  --verbose $(LPI)
 BUILD_MACOS   = lazbuild --cpu=x86_64 --widgetset=cocoa --verbose $(LPI)
 BUILD_WINDOWS = lazbuild --cpu=x86_64 --widgetset=win32 --verbose $(LPI)
 
