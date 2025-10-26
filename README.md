@@ -44,6 +44,8 @@ On macOS:
 ```bash
 make run/mac
 ```
+<img width="528" height="325" alt="Screenshot 2025-10-26 at 4 47 54 PM" src="https://github.com/user-attachments/assets/46c77c75-335a-4321-b7d7-f172ca7c3e97" />
+
 
 On Windows:
 
