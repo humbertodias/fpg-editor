@@ -30,12 +30,15 @@ build/win:
 	$(BUILD_CMD)
 
 run/lin:
+	@if [ ! -f $(APP) ]; then $(MAKE) build/lin; fi
 	GTK_PATH="" ./$(APP)
 
 run/mac:
+	@if [ ! -f $(APP) ]; then $(MAKE) build/mac; fi
 	./$(APP)
 
 run/win:
+	@if [ ! -f $(APP).exe ]; then $(MAKE) build/win; fi
 	./$(APP).exe
 
 package/lin: build/lin
