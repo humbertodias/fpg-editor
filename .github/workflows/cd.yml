@@ -52,7 +52,7 @@ jobs:
             widgetset: qt5
             cpu: x86_64
 #            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
-            install_dependencies: "sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools"
+            install_dependencies: ""
             build_executable: fpg-editor
             build_command: make build/lin release/lin
             
@@ -81,7 +81,6 @@ jobs:
           fpc-url: ${{ matrix.config.fpc-url }}
 
       - name: Build
-#        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
         run: ${{ matrix.config.build_command }}
 
       - name: Upload artifact
