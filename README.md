@@ -5,10 +5,10 @@ FPG, FNT and PRG Editor Application
 
 ## build
 ```shell
-make build/linux
+make build/lin
 ```
 
 ## run
 ```shell
-make run/linux
+make run/lin
 ```
