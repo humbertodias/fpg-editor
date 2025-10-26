@@ -1,14 +1,23 @@
+# Variables
+LPI = pfpgeditor.lpi
+APP = fpg-editor
+
+# Build commands
+BUILD_LINUX = lazbuild --ws=qt6 --bm=DefaultQT --verbose $(LPI)
+BUILD_MACOS = lazbuild --cpu=x86_64 --widgetset=cocoa --verbose $(LPI)
+
+# Targets
 build/linux:
-	lazbuild --ws=qt6 --bm=DefaultQT --verbose pfpgeditor.lpi
+	$(BUILD_LINUX)
 
 run/linux:
-	GTK_PATH="" ./fpg-editor
+	GTK_PATH="" ./$(APP)
 
 build/macos:
-	lazbuild --cpu=x86_64 --widgetset=cocoa --verbose pfpgeditor.lpi
+	$(BUILD_MACOS)
 
 run/macos:
-	./fpg-editor
-	
+	./$(APP)
+
 clean:
-	rm *.res fpg-editor
+	rm -f *.res $(APP)
