@@ -1,40 +1,52 @@
 # Variables
 LPI = pfpgeditor.lpi
 APP = fpg-editor
+LANG_DIR = languages
 
 # Build commands
-#BUILD_LINUX   = lazbuild --ws=qt6 --build-mode=DebugQT $(LPI)
-BUILD_LINUX   = lazbuild --cpu=x86_64 --widgetset=gtk2  --verbose $(LPI)
-BUILD_MACOS   = lazbuild --cpu=x86_64 --widgetset=cocoa --verbose $(LPI)
-BUILD_WINDOWS = lazbuild --cpu=x86_64 --widgetset=win32 --verbose $(LPI)
+BUILD_CMD = lazbuild --cpu=$(CPU) --widgetset=$(WIDGET) --verbose $(LPI)
 
-# Targets
+# Platform-specific settings
+LINUX = cpu=x86_64 WIDGET=gtk2
+MACOS = cpu=x86_64 WIDGET=cocoa
+WINDOWS = cpu=x86_64 WIDGET=win32
+
+# Generic build, run, package targets
+.PHONY: all clean build run package
+
+build/lin: CPU=x86_64
+build/lin: WIDGET=gtk2
 build/lin:
-	$(BUILD_LINUX)
+	$(BUILD_CMD)
+
+build/mac: CPU=x86_64
+build/mac: WIDGET=cocoa
+build/mac:
+	$(BUILD_CMD)
+
+build/win: CPU=x86_64
+build/win: WIDGET=win32
+build/win:
+	$(BUILD_CMD)
 
 run/lin:
 	GTK_PATH="" ./$(APP)
 
-release/lin:
-	tar cvfz $(APP).tar.gz $(APP) languages
-
-build/mac:
-	$(BUILD_MACOS)
-
 run/mac:
 	./$(APP)
-
-release/mac:
-	tar cvfz $(APP).tar.gz $(APP) languages
-
-build/win:
-	$(BUILD_WINDOWS)
 
 run/win:
 	./$(APP).exe
 
-release/win:
-	tar cvfz $(APP).tar.gz $(APP).exe languages
+package/lin: build/lin
+	tar cvfz $(APP)-lin.tar.gz $(APP) $(LANG_DIR)
 
+package/mac: build/mac
+	tar cvfz $(APP)-mac.tar.gz $(APP) $(LANG_DIR)
+
+package/win: build/win
+	tar cvfz $(APP)-win.tar.gz $(APP).exe $(LANG_DIR)
+
+# Clean
 clean:
-	rm -f *.res $(APP)
+	rm -f *.res $(APP) $(APP).exe

@@ -4,12 +4,8 @@ on:
   push:
     branches:
       - '**'
-#   pull_request:
-#     branches:
-#       - '**'
   workflow_dispatch:
 
-# required for upload
 permissions:
   contents: write
 
@@ -24,24 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         config:          
-
           - os: windows-latest
             name: Windows 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
-            widgetset: win32
-            cpu: x86_64
             install_dependencies: ""
             build_executable: fpg-editor.exe
             build_command: make build/win release/win
-            
-        #   - os: windows-latest
-        #     name: Windows 32
-        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 32 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win32.exe
-        #     widgetset: win32
-        #     cpu: x86_64
-        #     install_dependencies: ""
-        #     build_executable: fpg-editor.exe
-        #     build_command: make build/win
 
           - os: ubuntu-latest
             name: Linux 64
@@ -49,23 +33,15 @@ jobs:
             fpc-url: |
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
-            widgetset: qt5
-            cpu: x86_64
-#            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
             install_dependencies: ""
-            build_executable: fpg-editor
             build_command: make build/lin release/lin
-            
+
           - os: macos-latest
             name: MacOS 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
             fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-            widgetset: cocoa
-            cpu: x86_64
             install_dependencies: ""
-            build_executable: fpg-editor
             build_command: make build/mac release/mac
-  
 
     steps:
       - uses: actions/checkout@v5
@@ -75,16 +51,19 @@ jobs:
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
-#        uses: ollydev/setup-lazarus@v2
         uses: humbertodias/lazarus@v4.0
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
 
       - name: Build
-        run: ${{ matrix.config.build_command }}
+        run: |
+          set -e
+          set -x
+          ${{ matrix.config.build_command }}
 
       - name: Upload artifact
+        if: success()
         uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.config.name }}
