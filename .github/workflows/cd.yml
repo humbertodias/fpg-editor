@@ -41,6 +41,7 @@ jobs:
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
             widgetset: qt6
             cpu: x86_64
+            install_dependencies: apt install -y qt6-base-dev qt6-base-dev-tools
             
         #   - os: macos-latest
         #     name: MacOS 64
@@ -58,6 +59,9 @@ jobs:
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
+
+      - name: Install dependencies
+        run: ${{ matrix.config.install_dependencies }}
 
       - name: Build Test
         run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} --verbose pfpgeditor.lpi
