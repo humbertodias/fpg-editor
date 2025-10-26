@@ -177,7 +177,7 @@ end;
 //    pFromc: array[0..255] of char;
 //    Resultval: integer;
 //begin
-//   if not FileExistsUTF8(AFileName) { *Converted from FileExists*  } then begin
+//   if not FileExists(AFileName) { *Converted from FileExists*  } then begin
 //      Result := False;
 //      exit;
 //   end
@@ -379,4 +379,4 @@ begin
 
 end;
 
-end.
+end.
