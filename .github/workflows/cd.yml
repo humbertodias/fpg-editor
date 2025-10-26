@@ -26,35 +26,39 @@ jobs:
         #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
         #     widgetset: win32
         #     cpu: x86_64
+        #     install_dependencies: ""
             
         #   - os: windows-latest
         #     name: Windows 32
         #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 32 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win32.exe
         #     widgetset: win32
         #     cpu: x86_64
+        #     install_dependencies: ""
 
-          - os: ubuntu-latest
-            name: Linux 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
-            fpc-url: |
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
-            widgetset: qt6
-            cpu: x86_64
-            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
-            
-        #   - os: macos-latest
-        #     name: MacOS 64
-        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-        #     fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-        #     widgetset: cocoa
+        #   - os: ubuntu-latest
+        #     name: Linux 64
+        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
+        #     fpc-url: |
+        #       https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
+        #       https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
+        #     widgetset: qt6
         #     cpu: x86_64
+        #     install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
+            
+          - os: macos-latest
+            name: MacOS 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
+            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+            widgetset: cocoa
+            cpu: x86_64
+            install_dependencies: ""
   
 
     steps:
       - uses: actions/checkout@v5
 
       - name: Install dependencies
+        if: ${{ matrix.config.install_dependencies != '' }}
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
