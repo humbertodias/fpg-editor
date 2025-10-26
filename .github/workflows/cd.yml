@@ -1,9 +1,9 @@
 name: cd
 
 on:
-#   push:
-#     branches:
-#       - '**'
+  push:
+    branches:
+      - '**'
 #   pull_request:
 #     branches:
 #       - '**'
@@ -21,33 +21,33 @@ jobs:
       matrix:
         config:          
 
-          - os: windows-latest
-            name: Windows 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
-            widgetset: win32
-            cpu: x86_64
+        #   - os: windows-latest
+        #     name: Windows 64
+        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
+        #     widgetset: win32
+        #     cpu: x86_64
             
-          - os: windows-latest
-            name: Windows 32
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 32 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win32.exe
-            widgetset: win32
-            cpu: x86_64
+        #   - os: windows-latest
+        #     name: Windows 32
+        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 32 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win32.exe
+        #     widgetset: win32
+        #     cpu: x86_64
 
           - os: ubuntu-latest
             name: Linux 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/lazarus-project_2.0.12-0_amd64.deb
             fpc-url: |
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/fpc-laz_3.2.0-1_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/fpc-src_3.2.0-1_amd64.deb
             widgetset: qt6
             cpu: x86_64
             
-          - os: macos-latest
-            name: MacOS 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-            widgetset: cocoa
-            cpu: x86_64
+        #   - os: macos-latest
+        #     name: MacOS 64
+        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
+        #     fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+        #     widgetset: cocoa
+        #     cpu: x86_64
   
 
     steps:
