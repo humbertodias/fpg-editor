@@ -1,0 +1,65 @@
+# ========================================
+# Lazarus / Free Pascal .gitignore
+# ========================================
+
+# --- Compiled and temporary files ---
+*.o
+*.ppu
+*.a
+*.compiled
+*.or
+*.rsj
+*.dbg
+*.pdb
+*.log
+
+# --- Backup files ---
+*.bak
+*.~*
+*.orig
+
+# --- Executables and libraries ---
+*.exe
+*.dll
+*.so
+*.dylib
+
+# --- Lazarus / FPC build folders ---
+lib/
+backup/
+units/
+bin/
+temp/
+build/
+output/
+dist/
+
+# --- Lazarus IDE local configuration ---
+environmentoptions.xml
+*.lps  # Lazarus session file (open tabs, etc.)
+
+# --- System / OS specific files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Lazarus cache and project artifacts ---
+*.compiled
+*.ppu
+*.rst
+*.rsj
+*.map
+
+# --- Logs and temporary text files ---
+*.log
+*.txt~
+
+# --- Architecture-specific build directories ---
+lib/x86_64-linux/
+lib/x86_64-win64/
+lib/i386-linux/
+lib/i386-win32/
+
+# --- Common temporary Lazarus folders ---
+__history/
+__recovery/
