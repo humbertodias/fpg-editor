@@ -60,7 +60,10 @@ jobs:
           fpc-url: ${{ matrix.config.fpc-url }}
 
       - name: Build Test
-        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.laz-url }} --verbose pfpgeditor.lpi
+        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} --verbose pfpgeditor.lpi
 
       - name: Run Test
         run: ./fpg-editor
+
+      - name: Release
+        run: ls -lha
