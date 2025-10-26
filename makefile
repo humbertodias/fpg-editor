@@ -3,6 +3,12 @@ build/linux:
 
 run/linux:
 	GTK_PATH="" ./fpg-editor
+
+build/macos:
+	lazbuild --cpu=x86_64 --widgetset=cocoa --verbose pfpgeditor.lpi
+
+run/macos:
+	./fpg-editor
 	
 clean:
-	rm *.res
+	rm *.res fpg-editor

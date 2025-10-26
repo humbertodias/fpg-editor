@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="9"/>
+    <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <CompatibilityMode Value="True"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
-      <MainUnit Value="0"/>
       <Title Value="FPG Editor"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -15,13 +17,10 @@
       <EnableI18N Value="True"/>
       <OutDir Value="languages"/>
     </i18n>
-    <VersionInfo>
-      <StringTable ProductVersion=""/>
-    </VersionInfo>
     <MacroValues Count="1">
       <Macro1 Name="LCLWidgetType" Value="win32"/>
     </MacroValues>
-    <BuildModes Count="4">
+    <BuildModes Count="5">
       <Item1 Name="DefaultWin32" Default="True"/>
       <Item2 Name="DebugWin32">
         <MacroValues Count="1">
@@ -102,6 +101,9 @@
             <SmallerCode Value="True"/>
           </CodeGeneration>
           <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
+            </Debugging>
             <Options>
               <Win32>
                 <GraphicApplication Value="True"/>
@@ -110,21 +112,78 @@
           </Linking>
         </CompilerOptions>
       </Item4>
+      <Item5 Name="DefaultCocoa">
+  <MacroValues Count="1">
+    <Macro1 Name="LCLWidgetType" Value="cocoa"/>
+  </MacroValues>
+  <CompilerOptions>
+    <Target>
+      <Filename Value="fpg-editor"/>
+    </Target>
+    <SearchPaths>
+        <IncludeFiles Value="$(ProjOutDir)"/>
+        <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+      <SmallerCode Value="True"/>
+    </CodeGeneration>
+  </CompilerOptions>
+      </Item5>
+      <Item6 Name="DebugCocoa">
+        <MacroValues Count="1">
+          <Macro2 Name="LCLWidgetType" Value="cocoa"/>
+        </MacroValues>
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="fpg-editor"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmallerCode Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item6>
       <SharedMatrixOptions Count="2">
         <Item1 ID="525257142652" Modes="DefaultWin32,DebugWin32" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
         <Item2 ID="315224791454" Modes="DefaultQT,DebugQT" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
+        <Item3 ID="315224791455" Modes="DefaultMac" Type="IDEMacro" MacroName="LCLWidgetType" Value="cocoa"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
-      <IncludeFileFilter Value="*.(pas|pp|inc|lfm|lpr|lrs|lpi|lpk|sh|xml)"/>
-      <ExcludeFileFilter Value="*.(bak|ppu|o|so);*~;backup"/>
     </PublishOptions>
     <RunParams>
       <local>
-        <FormatVersion Value="1"/>
         <CommandLineParams Value="BennuPRGs\FNXsTester.prg"/>
       </local>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default">
+          <local>
+            <CommandLineParams Value="BennuPRGs\FNXsTester.prg"/>
+          </local>
+        </Mode0>
+      </Modes>
     </RunParams>
     <RequiredPackages Count="4">
       <Item1>
@@ -151,7 +210,6 @@
         <ComponentName Value="frmFPGEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="ufrmfpgeditor"/>
       </Unit1>
       <Unit2>
         <Filename Value="uFrmView\ufrmView.pas"/>
@@ -163,7 +221,6 @@
       <Unit3>
         <Filename Value="uFPG\uFPG.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uFPG"/>
       </Unit3>
       <Unit4>
         <Filename Value="uPCX\uPCX.pas"/>
@@ -195,7 +252,6 @@
       <Unit9>
         <Filename Value="uFPGConvert\uFPGConvert.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="uFPGConvert"/>
       </Unit9>
       <Unit10>
         <Filename Value="uSort\uSort.pas"/>
@@ -269,7 +325,6 @@
         <ComponentName Value="frmSplash"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uFrmSplahs"/>
       </Unit22>
       <Unit23>
         <Filename Value="uPAL\ucopypalette.pas"/>
@@ -321,7 +376,6 @@
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uFrmAbout"/>
       </Unit31>
       <Unit32>
         <Filename Value="uFrmFNTView\uFrmFNTView.pas"/>
@@ -383,7 +437,6 @@
         <ComponentName Value="frmPRGEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="ufrmprgeditor"/>
       </Unit41>
       <Unit42>
         <Filename Value="uprgeditor\ufrmprgoptions.pas"/>
@@ -395,7 +448,6 @@
       <Unit43>
         <Filename Value="uprgeditor\usynprghl.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="usynprghl"/>
       </Unit43>
       <Unit44>
         <Filename Value="uFrmMain\uFrmMain.pas"/>
@@ -403,13 +455,7 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="uFrmMain"/>
       </Unit44>
-
-      <Unit46>
-        <Filename Value="uUtils\uUtils.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit46>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
