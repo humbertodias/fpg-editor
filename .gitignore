@@ -63,3 +63,6 @@ lib/i386-win32/
 # --- Common temporary Lazarus folders ---
 __history/
 __recovery/
+
+# --- Free Pascal temporary symbol order file ---
+symbol_order.fpc
