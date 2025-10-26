@@ -27,6 +27,7 @@ jobs:
             widgetset: win32
             cpu: x86_64
             install_dependencies: ""
+            build_executable: fpg-editor.exe
             
         #   - os: windows-latest
         #     name: Windows 32
@@ -34,16 +35,19 @@ jobs:
         #     widgetset: win32
         #     cpu: x86_64
         #     install_dependencies: ""
+        #     build_executable: fpg-editor.exe
 
-        #   - os: ubuntu-latest
-        #     name: Linux 64
-        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
-        #     fpc-url: |
-        #       https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
-        #       https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
-        #     widgetset: qt6
-        #     cpu: x86_64
-        #     install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
+          - os: ubuntu-latest
+            name: Linux 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
+            fpc-url: |
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
+            widgetset: qt5
+            cpu: x86_64
+#            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
+            install_dependencies: ""
+            build_executable: fpg-editor
             
         #   - os: macos-latest
         #     name: MacOS 64
@@ -52,6 +56,7 @@ jobs:
         #     widgetset: cocoa
         #     cpu: x86_64
         #     install_dependencies: ""
+        #     build_executable: fpg-editor
   
 
     steps:
@@ -71,7 +76,7 @@ jobs:
         run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
 
       - name: Run Test
-        run: ./fpg-editor
+        run: file ${{ matrix.config.build_executable }}
 
       - name: Release
         run: ls -lha
