@@ -21,12 +21,12 @@ jobs:
       matrix:
         config:          
 
-        #   - os: windows-latest
-        #     name: Windows 64
-        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
-        #     widgetset: win32
-        #     cpu: x86_64
-        #     install_dependencies: ""
+          - os: windows-latest
+            name: Windows 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
+            widgetset: win32
+            cpu: x86_64
+            install_dependencies: ""
             
         #   - os: windows-latest
         #     name: Windows 32
@@ -45,13 +45,13 @@ jobs:
         #     cpu: x86_64
         #     install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
             
-          - os: macos-latest
-            name: MacOS 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-            widgetset: cocoa
-            cpu: x86_64
-            install_dependencies: ""
+        #   - os: macos-latest
+        #     name: MacOS 64
+        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
+        #     fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+        #     widgetset: cocoa
+        #     cpu: x86_64
+        #     install_dependencies: ""
   
 
     steps:
@@ -68,7 +68,7 @@ jobs:
           fpc-url: ${{ matrix.config.fpc-url }}
 
       - name: Build Test
-        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} --verbose pfpgeditor.lpi
+        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
 
       - name: Run Test
         run: ./fpg-editor
