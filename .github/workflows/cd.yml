@@ -35,10 +35,10 @@ jobs:
 
           - os: ubuntu-latest
             name: Linux 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/lazarus-project_2.0.12-0_amd64.deb
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
             fpc-url: |
-              https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/fpc-laz_3.2.0-1_amd64.deb
-              https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%202.0.12/fpc-src_3.2.0-1_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
             widgetset: qt6
             cpu: x86_64
             
@@ -58,6 +58,7 @@ jobs:
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
+          use-cache: false
 
       - name: Build Test
         run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.laz-url }} --verbose pfpgeditor.lpi
