@@ -310,7 +310,7 @@ var
 begin
   Result := False;
 
-  if not FileExistsUTF8(fileName) { *Converted from FileExists*  } then
+  if not FileExists(fileName) { *Converted from FileExists*  } then
     Exit;
 
   try
@@ -601,7 +601,7 @@ begin
 
   Result := False;
 
-  if not FileExistsUTF8(str) { *Converted from FileExists*  } then
+  if not FileExists(str) { *Converted from FileExists*  } then
     Exit;
 
   //if not FPG_Test(str) then
@@ -1027,4 +1027,4 @@ end;
 //initialization
 //  {$I fpgres.lrs}
 
-end.
+end.

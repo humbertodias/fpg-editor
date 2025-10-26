@@ -184,7 +184,7 @@ begin
    Exit;
 
   // Comprobamos si existe o no
-  if not FileExistsUTF8(ParamStr(1)) { *Converted from FileExists*  } then
+  if not FileExists(ParamStr(1)) { *Converted from FileExists*  } then
    Exit;
 
   if (ExtractFileExt(ParamStr(1))='.fpg') or (ExtractFileExt(ParamStr(1))='.fnt') then
@@ -205,4 +205,4 @@ begin
 end;
 
 end.
-
+

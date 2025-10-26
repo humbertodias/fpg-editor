@@ -127,7 +127,7 @@ begin
     (temp[i - 1] <> 'p') or (temp[i] <> 'g')) then
   edNombre.Text := edNombre.Text + '.fpg';
 
- if FileExistsUTF8(edNombre.Text) { *Converted from FileExists*  } then
+ if FileExists(edNombre.Text) { *Converted from FileExists*  } then
  begin
   feMessageBox( LNG_ERROR, LNG_FILE_EXIST, 0, 0);
   Exit;
@@ -147,7 +147,7 @@ begin
  if not odPalette.Execute then
   Exit;
 
- if not FileExistsUTF8(odPalette.FileName) then
+ if not FileExists(odPalette.FileName) then
  begin
   feMessageBox( LNG_ERROR, LNG_FILE_NOTEXIST, 0, 0);
   Exit;
@@ -200,4 +200,4 @@ begin
  cbTipoFPG.Color := clMedGray;
 end;
 
-end.
+end.

@@ -128,7 +128,7 @@ var
 
 begin
   Result := False;
-  if not FileExistsUTF8(filename) { *Converted from FileExists*  } then
+  if not FileExists(filename) { *Converted from FileExists*  } then
    Exit;
   try
    Stream := TFileStream.Create(filename, fmOpenRead);
@@ -198,7 +198,7 @@ procedure TMAPGraphic.LoadFromFile(const Filename: string);
 var
   f: TFileStream;
 begin
-  if not FileExistsUTF8(Filename) { *Converted from FileExists*  } then
+  if not FileExists(Filename) { *Converted from FileExists*  } then
     Exit;
 
   try
@@ -1014,4 +1014,4 @@ end;
 initialization
   TPicture.RegisterFileFormat('map','DIV MAP Images', TMAPGraphic);
 
-end.
+end.

@@ -1554,7 +1554,7 @@ procedure TfrmMainFNT.sbOpenClick(Sender: TObject);
 begin
  if dlgOpen.Execute then
  begin
-  if( not FileExistsUTF8(dlgOpen.FileName) { *Converted from FileExists*  } ) then
+  if( not FileExists(dlgOpen.FileName) { *Converted from FileExists*  } ) then
   begin
    showmessage('No existe el archivo.');
    Exit;
@@ -1596,7 +1596,7 @@ procedure TfrmMainFNT.openParamFile;
 begin
  // Si hay Tipografía como parámetro
  if ParamCount = 1 then
-  if FileExistsUTF8(ParamStr(1) ) { *Converted from FileExists*  } then
+  if FileExists(ParamStr(1) ) { *Converted from FileExists*  } then
    if load_fnt( ParamStr(1) ) then
    begin
     sbInfo.Panels.Items[0].Text := dlgOpen.FileName;
@@ -2068,7 +2068,7 @@ begin
  if sbInfo.Panels.Items[0].Text = '' then
     sbSaveAsClick(Sender)
  else
-  if FileExistsUTF8(sbInfo.Panels.Items[0].Text) { *Converted from FileExists*  }  then
+  if FileExists(sbInfo.Panels.Items[0].Text) { *Converted from FileExists*  }  then
    if save_fnt(sbInfo.Panels.Items[0].Text, fBPP.cbBPP.itemIndex) then
     showmessage('Tipografía guardada.');
 end;
@@ -2087,7 +2087,7 @@ begin
     else
      str := dlgSave.FileName;*)
 
-    if( FileExistsUTF8(dlgSave.FileName) { *Converted from FileExists*  } ) then
+    if( FileExists(dlgSave.FileName) { *Converted from FileExists*  } ) then
      QueryResult := MessageBox(frmMainFNT.Handle, 'El fichero ya existe ¿Desea sobreescribirlo?', '¡Aviso!', 4);
 
     //Si se cancela la operación
@@ -2416,7 +2416,7 @@ var
  tWidth, tHeight, tVOffset, tDOffset : Integer;
  lazBMPbuffer,lazBMPtmp : TLazIntfImage;
 begin
- if not FileExistsUTF8(str) { *Converted from FileExists*  } then
+ if not FileExists(str) { *Converted from FileExists*  } then
   Exit;
 
  bmp_buffer := TBitmap.Create;
@@ -2584,7 +2584,7 @@ begin
 
   if sdSaveText.Execute then
   begin
-   if( FileExistsUTF8(sdSaveText.FileName) { *Converted from FileExists*  } ) then
+   if( FileExists(sdSaveText.FileName) { *Converted from FileExists*  } ) then
     QueryResult := MessageBox(frmMainFNT.Handle, 'El fichero ya existe ¿Desea sobreescribirlo?', '¡Aviso!', 4);
 
    //Si se cancela la operación
@@ -2633,7 +2633,7 @@ begin
 
   if sdSaveText.Execute then
   begin
-   if( FileExistsUTF8(sdSaveText.FileName) { *Converted from FileExists*  } ) then
+   if( FileExists(sdSaveText.FileName) { *Converted from FileExists*  } ) then
     QueryResult := MessageBox(frmMainFNT.Handle, 'El fichero ya existe ¿Desea sobreescribirlo?', '¡Aviso!', 4);
 
    //Si se cancela la operación
@@ -2673,4 +2673,4 @@ begin
    +Byte(fnt_container.header.file_type[3])) <> 0);
 end;
 
-end.
+end.

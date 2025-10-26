@@ -198,7 +198,7 @@ var
  header : file_str_map;
 begin
   Result := False;
-  if not FileExistsUTF8(filename) { *Converted from FileExists*  } then
+  if not FileExists(filename) { *Converted from FileExists*  } then
    Exit;
   try
    Stream := TFileStream.Create(filename, fmOpenRead);
@@ -279,7 +279,7 @@ function MAP_Load(filename: string; var ncpoints:word; cpoints:PWord) : TBitmap;
 
   result   := nil;
 
-  if not FileExistsUTF8(filename) { *Converted from FileExists*  } then
+  if not FileExists(filename) { *Converted from FileExists*  } then
    Exit;
 
   try
@@ -415,4 +415,4 @@ function MAP_Load(filename: string; var ncpoints:word; cpoints:PWord) : TBitmap;
  end;
 
 end.
- 
+ 
