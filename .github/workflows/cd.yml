@@ -1,0 +1,80 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        config:          
+          - os: windows-latest
+            name: Windows 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
+            install_dependencies: ""
+            build_executable: fpg-editor.exe
+            build_command: make package/win
+
+          - os: ubuntu-latest
+            name: Linux 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
+            fpc-url: |
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
+            install_dependencies: ""
+            build_command: make package/lin
+
+          - os: macos-latest
+            name: MacOS 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
+            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+            install_dependencies: ""
+            build_command: make package/mac
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install dependencies
+        if: ${{ matrix.config.install_dependencies != '' }}
+        run: ${{ matrix.config.install_dependencies }}
+
+      - name: Install Lazarus
+        uses: humbertodias/lazarus@v4.0
+        with:
+          laz-url: ${{ matrix.config.laz-url }}
+          fpc-url: ${{ matrix.config.fpc-url }}
+
+      - name: Build
+        run: |
+          set -e
+          set -x
+          ${{ matrix.config.build_command }}
+
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.config.name }}
+          path: '*.tar.gz'
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            *.zip
+            *.tar.gz

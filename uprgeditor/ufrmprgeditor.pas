@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, SynMemo, SynHighlighterCpp, Forms,
   Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls, StdActns, StdCtrls,
-  ExtCtrls, usynprghl, uTools, ufrmprgoptions, LConvEncoding,strutils
+  ExtCtrls, usynprghl, uTools, ufrmprgoptions, LConvEncoding,strutils, uUtils
   ;
 
 
@@ -106,7 +106,8 @@ begin
   SynMemo1.Lines.LoadFromFile(FileOpen1.Dialog.FileName);
   SynMemo1.Lines.Text:= ConvertEncoding(SynMemo1.Lines.Text,cbCharset.Text, 'utf8');;
 
-  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameOnly(  FileOpen1.Dialog.FileName);
+//  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameOnly(  FileOpen1.Dialog.FileName);
+  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameWithoutExt(  FileOpen1.Dialog.FileName);
 end;
 
 procedure TfrmPRGEditor.FileSaveAs1Accept(Sender: TObject);
@@ -115,7 +116,8 @@ begin
   SynMemo1.Lines.SaveToFile(FileSaveAs1.Dialog.FileName);
 
   FileOpen1.Dialog.FileName:=FileSaveAs1.Dialog.FileName;
-  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameOnly(  FileOpen1.Dialog.FileName);
+//  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameOnly(  FileOpen1.Dialog.FileName);
+  Caption:=LNG_PRG_EDITOR + ' - ' + ExtractFileNameWithoutExt(  FileOpen1.Dialog.FileName);
 end;
 
 procedure TfrmPRGEditor.FormCreate(Sender: TObject);

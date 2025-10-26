@@ -162,7 +162,7 @@ var
 begin
   Result := False;
 
-  if not FileExistsUTF8(str) { *Converted from FileExists*  } then
+  if not FileExists(str) { *Converted from FileExists*  } then
     Exit;
 
   try
@@ -683,4 +683,4 @@ begin
 end;
 
 
-end.
+end.

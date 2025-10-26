@@ -64,7 +64,7 @@ implementation
  begin
   result := false;
 
-  if not FileExistsUTF8(str) { *Converted from FileExists*  } then
+  if not FileExists(str) { *Converted from FileExists*  } then
    Exit;
 
   f := TFileStream.Create(str, fmOpenRead);
@@ -183,4 +183,4 @@ implementation
   f.free;
  end;
 
-end.
+end.

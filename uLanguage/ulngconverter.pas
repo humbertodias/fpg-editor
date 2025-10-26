@@ -93,18 +93,18 @@ var
  FilenameReference : String;
 begin
  // Si no existe el fichero cambia al lenguaje por defecto
- if not FileExistsUTF8(eficheroAntiguo.Text) { *Converted from FileExists*  } then
+ if not FileExists(eficheroAntiguo.Text) { *Converted from FileExists*  } then
  begin
    ShowMessage(LNG_FILE_NO_EXIST+' '+eficheroAntiguo.Text);
    exit;
  end;
- if not FileExistsUTF8(eficheroNuevo.Text) { *Converted from FileExists*  } then
+ if not FileExists(eficheroNuevo.Text) { *Converted from FileExists*  } then
  begin
    ShowMessage(LNG_FILE_NO_EXIST+' '+eficheroNuevo.Text);
    exit;
  end;
  FilenameReference:= 'lng'+DirectorySeparator+'Spanish.ini';
- if not FileExistsUTF8(FilenameReference) { *Converted from FileExists*  } then
+ if not FileExists(FilenameReference) { *Converted from FileExists*  } then
  begin
    ShowMessage(LNG_FILE_REFERENCE_NO_EXIST+' '+FilenameReference);
    exit;

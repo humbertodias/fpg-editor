@@ -125,7 +125,7 @@ begin
    if lvFPG.Fpg.images[j].code = StrToInt(lvFPG.Items.Item[i].Caption) then
    begin
     //Se comprueba si existe el fichero
-    if FileExistsUTF8(path + imagename + '.bmp') { *Converted from FileExists*  } then
+    if FileExists(path + imagename + '.bmp') { *Converted from FileExists*  } then
     begin
 
      if feMessageBox(LNG_WARNING, LNG_EXISTS_FILE_OVERWRITE, 4, 2) <> mrYes then
@@ -177,7 +177,7 @@ begin
    if lvFPG.Fpg.images[j].code = StrToInt(lvFPG.Items.Item[i].Caption) then
    begin
     //Se comprueba si existe el fichero
-    if FileExistsUTF8(path + imageName + '.png') { *Converted from FileExists*  } then
+    if FileExists(path + imageName + '.png') { *Converted from FileExists*  } then
     begin
      if feMessageBox(LNG_WARNING, LNG_EXISTS_FILE_OVERWRITE, 4, 2) <> mrYes then
       break;
@@ -226,7 +226,7 @@ begin
    if lvFPG.Fpg.images[j].code = StrToInt(lvFPG.Items.Item[i].Caption) then
    begin
     //Se comprueba si existe el fichero
-    if FileExistsUTF8(path + imagename + '.map') { *Converted from FileExists*  } then
+    if FileExists(path + imagename + '.map') { *Converted from FileExists*  } then
     begin
 
      if feMessageBox(LNG_WARNING, LNG_EXISTS_FILE_OVERWRITE, 4, 2) <> mrYes then
@@ -260,4 +260,4 @@ begin
  Save_JASP_pal(lvFPG.Fpg.palette, path + 'PSP4.pal' );
 end;
 
-end.
+end.

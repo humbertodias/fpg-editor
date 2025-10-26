@@ -1171,7 +1171,7 @@ begin
 
 
  // Comprobamos si existe o no
- if not FileExistsUTF8(OpenDialog.Filename) { *Converted from FileExists*  } then
+ if not FileExists(OpenDialog.Filename) { *Converted from FileExists*  } then
   Exit;
 
  aCloseExecute(Sender);
@@ -1224,7 +1224,7 @@ begin
   Exit;
 
  //Se comprueba si existe el fichero
- if FileExistsUTF8(SaveDialog.FileName) { *Converted from FileExists*  } then
+ if FileExists(SaveDialog.FileName) { *Converted from FileExists*  } then
  begin
 
   if feMessageBox(LNG_WARNING, LNG_EXISTS_FILE_OVERWRITE, 4, 2) <> mrYes then
@@ -1840,4 +1840,4 @@ begin
 
 end;
 
-end.
+end.

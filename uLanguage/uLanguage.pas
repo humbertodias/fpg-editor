@@ -23,7 +23,8 @@ unit uLanguage;
 
 interface
 
-uses Forms, SysUtils, DefaultTranslator,Translations, GetText, FileUtil , LResources;
+uses Forms, SysUtils, DefaultTranslator,Translations, GetText, FileUtil , LResources, LCLTranslator, uUtils;
+
 
 procedure SetDefaultLangByFile(Lang: string);
 
@@ -204,7 +205,7 @@ var
   lcfn: string;
 
 begin
-  if not FileExistsUTF8(Lang) then
+  if not FileExists(Lang) then
      exit;
   LocalTranslator := nil;
   lcfn := lang;
@@ -226,15 +227,17 @@ begin
    // search mo translation resources
   if (lcfn<>'') and (ExtractFileExt(lcfn) = '.mo') then
   begin
-      GetText.TranslateResourceStrings(UTF8ToSys(lcfn));
+//      GetText.TranslateResourceStrings(UTF8ToSys(lcfn));
+      GetText.TranslateResourceStrings(lcfn);
       LCLPath := ExtractFileName(lcfn);
       Dot1 := pos('.', LCLPath);
       if Dot1 > 1 then
       begin
         Delete(LCLPath, 1, Dot1 - 1);
         LCLPath := ExtractFilePath(lcfn) + 'lclstrconsts' + LCLPath;
-        if FileExistsUTF8(LCLPath) then
-          GetText.TranslateResourceStrings(UTF8ToSys(LCLPath));
+        if FileExists(LCLPath) then
+//          GetText.TranslateResourceStrings(UTF8ToSys(LCLPath));
+          GetText.TranslateResourceStrings(LCLPath);
       end;
       LocalTranslator := TDefaultTranslator.Create(lcfn);
   end;
@@ -249,4 +252,4 @@ begin
   end;
 end;
 
-end.
+end.

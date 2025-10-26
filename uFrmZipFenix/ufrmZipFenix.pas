@@ -164,7 +164,7 @@ begin
  AssignFile(f, FileName);
  Erase(f);
 
- RenameFileUTF8(FileName + '.gz',FileName); { *Converted from RenameFile*  }
+ RenameFile(FileName + '.gz',FileName); { *Converted from RenameFile*  }
 
  statusbar.Panels.Items[1].Text := IntToStr(old_file_size) + ' Bytes';
 
@@ -182,4 +182,4 @@ end;
 
 
 end.
-
+

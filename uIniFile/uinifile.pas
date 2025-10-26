@@ -112,7 +112,7 @@ begin
 
  strinifile := ExtractFileDir( ParamStr(0) ) + sINIFILE;
 
- if not FileExistsUTF8(strinifile) { *Converted from FileExists*  } then
+ if not FileExists(strinifile) { *Converted from FileExists*  } then
  begin
   inifile_sizeof_icon     := 50;
   inifile_autoload_images := true;
@@ -236,4 +236,4 @@ begin
  inifile.Destroy;
 end;
 
-end.
+end.
