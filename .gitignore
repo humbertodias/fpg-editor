@@ -79,3 +79,6 @@ pfpgeditor.res
 fpg-editor
 fpg-editor.exe
 fpg-editor.ini
+fpg-editor.app
+
+.vscode
