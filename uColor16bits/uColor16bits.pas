@@ -131,10 +131,13 @@ begin
  G := Green;
  B := Blue;
 
- Red := ( Red shr 3 ) shl 3;
- Green := ( Green shr 2) shl 2;
- Blue := ( Blue shr 3) shl 3;
-
+// Asm: byte value exceeds bounds
+// Red := ( Red shr 3 ) shl 3;
+// Green := ( Green shr 2) shl 2;
+// Blue := ( Blue shr 3) shl 3;
+R := Byte((Cardinal(Red) shr 3) shl 3);
+G := Byte((Cardinal(Green) shr 2) shl 2);
+B := Byte((Cardinal(Blue) shr 3) shl 3);
 
  // Si la conversión va ha procudir un color transparente lo corregimos
  if( (R <> 0) or (G <> 0) or (B <> 0) or (FPG_type = FPG16_CDIV) ) then
