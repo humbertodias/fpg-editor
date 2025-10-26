@@ -25,7 +25,7 @@ jobs:
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
             install_dependencies: ""
             build_executable: fpg-editor.exe
-            build_command: make build/win release/win
+            build_command: make package/win
 
           - os: ubuntu-latest
             name: Linux 64
@@ -34,14 +34,14 @@ jobs:
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
             install_dependencies: ""
-            build_command: make build/lin release/lin
+            build_command: make package/lin
 
           - os: macos-latest
             name: MacOS 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
             fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
             install_dependencies: ""
-            build_command: make build/mac release/mac
+            build_command: make package/mac
 
     steps:
       - uses: actions/checkout@v5
