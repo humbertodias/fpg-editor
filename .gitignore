@@ -71,3 +71,6 @@ symbol_order.fpc
 ppas.sh
 ppaslink.sh
 ppas.bat
+
+link*.res
+pfpgeditor.res
