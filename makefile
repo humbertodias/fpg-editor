@@ -14,17 +14,26 @@ build/lin:
 run/lin:
 	GTK_PATH="" ./$(APP)
 
+release/lin:
+	tar cvfz $(APP).tar.gz $(APP) languages
+
 build/mac:
 	$(BUILD_MACOS)
 
 run/mac:
 	./$(APP)
 
+release/mac:
+	tar cvfz $(APP).tar.gz $(APP) languages
+
 build/win:
 	$(BUILD_WINDOWS)
 
 run/win:
 	./$(APP).exe
+
+release/win:
+	tar cvfz $(APP).tar.gz $(APP).exe languages
 
 clean:
 	rm -f *.res $(APP)

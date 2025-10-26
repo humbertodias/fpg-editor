@@ -9,6 +9,10 @@ on:
 #       - '**'
   workflow_dispatch:
 
+# required for upload
+permissions:
+  contents: write
+
 jobs:
   test:
     name: ${{ matrix.config.name }}
@@ -28,6 +32,7 @@ jobs:
             cpu: x86_64
             install_dependencies: ""
             build_executable: fpg-editor.exe
+            build_command: make build/win release/win
             
         #   - os: windows-latest
         #     name: Windows 32
@@ -36,6 +41,7 @@ jobs:
         #     cpu: x86_64
         #     install_dependencies: ""
         #     build_executable: fpg-editor.exe
+        #     build_command: make build/win
 
           - os: ubuntu-latest
             name: Linux 64
@@ -46,8 +52,9 @@ jobs:
             widgetset: qt5
             cpu: x86_64
 #            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
-            install_dependencies: ""
+            install_dependencies: "sudo apt install qt5-default qtbase5-dev"
             build_executable: fpg-editor
+            build_command: make build/lin release/lin
             
         #   - os: macos-latest
         #     name: MacOS 64
@@ -57,6 +64,7 @@ jobs:
         #     cpu: x86_64
         #     install_dependencies: ""
         #     build_executable: fpg-editor
+        #     build_command: make build/mac
   
 
     steps:
@@ -72,11 +80,21 @@ jobs:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
 
-      - name: Build Test
-        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
+      - name: Build
+#        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
+        run: ${{ matrix.config.build_command }}
 
-      - name: Run Test
-        run: file ${{ matrix.config.build_executable }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.config.name }}
+          path: '*.tar.gz'
 
-      - name: Release
-        run: ls -lha
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            *.zip
+            *.tar.gz
