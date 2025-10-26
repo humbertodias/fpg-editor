@@ -54,11 +54,10 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Install Lazarus
-        uses: ollydev/setup-lazarus@v3
+        uses: ollydev/setup-lazarus@v2
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
-          use-cache: false
 
       - name: Build Test
         run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.laz-url }} --verbose pfpgeditor.lpi
