@@ -4,8 +4,8 @@
 
 # FPG Editor
 
-**FPG Editor** is a desktop application for editing **FPG**, **FNT**, and **PRG** files.  
-It supports Linux, macOS, and Windows.
+**FPG Editor** is a cross-platform desktop application for editing **FPG**, **FNT** and **PRG** files.  
+It runs on Linux, macOS, and Windows using [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads)
 
 [Download the latest release](https://github.com/humbertodias/fpg-editor/releases).
 
