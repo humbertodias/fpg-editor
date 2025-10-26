@@ -1,0 +1,152 @@
+object FrmCFG: TFrmCFG
+  Left = 451
+  Height = 186
+  Top = 516
+  Width = 337
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSingle
+  Caption = 'Configuración del generador de fuentes'
+  ClientHeight = 186
+  ClientWidth = 337
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.1'
+  object sbAccept: TSpeedButton
+    Cursor = crHandPoint
+    Left = 129
+    Height = 28
+    Top = 152
+    Width = 100
+    Caption = '&Aceptar'
+    NumGlyphs = 2
+    OnClick = sbAcceptClick
+  end
+  object sbCancel: TSpeedButton
+    Cursor = crHandPoint
+    Left = 233
+    Height = 28
+    Top = 152
+    Width = 100
+    Caption = '&Cancelar'
+    NumGlyphs = 2
+    OnClick = sbCancelClick
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Height = 2
+    Top = 144
+    Width = 337
+    Style = bsRaised
+  end
+  object TabControl1: TTabControl
+    Left = 0
+    Height = 137
+    Top = 0
+    Width = 337
+    Style = tsFlatButtons
+    TabIndex = 0
+    Tabs.Strings = (
+      'General'
+    )
+    TabOrder = 0
+    object gbPaleta: TGroupBox
+      Left = 2
+      Height = 105
+      Top = 30
+      Width = 333
+      Align = alTop
+      Caption = 'Paleta de 256 colores'
+      ClientHeight = 90
+      ClientWidth = 329
+      Color = clBtnFace
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      ParentColor = False
+      ParentFont = False
+      TabOrder = 0
+      object sbLoadPAL: TSpeedButton
+        Left = 6
+        Height = 27
+        Top = 54
+        Width = 157
+        Caption = '&Cargar paleta'
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          04000000000000010000120B0000120B00001000000000000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00555555555555
+          5555555555555555555555555555555555555555555555555555555555555555
+          555555555555555555555555555555555555555FFFFFFFFFF555550000000000
+          55555577777777775F55500B8B8B8B8B05555775F555555575F550F0B8B8B8B8
+          B05557F75F555555575F50BF0B8B8B8B8B0557F575FFFFFFFF7F50FBF0000000
+          000557F557777777777550BFBFBFBFB0555557F555555557F55550FBFBFBFBF0
+          555557F555555FF7555550BFBFBF00055555575F555577755555550BFBF05555
+          55555575FFF75555555555700007555555555557777555555555555555555555
+          5555555555555555555555555555555555555555555555555555
+        }
+        NumGlyphs = 2
+        OnClick = sbLoadPALClick
+      end
+      object sbViewPAL: TSpeedButton
+        Left = 163
+        Height = 27
+        Top = 54
+        Width = 157
+        Caption = '&Ver paleta'
+        Enabled = False
+        Glyph.Data = {
+          76010000424D7601000000000000760000002800000020000000100000000100
+          04000000000000010000130B0000130B00001000000000000000000000000000
+          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
+          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00333333333333
+          33033333333333333F7F3333333333333000333333333333F777333333333333
+          000333333333333F777333333333333000333333333333F77733333333333300
+          033333333FFF3F777333333700073B703333333F7773F77733333307777700B3
+          33333377333777733333307F8F8F7033333337F333F337F3333377F8F9F8F773
+          3333373337F3373F3333078F898F870333337F33F7FFF37F333307F99999F703
+          33337F377777337F3333078F898F8703333373F337F33373333377F8F9F8F773
+          333337F3373337F33333307F8F8F70333333373FF333F7333333330777770333
+          333333773FF77333333333370007333333333333777333333333
+        }
+        NumGlyphs = 2
+        OnClick = sbViewPALClick
+      end
+      object rbFNT2PAL: TRadioButton
+        Left = 6
+        Height = 25
+        Top = 2
+        Width = 368
+        Caption = 'Calcular paleta optimizada a los colores de la fuente'
+        Checked = True
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        OnClick = rbFNT2PALClick
+        ParentBidiMode = False
+        ParentFont = False
+        TabOrder = 0
+        TabStop = True
+      end
+      object rbPAL2FNT: TRadioButton
+        Left = 6
+        Height = 25
+        Top = 27
+        Width = 249
+        Caption = 'Adaptar fuente a la paleta cargada'
+        OnClick = rbPAL2FNTClick
+        TabOrder = 1
+      end
+    end
+  end
+  object odPAL: TOpenDialog
+    Filter = '(PAL, BMP, PCX, FPG)|*.pal;*.bmp;*.pcx;*.fpg|PAL (DIV2, Microsoft, PSP)|*.pal|FPG DIV2|*.fpg|BMP 8 bits|*.bmp|PCX 8 bits|*.pcx|( *.* )|*.*'
+    Options = [ofEnableSizing]
+    left = 136
+  end
+end

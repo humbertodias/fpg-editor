@@ -1,0 +1,53 @@
+object frmMessageBox: TfrmMessageBox
+  Left = 617
+  Height = 86
+  Top = 385
+  Width = 298
+  Caption = 'frmMessageBox'
+  ClientHeight = 86
+  ClientWidth = 298
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.1'
+  object Bevel1: TBevel
+    Left = 8
+    Height = 2
+    Top = 48
+    Width = 281
+  end
+  object bbButton1: TBitBtn
+    Left = 104
+    Height = 25
+    Top = 56
+    Width = 89
+    Caption = '&No'
+    TabOrder = 0
+  end
+  object bbButton2: TBitBtn
+    Left = 200
+    Height = 25
+    Top = 56
+    Width = 89
+    Caption = '&Cancelar'
+    TabOrder = 1
+  end
+  object bbButton0: TBitBtn
+    Left = 8
+    Height = 25
+    Top = 56
+    Width = 89
+    Caption = '&Si'
+    TabOrder = 2
+  end
+  object reText: TMemo
+    Left = 8
+    Height = 38
+    Top = 8
+    Width = 281
+    Alignment = taCenter
+    TabOrder = 3
+  end
+end

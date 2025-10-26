@@ -1,0 +1,84 @@
+object Form1: TForm1
+  Left = 429
+  Height = 346
+  Top = 200
+  Width = 463
+  Caption = 'Form1'
+  ClientHeight = 317
+  ClientWidth = 463
+  Menu = MainMenu1
+  OnCreate = FormCreate
+  LCLVersion = '1.1'
+  object FPGListView1: TFPGListView
+    Left = 0
+    Height = 274
+    Top = 0
+    Width = 463
+    Align = alClient
+    Columns = <>
+    IconOptions.AutoArrange = True
+    LargeImages = ImageList1
+    TabOrder = 0
+    ViewStyle = vsIcon
+    Fpg.msgInfo = 'Info'
+    Fpg.msgError = 'Error'
+    Fpg.msgCorrect = 'Correct'
+    Fpg.msgWrong = 'Wrong'
+    repaintNumber = 20
+  end
+  object ProgressBar1: TProgressBar
+    Left = 0
+    Height = 20
+    Top = 274
+    Width = 463
+    Align = alBottom
+    TabOrder = 1
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 23
+    Top = 294
+    Width = 463
+    Align = alBottom
+    ClientHeight = 23
+    ClientWidth = 463
+    TabOrder = 2
+    object Label1: TLabel
+      Left = 312
+      Height = 21
+      Top = 0
+      Width = 45
+      Caption = 'Label1'
+      ParentColor = False
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    left = 128
+    top = 120
+  end
+  object MainMenu1: TMainMenu
+    left = 244
+    top = 73
+    object MenuItem1: TMenuItem
+      Caption = 'Archivo'
+      object MenuItem2: TMenuItem
+        Caption = 'Abrir'
+        OnClick = MenuItem2Click
+      end
+      object MenuItem3: TMenuItem
+        Caption = 'Guardar'
+        OnClick = MenuItem3Click
+      end
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    left = 111
+    top = 45
+  end
+  object ImageList1: TImageList
+    Height = 50
+    Width = 50
+    left = 312
+    top = 48
+  end
+end

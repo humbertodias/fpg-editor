@@ -1,0 +1,74 @@
+object frmAnimate: TfrmAnimate
+  Left = 420
+  Height = 294
+  Top = 293
+  Width = 369
+  Caption = 'Animación'
+  ClientHeight = 294
+  ClientWidth = 369
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  OnHide = FormHide
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '1.1'
+  object Image1: TImage
+    Left = 0
+    Height = 270
+    Top = 24
+    Width = 369
+    Align = alClient
+    Center = True
+    Proportional = True
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 369
+    Align = alTop
+    ClientHeight = 24
+    ClientWidth = 369
+    TabOrder = 0
+    object seMilliseconds: TSpinEdit
+      Left = 8
+      Height = 23
+      Top = 0
+      Width = 106
+      MaxValue = 100000
+      MinValue = 1
+      OnChange = seMillisecondsChange
+      TabOrder = 0
+      Value = 1
+    end
+    object cbStretch: TCheckBox
+      Left = 132
+      Height = 22
+      Top = 0
+      Width = 65
+      Caption = 'Stretch'
+      OnChange = cbStretchChange
+      TabOrder = 1
+    end
+    object cbProportional: TCheckBox
+      Left = 216
+      Height = 22
+      Top = 0
+      Width = 93
+      Caption = 'Proportional'
+      Checked = True
+      OnChange = cbProportionalChange
+      State = cbChecked
+      TabOrder = 2
+    end
+  end
+  object tAnimate: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tAnimateTimer
+    left = 296
+    top = 8
+  end
+end

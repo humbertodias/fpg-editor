@@ -1,0 +1,86 @@
+object frmLanguageConverter: TfrmLanguageConverter
+  Left = 516
+  Height = 172
+  Top = 331
+  Width = 322
+  Caption = 'Conversor de ficheros de idioma'
+  ClientHeight = 172
+  ClientWidth = 322
+  LCLVersion = '1.1'
+  object eficheroAntiguo: TEdit
+    Left = 24
+    Height = 31
+    Top = 32
+    Width = 256
+    TabOrder = 0
+  end
+  object lblFicheroAntiguo: TLabel
+    Left = 16
+    Height = 21
+    Top = 8
+    Width = 108
+    Caption = 'Archivo Antiguo:'
+    ParentColor = False
+  end
+  object sbFicheroAntiguo: TSpeedButton
+    Left = 288
+    Height = 22
+    Top = 36
+    Width = 23
+    Caption = '..'
+    OnClick = sbFicheroAntiguoClick
+  end
+  object eficheroNuevo: TEdit
+    Left = 24
+    Height = 31
+    Top = 88
+    Width = 256
+    TabOrder = 1
+  end
+  object lblFicheroNuevo: TLabel
+    Left = 16
+    Height = 21
+    Top = 64
+    Width = 99
+    Caption = 'Archivo Nuevo:'
+    ParentColor = False
+  end
+  object sbFicheroNuevo: TSpeedButton
+    Left = 288
+    Height = 22
+    Top = 92
+    Width = 23
+    Caption = '..'
+    OnClick = sbFicheroNuevoClick
+  end
+  object bconvertir: TButton
+    Left = 152
+    Height = 25
+    Top = 136
+    Width = 75
+    Caption = 'C&onvertir'
+    OnClick = bconvertirClick
+    TabOrder = 2
+  end
+  object bCerrar: TButton
+    Left = 236
+    Height = 25
+    Top = 136
+    Width = 75
+    Caption = '&Cerrar'
+    OnClick = bCerrarClick
+    TabOrder = 3
+  end
+  object OpenDialogFA: TOpenDialog
+    Filter = 'Archivos ini (*.ini)|*.ini'
+    InitialDir = 'lng'
+    left = 40
+    top = 126
+  end
+  object OpenDialogFN: TOpenDialog
+    Filter = 'Archivos PO (*.po)|*.po'
+    InitialDir = 'languages'
+    left = 8
+    top = 126
+  end
+end

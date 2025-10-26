@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<CONFIG>
+  <Package Version="4">
+    <PathDelim Value="\"/>
+    <Name Value="fpg_editor_pkg"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="uFPGListView;uFPG;uMap;uLoadImage;uTools;uprgeditor"/>
+        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Other>
+        <CompilerMessages>
+          <MsgFileName Value=""/>
+        </CompilerMessages>
+        <CompilerPath Value="$(CompPath)"/>
+      </Other>
+    </CompilerOptions>
+    <Files Count="6">
+      <Item1>
+        <Filename Value="uFPGListView\ufpglistview.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="uFPGListView"/>
+      </Item1>
+      <Item2>
+        <Filename Value="uFPG\uFPG.pas"/>
+        <UnitName Value="uFPG"/>
+      </Item2>
+      <Item3>
+        <Filename Value="uMap\umapgraphic.pas"/>
+        <UnitName Value="uMAPGraphic"/>
+      </Item3>
+      <Item4>
+        <Filename Value="uLoadImage\uLoadImage.pas"/>
+        <UnitName Value="uLoadImage"/>
+      </Item4>
+      <Item5>
+        <Filename Value="uTools\uTools.pas"/>
+        <UnitName Value="uTools"/>
+      </Item5>
+      <Item6>
+        <Filename Value="uprgeditor\usynprghl.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="usynprghl"/>
+      </Item6>
+    </Files>
+    <Type Value="RunAndDesignTime"/>
+    <RequiredPkgs Count="2">
+      <Item1>
+        <PackageName Value="SynEdit"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="IDEIntf"/>
+      </Item2>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>

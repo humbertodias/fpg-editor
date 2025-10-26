@@ -1,0 +1,56 @@
+object frmInputBox: TfrmInputBox
+  Left = 483
+  Height = 84
+  Top = 577
+  Width = 267
+  Caption = 'frmInputBox'
+  ClientHeight = 84
+  ClientWidth = 267
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '1.1'
+  object lbText: TLabel
+    Left = 8
+    Height = 13
+    Top = 8
+    Width = 256
+    AutoSize = False
+    Caption = 'Código:'
+    ParentColor = False
+  end
+  object Bevel1: TBevel
+    Left = 8
+    Height = 2
+    Top = 48
+    Width = 257
+  end
+  object edText: TEdit
+    Left = 8
+    Height = 23
+    Top = 24
+    Width = 257
+    OnKeyPress = edTextKeyPress
+    TabOrder = 0
+  end
+  object bbAcept: TBitBtn
+    Left = 96
+    Height = 25
+    Top = 56
+    Width = 81
+    Caption = '&Aceptar'
+    Default = True
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object bbCancel: TBitBtn
+    Left = 184
+    Height = 25
+    Top = 56
+    Width = 81
+    Caption = '&Cancelar'
+    ModalResult = 2
+    TabOrder = 2
+  end
+end

@@ -1,0 +1,188 @@
+object frmAbout: TfrmAbout
+  Left = 381
+  Height = 344
+  Top = 184
+  Width = 454
+  Caption = 'Acerca de FPG EDIT'
+  ClientHeight = 344
+  ClientWidth = 454
+  Font.Name = 'MS Sans Serif'
+  OnActivate = FormActivate
+  Position = poScreenCenter
+  LCLVersion = '1.1'
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 310
+    Top = 0
+    Width = 454
+    ActivePage = tsDescription
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    OnChange = PageControl1Change
+    object tsDescription: TTabSheet
+      Caption = 'Descripcion'
+      ClientHeight = 281
+      ClientWidth = 446
+      object Memo2: TMemo
+        Left = 0
+        Height = 281
+        Top = 0
+        Width = 446
+        Align = alClient
+        Alignment = taCenter
+        Font.Height = -11
+        Font.Name = 'Verdana'
+        Lines.Strings = (
+          ''
+          '--------------------'
+          'FPG EDIT'
+          '--------------------'
+          ''
+          'Programador:'
+          ''
+          'CodeMaster'
+          'cdmstrinside@hotmail.com'
+          ''
+          ''
+          'Agradezco la colaboración en la detección de bugs y las '
+          'sugerencias aportadas a este programa por la comunidad '
+          'DIVNET, especialmente al foro de dicha comunidad.'
+          ''
+          'Añadido soporte para 1, 24 y 32 bits y portado a Lazarus IDE por '
+          'DCelso.'
+        )
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+    end
+    object tsCharacteristic: TTabSheet
+      Caption = 'Caracteristicas'
+      ClientHeight = 281
+      ClientWidth = 446
+      ImageIndex = 1
+      object Memo1: TMemo
+        Left = 0
+        Height = 281
+        Top = 0
+        Width = 446
+        Align = alClient
+        Font.Height = -11
+        Font.Name = 'Verdana'
+        Lines.Strings = (
+          'Tiene la capacidad de abrir, cargar, convertir, visualizar, modificar, '
+          'extraer todo lo que contienen los ficheros FPG de 8 y 16 bits '
+          'comprimidos '
+          'y sin comprimir de DIV2,  CDIV, Fenix, BennuGD y Gemix.'
+          ''
+          'Soporta:'
+          ' + FPG de 1 bit. '
+          ' + FPG de 8 bits para (DIV2,  CDIV, Fenix, BennuGD y Gemix)'
+          ' + FPG de 16 bits para Fenix y BennuGD'
+          ' + FPG de 16 bits para CDIV'
+          ' + FPG de 24 bits. '
+          ' + FPG de 32 bits para BennuGD'
+          ' + Conversión de un formato a otro'
+          ' + Sistema de multi-lenguaje auto-adaptable'
+          ' + Manejo del portapapeles para imágenes '
+          '    (copiar, pegar y vaciar portapapeles)'
+          ' + Capacidad de exportar todo lo que contine un FPG '
+          '    ( Imágenes, paletas y puntos de control )'
+          ' + "Drag and Drop" arrastrar y soltar, tanto para añadir imágenes al '
+          'FPG '
+          '    como para exportar las imágenes del FPG'
+          ' + Selección de puntos de control de forma gráfica, con la posibilidad de '
+          '    cargar desde un fichero de texto .CPT'
+          ' + Sistema de animación para las imágenes de los ficheros FPG'
+          ' + Filtrado de imágenes personalizado'
+          ' + Compresor para los FPG de Fenix/BennuGD'
+          ''
+          'Formatos de imágenes:'
+          ' PNG, MNG, JNG, JPG, JIF, GIF, BMP, WMF,  EMF, DIB, RLE, TGA, '
+          ' PCX, ICO, TIF, TIFF, FAX, BW, RGB, RGBA, SGI, CEL, PIC, VST, ICB, '
+          ' VDA, WIN, PCC, SCR, PCD, PPM, PGM, CUT, PAL, RLA, RPF, PSD, '
+          ' PDD, PSP.'
+          ''
+          'Formatos de paletas:'
+          ' PAL (DIV2, MICROSOFT,  PAINT SHOP PRO 4)'
+          ''
+          'Importa paletas de ficheros de 8 bits de: '
+          ' BMP, PCX, FPG, MAP y FNT.'
+          ''
+          'Carga y extrae puntos de control a:'
+          ' CPT.'
+        )
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+    end
+    object tsCredits: TTabSheet
+      Caption = 'Creditos'
+      ClientHeight = 281
+      ClientWidth = 446
+      ImageIndex = 2
+      object Memo3: TMemo
+        Left = 0
+        Height = 281
+        Top = 0
+        Width = 446
+        Align = alClient
+        Alignment = taCenter
+        Font.Height = -11
+        Font.Name = 'Verdana'
+        Lines.Strings = (
+          ''
+          '--------------------'
+          'FPG EDIT'
+          '--------------------'
+          ''
+          'Es un visualizador/editor de ficheros de imágenes (FPG) para '
+          'aplicaciones multimedia realizados en DIV2, FENIX y CDIV.'
+          ''
+          'Este programa trata de dar un soporte para la edición de '
+          'ficheros FPG de una forma sencilla y eficiente.'
+          ''
+          'Este programa es de software libre, usted puede distribuirlo '
+          'y/o '
+          'modificarlo bajo los terminos de licencia: '
+          'GNU (GENERAL PUBLIC LICENSE)'
+          ''
+          'Este programa se distribuye para que todos lo puedan utilizar, '
+          'pero NO TIENE NINGUNA GARANTIA. Por lo que el autor no se '
+          'hace responsable de cualquier mal funcionamiento o daño que '
+          'puediese ocasionar.'
+          ''
+          ''
+        )
+        OnChange = Memo3Change
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+      end
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 34
+    Top = 310
+    Width = 454
+    Align = alBottom
+    ClientHeight = 34
+    ClientWidth = 454
+    TabOrder = 1
+    object Button1: TButton
+      Left = 368
+      Height = 25
+      Top = 2
+      Width = 75
+      Caption = 'Ok'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+  end
+end

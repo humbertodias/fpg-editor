@@ -1,0 +1,90 @@
+object frmSelectColor: TfrmSelectColor
+  Left = 494
+  Height = 240
+  Top = 457
+  Width = 320
+  ActiveControl = bAceptar
+  Caption = 'Seleccionar Color'
+  ClientHeight = 240
+  ClientWidth = 320
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '1.1'
+  object gbPalette: TGroupBox
+    Left = 0
+    Height = 208
+    Top = 0
+    Width = 320
+    Align = alClient
+    Caption = 'Paleta de colores'
+    ClientHeight = 185
+    ClientWidth = 316
+    TabOrder = 0
+    object scrlbxPalette: TScrollBox
+      Left = 0
+      Height = 185
+      Top = 0
+      Width = 316
+      HorzScrollBar.Page = 314
+      VertScrollBar.Page = 183
+      Align = alClient
+      ClientHeight = 183
+      ClientWidth = 314
+      TabOrder = 0
+      object PPaletteReference: TPanel
+        Left = 0
+        Height = 16
+        Top = 167
+        Width = 314
+        Align = alBottom
+        BevelOuter = bvNone
+        ClientHeight = 16
+        ClientWidth = 314
+        TabOrder = 0
+        Visible = False
+        object PColorReference: TPanel
+          Left = 0
+          Height = 16
+          Top = 0
+          Width = 16
+          Align = alLeft
+          BevelOuter = bvNone
+          ParentColor = False
+          TabOrder = 0
+          Visible = False
+          OnClick = PColorReferenceClick
+        end
+      end
+    end
+  end
+  object pBotonera: TPanel
+    Left = 0
+    Height = 32
+    Top = 208
+    Width = 320
+    Align = alBottom
+    ClientHeight = 32
+    ClientWidth = 320
+    TabOrder = 1
+    object bCancelar: TButton
+      Left = 244
+      Height = 30
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Cancelar'
+      ModalResult = 2
+      TabOrder = 0
+    end
+    object bAceptar: TButton
+      Left = 169
+      Height = 30
+      Top = 1
+      Width = 75
+      Align = alRight
+      Caption = 'Aceptar'
+      ModalResult = 1
+      TabOrder = 1
+    end
+  end
+end
