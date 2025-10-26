@@ -1,0 +1,283 @@
+object frmFNTView: TfrmFNTView
+  Left = 176
+  Height = 579
+  Top = 91
+  Width = 788
+  Caption = 'Visto de datos FNT'
+  ClientHeight = 579
+  ClientWidth = 788
+  Color = clBtnFace
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  OnShow = FormShow
+  LCLVersion = '1.1'
+  object Panel1: TPanel
+    Left = 0
+    Height = 217
+    Top = 0
+    Width = 788
+    Align = alTop
+    ClientHeight = 217
+    ClientWidth = 788
+    TabOrder = 0
+    object Label4: TLabel
+      Left = 38
+      Height = 13
+      Top = 150
+      Width = 44
+      Caption = 'Charset'
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label5: TLabel
+      Left = 110
+      Height = 1
+      Top = 166
+      Width = 1
+      ParentColor = False
+    end
+    object GroupBox1: TGroupBox
+      Left = 8
+      Height = 121
+      Top = 8
+      Width = 161
+      Caption = 'Header'
+      ClientHeight = 103
+      ClientWidth = 157
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+      object Label1: TLabel
+        Left = 38
+        Height = 13
+        Top = 10
+        Width = 33
+        Caption = 'Magic'
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label2: TLabel
+        Left = 14
+        Height = 13
+        Top = 42
+        Width = 63
+        Caption = 'MSDOS End'
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label3: TLabel
+        Left = 6
+        Height = 13
+        Top = 74
+        Width = 73
+        Caption = 'Bits Per Pixel'
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Edit1: TEdit
+        Left = 78
+        Height = 21
+        Top = 2
+        Width = 57
+        MaxLength = 3
+        TabOrder = 0
+      end
+      object Edit2: TEdit
+        Left = 78
+        Height = 21
+        Top = 34
+        Width = 57
+        MaxLength = 8
+        TabOrder = 1
+      end
+      object Edit3: TEdit
+        Left = 78
+        Height = 21
+        Top = 66
+        Width = 57
+        MaxLength = 2
+        TabOrder = 2
+      end
+    end
+    object GroupBox2: TGroupBox
+      Left = 174
+      Height = 201
+      Top = 8
+      Width = 401
+      Caption = 'Colors'
+      ClientHeight = 183
+      ClientWidth = 397
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+      object GroupBox3: TGroupBox
+        Left = 6
+        Height = 177
+        Top = 2
+        Width = 185
+        Caption = 'Palette'
+        ClientHeight = 159
+        ClientWidth = 181
+        TabOrder = 0
+        object DrawGrid1: TDrawGrid
+          Left = 0
+          Height = 159
+          Top = 0
+          Width = 181
+          Align = alClient
+          ColCount = 16
+          DefaultColWidth = 10
+          DefaultRowHeight = 10
+          ExtendedSelect = False
+          FixedCols = 0
+          FixedRows = 0
+          RowCount = 16
+          ScrollBars = ssNone
+          TabOrder = 0
+          TitleFont.Color = clWindowText
+          TitleFont.Height = -11
+          TitleFont.Name = 'Tahoma'
+        end
+      end
+      object GroupBox4: TGroupBox
+        Left = 198
+        Height = 177
+        Top = 2
+        Width = 193
+        Caption = 'Gamma'
+        ClientHeight = 159
+        ClientWidth = 189
+        TabOrder = 1
+        object Memo1: TMemo
+          Left = 0
+          Height = 159
+          Top = 0
+          Width = 189
+          Align = alClient
+          ScrollBars = ssVertical
+          TabOrder = 0
+        end
+      end
+    end
+    object ComboBox1: TComboBox
+      Left = 86
+      Height = 21
+      Top = 142
+      Width = 81
+      ItemHeight = 13
+      Items.Strings = (
+        'ISO8859'
+        'CP850'
+        ''
+      )
+      TabOrder = 2
+    end
+    object GroupBox6: TGroupBox
+      Left = 582
+      Height = 201
+      Top = 6
+      Width = 193
+      Caption = 'Preview'
+      ClientHeight = 183
+      ClientWidth = 189
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 3
+      object Image1: TImage
+        Left = 0
+        Height = 183
+        Top = 0
+        Width = 189
+        Align = alClient
+        Center = True
+        Stretch = True
+      end
+    end
+  end
+  object GroupBox5: TGroupBox
+    Left = 0
+    Height = 362
+    Top = 217
+    Width = 788
+    Align = alClient
+    Caption = 'Descriptors'
+    ClientHeight = 344
+    ClientWidth = 784
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 1
+    object ListView1: TListView
+      Left = 0
+      Height = 344
+      Top = 0
+      Width = 784
+      Align = alClient
+      Columns = <      
+        item
+          Caption = 'Index'
+        end      
+        item
+          Caption = 'ASCII'
+        end      
+        item
+          Caption = 'Width'
+        end      
+        item
+          Caption = 'Height'
+        end      
+        item
+          Caption = 'Width Offset'
+          Width = 100
+        end      
+        item
+          Caption = 'Heigh Offset'
+          Width = 100
+        end      
+        item
+          Caption = 'Horizontal Offset'
+        end      
+        item
+          Caption = 'Vertical Offset'
+          Width = 100
+        end      
+        item
+          Caption = 'File Offset'
+          Width = 100
+        end>
+      GridLines = True
+      RowSelect = True
+      TabOrder = 0
+      ViewStyle = vsReport
+      OnSelectItem = ListView1SelectItem
+    end
+  end
+end

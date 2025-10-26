@@ -1,0 +1,88 @@
+object frmprgoptions: Tfrmprgoptions
+  Left = 406
+  Height = 186
+  Top = 294
+  Width = 386
+  Caption = 'Opciones del editor de Archivos de programa'
+  ClientHeight = 186
+  ClientWidth = 386
+  LCLVersion = '1.1'
+  object fneCompilador: TFileNameEdit
+    Left = 24
+    Height = 31
+    Top = 32
+    Width = 320
+    FileName = 'bgdc'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 0
+  end
+  object lblCompilador: TLabel
+    Left = 24
+    Height = 21
+    Top = 8
+    Width = 78
+    Caption = 'Compilador:'
+    ParentColor = False
+  end
+  object lblInterprete: TLabel
+    Left = 24
+    Height = 21
+    Top = 72
+    Width = 73
+    Caption = 'Intérprete:'
+    ParentColor = False
+  end
+  object fneInterprete: TFileNameEdit
+    Left = 24
+    Height = 31
+    Top = 96
+    Width = 320
+    FileName = 'bgdi'
+    FilterIndex = 0
+    HideDirectories = False
+    ButtonWidth = 23
+    NumGlyphs = 1
+    MaxLength = 0
+    TabOrder = 1
+  end
+  object Panel1: TPanel
+    Left = 0
+    Height = 34
+    Top = 152
+    Width = 386
+    Align = alBottom
+    ClientHeight = 34
+    ClientWidth = 386
+    TabOrder = 2
+    object BtnCancelar: TBitBtn
+      Left = 305
+      Height = 27
+      Top = 1
+      Width = 75
+      Align = alRight
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      Caption = 'Cancelar'
+      OnClick = BtnCancelarClick
+      TabOrder = 0
+      Visible = False
+    end
+    object BtnAceptar: TBitBtn
+      Left = 225
+      Height = 27
+      Top = 1
+      Width = 75
+      Align = alRight
+      BorderSpacing.Right = 5
+      BorderSpacing.Bottom = 5
+      Caption = 'Aceptar'
+      Default = True
+      OnClick = BtnAceptarClick
+      TabOrder = 1
+    end
+  end
+end

@@ -1,0 +1,2586 @@
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2014-05-29 23:33+0100\n"
+"Last-Translator: Pieter Kuperus <dyko.kuperus1@home.nl>\n"
+"Language-Team: debian wheezy\n"
+"Language: en\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.5\n"
+"Project-Id-Version: FPG Editor\n"
+"POT-Creation-Date: \n"
+"MIME-Version: 1.0\n"
+
+#: pfpgeditor.lng_no_enough_memory
+msgid "Error, no se encuentran suficientes recursos para iniciar el programa. Salga de uno o más programas si desea ejecutar este programa."
+msgstr "Error, there is not enough resources to star the apllication. Close one or more apllications if you wish run it."
+
+#: tform1.btnaceptar.caption
+msgctxt "tform1.btnaceptar.caption"
+msgid "Aceptar"
+msgstr "Accept"
+
+#: tform1.btncancelar.caption
+msgctxt "tform1.btncancelar.caption"
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: tform1.caption
+msgctxt "tform1.caption"
+msgid "Opciones del editor de Archivos de programa"
+msgstr "Program editor options"
+
+#: tform1.lblcompilador.caption
+msgctxt "tform1.lblcompilador.caption"
+msgid "Compilador:"
+msgstr "Compiler:"
+
+#: tform1.lblinterprete.caption
+msgctxt "tform1.lblinterprete.caption"
+msgid "Intérprete:"
+msgstr "Interpreter:"
+
+#: tfrmabout.button1.caption
+msgid "Ok"
+msgstr "Ok"
+
+#: tfrmabout.caption
+msgctxt "tfrmabout.caption"
+msgid "Acerca de ..."
+msgstr "About ..."
+
+#: tfrmabout.tscharacteristic.caption
+msgctxt "tfrmabout.tscharacteristic.caption"
+msgid "Caracteristicas"
+msgstr "Characteristics"
+
+#: tfrmabout.tscredits.caption
+msgctxt "tfrmabout.tscredits.caption"
+msgid "Creditos"
+msgstr "Credits"
+
+#: tfrmabout.tsdescription.caption
+msgid "Descripcion"
+msgstr "Description"
+
+#: tfrmcfg.caption
+msgid "Configuración del generador de fuentes"
+msgstr "Font Generator Configuration"
+
+#: tfrmcfg.gbpaleta.caption
+msgctxt "tfrmcfg.gbpaleta.caption"
+msgid "Paleta de 256 colores"
+msgstr "256 Color palette"
+
+#: tfrmcfg.rbfnt2pal.caption
+msgid "Calcular paleta optimizada a los colores de la fuente"
+msgstr "Calculate optimized color palette for the font"
+
+#: tfrmcfg.rbpal2fnt.caption
+msgid "Adaptar fuente a la paleta cargada"
+msgstr "Adapt font to loaded palette"
+
+#: tfrmcfg.sbaccept.caption
+msgctxt "tfrmcfg.sbaccept.caption"
+msgid "&Aceptar"
+msgstr "&Accept"
+
+#: tfrmcfg.sbcancel.caption
+msgctxt "tfrmcfg.sbcancel.caption"
+msgid "&Cancelar"
+msgstr "&Cancel"
+
+#: tfrmcfg.sbloadpal.caption
+msgid "&Cargar paleta"
+msgstr "&Load Palette"
+
+#: tfrmcfg.sbviewpal.caption
+msgid "&Ver paleta"
+msgstr "&View palette"
+
+#: tfrmconfig.bbacept.caption
+msgctxt "TFRMCONFIG.BBACEPT.CAPTION"
+msgid "&Aceptar"
+msgstr "&Accept"
+
+#: tfrmconfig.bbcancel.caption
+msgctxt "TFRMCONFIG.BBCANCEL.CAPTION"
+msgid "&Cancelar"
+msgstr "&Cancel"
+
+#: tfrmconfig.caption
+msgid "Configuración de FPG EDIT"
+msgstr "Configure FPGEDIT"
+
+#: tfrmconfig.cbalfanegro.caption
+msgid "50% alfa a transparente"
+msgstr "50% alpha transparent"
+
+#: tfrmconfig.cbautoloadimages.caption
+msgid "Auto carga de imágenes"
+msgstr "Auto load images"
+
+#: tfrmconfig.cbautoloadremove.caption
+msgid "Auto carga al borrar"
+msgstr "Auto load on delete"
+
+#: tfrmconfig.cbflat.caption
+msgid "Botones tipo \"flat\""
+msgstr "Button type \"flat\""
+
+#: tfrmconfig.cbsplash.caption
+msgctxt "tfrmconfig.cbsplash.caption"
+msgid "Mostrar pantalla de inicio"
+msgstr "Show start screen"
+
+#: tfrmconfig.gbenviroment.caption
+msgid "Global"
+msgstr "Global"
+
+#: tfrmconfig.gbimageedit.caption
+msgid " Editor de imágenes "
+msgstr "Image Editor"
+
+#: tfrmconfig.gblanguaje.caption
+msgctxt "tfrmconfig.gblanguaje.caption"
+msgid "Lenguaje"
+msgstr "Language"
+
+#: tfrmconfig.gbtimeanimate.caption
+msgid " Tiempo entre animación "
+msgstr "Time between animation"
+
+#: tfrmconfig.groupbox1.caption
+msgid "Colores de fondo"
+msgstr "Background Colors"
+
+#: tfrmconfig.label1.caption
+msgctxt "tfrmconfig.label1.caption"
+msgid "FPG"
+msgstr "FPG"
+
+#: tfrmconfig.label2.caption
+msgid "Files"
+msgstr "Files"
+
+#: tfrmconfig.lbmiliseconds.caption
+msgctxt "tfrmconfig.lbmiliseconds.caption"
+msgid "Milisegundos"
+msgstr "Milliseconds"
+
+#: tfrmconfig.lbpixels.caption
+msgctxt "tfrmconfig.lbpixels.caption"
+msgid "Pixels"
+msgstr "Pixels"
+
+#: tfrmconfig.lbsizeoficon.caption
+msgid "Tamaño de los iconos:"
+msgstr "Size of the icons:"
+
+#: tfrmconfig.tsenviroment.caption
+msgctxt "tfrmconfig.tsenviroment.caption"
+msgid "Entorno"
+msgstr "Enviroment"
+
+#: tfrmfntview.caption
+msgid "Visor de datos FNT"
+msgstr "FNT data viewer"
+
+#: tfrmfntview.groupbox1.caption
+msgid "Cabecera"
+msgstr "Header"
+
+#: tfrmfntview.groupbox2.caption
+msgid "Colores"
+msgstr "Colors"
+
+#: tfrmfntview.groupbox3.caption
+msgid "Paleta"
+msgstr "Palette"
+
+#: tfrmfntview.groupbox4.caption
+msgid "Gamas"
+msgstr "Ranges"
+
+#: tfrmfntview.groupbox5.caption
+msgid "Descriptores"
+msgstr "Descriptors"
+
+#: tfrmfntview.groupbox6.caption
+msgctxt "tfrmfntview.groupbox6.caption"
+msgid "Imagen"
+msgstr "Image"
+
+#: tfrmfntview.label1.caption
+msgid "Magic"
+msgstr "Magic"
+
+#: tfrmfntview.label2.caption
+msgid "MSDOS End"
+msgstr "MSDOS End"
+
+#: tfrmfntview.label3.caption
+msgid "Bits Per Pixel"
+msgstr "Bits Per Pixel"
+
+#: tfrmfntview.label4.caption
+msgctxt "tfrmfntview.label4.caption"
+msgid "Charset"
+msgstr "Charset"
+
+#: tfrmfntview.listview1.columns[0].caption
+msgid "Index"
+msgstr "Index"
+
+#: tfrmfntview.listview1.columns[1].caption
+msgid "ASCII"
+msgstr "ASCII"
+
+#: tfrmfntview.listview1.columns[2].caption
+msgid "Width"
+msgstr "Width"
+
+#: tfrmfntview.listview1.columns[3].caption
+msgid "Height"
+msgstr "Height"
+
+#: tfrmfntview.listview1.columns[4].caption
+msgid "Width Offset"
+msgstr "Width Offset"
+
+#: tfrmfntview.listview1.columns[5].caption
+#, fuzzy
+#| msgid "Height Offset"
+msgid "Heigh Offset"
+msgstr "Height Offset"
+
+#: tfrmfntview.listview1.columns[6].caption
+msgid "Horizontal Offset"
+msgstr "Horizontal Offset"
+
+#: tfrmfntview.listview1.columns[7].caption
+msgid "Vertical Offset"
+msgstr "Vertical Offset"
+
+#: tfrmfntview.listview1.columns[8].caption
+msgid "File Offset"
+msgstr "File Offset"
+
+#: tfrmfpgcompare.button1.caption
+msgctxt "tfrmfpgcompare.button1.caption"
+msgid ".."
+msgstr ".."
+
+#: tfrmfpgcompare.button2.caption
+msgctxt "tfrmfpgcompare.button2.caption"
+msgid ".."
+msgstr ".."
+
+#: tfrmfpgcompare.button3.caption
+msgid "Comparar"
+msgstr "Compare"
+
+#: tfrmfpgcompare.caption
+msgid "Comparar FPGs"
+msgstr "Compare FPG contents"
+
+#: tfrmfpgeditor.aaddimg.caption
+msgctxt "tfrmfpgeditor.aaddimg.caption"
+msgid "Añadir"
+msgstr "Add"
+
+#: tfrmfpgeditor.aanimfpg.caption
+msgctxt "tfrmfpgeditor.aanimfpg.caption"
+msgid "Animar"
+msgstr "Animate"
+
+#: tfrmfpgeditor.aanimimgs.caption
+msgctxt "tfrmfpgeditor.aanimimgs.caption"
+msgid "Animar"
+msgstr "Animate"
+
+#: tfrmfpgeditor.aclose.caption
+msgctxt "tfrmfpgeditor.aclose.caption"
+msgid "&Cerrar"
+msgstr "&Close"
+
+#: tfrmfpgeditor.aconfig.caption
+msgctxt "tfrmfpgeditor.aconfig.caption"
+msgid "Configuración"
+msgstr "Configuration"
+
+#: tfrmfpgeditor.acopyimg.caption
+msgctxt "tfrmfpgeditor.acopyimg.caption"
+msgid "Copiar Imagen"
+msgstr "Copy image"
+
+#: tfrmfpgeditor.action2.caption
+msgctxt "tfrmfpgeditor.action2.caption"
+msgid "Action2"
+msgstr "Action 2"
+
+#: tfrmfpgeditor.adelete.caption
+msgctxt "tfrmfpgeditor.adelete.caption"
+msgid "Eliminar"
+msgstr "Remove"
+
+#: tfrmfpgeditor.adeleteselimg.caption
+msgctxt "tfrmfpgeditor.adeleteselimg.caption"
+msgid "Eliminar"
+msgstr "Delete"
+
+#: tfrmfpgeditor.aeditsel.caption
+msgctxt "tfrmfpgeditor.aeditsel.caption"
+msgid "Editar"
+msgstr "Edit"
+
+#: tfrmfpgeditor.aeditselimg.caption
+msgctxt "tfrmfpgeditor.aeditselimg.caption"
+msgid "Editar"
+msgstr "Edit"
+
+#: tfrmfpgeditor.aempty.caption
+msgctxt "tfrmfpgeditor.aempty.caption"
+msgid "Vaciar portapapeles"
+msgstr "Clear clipboard"
+
+#: tfrmfpgeditor.aexit.caption
+msgctxt "tfrmfpgeditor.aexit.caption"
+msgid "Salir"
+msgstr "Quit"
+
+#: tfrmfpgeditor.aexport.caption
+msgctxt "tfrmfpgeditor.aexport.caption"
+msgid "Exportar"
+msgstr "Export"
+
+#: tfrmfpgeditor.afpg1.caption
+msgctxt "tfrmfpgeditor.afpg1.caption"
+msgid "1 Bit"
+msgstr "1 Bit"
+
+#: tfrmfpgeditor.afpg16c.caption
+msgctxt "tfrmfpgeditor.afpg16c.caption"
+msgid "16bits CDIV"
+msgstr "16 bits CDIV"
+
+#: tfrmfpgeditor.afpg16f.caption
+msgctxt "tfrmfpgeditor.afpg16f.caption"
+msgid "16 bits Fenix"
+msgstr "16 bits Fenix"
+
+#: tfrmfpgeditor.afpg24.caption
+msgctxt "tfrmfpgeditor.afpg24.caption"
+msgid "24 bits"
+msgstr "24 bits"
+
+#: tfrmfpgeditor.afpg32.caption
+msgctxt "tfrmfpgeditor.afpg32.caption"
+msgid "32 bits"
+msgstr "32 bits"
+
+#: tfrmfpgeditor.afpg8.caption
+msgctxt "tfrmfpgeditor.afpg8.caption"
+msgid "8 bits"
+msgstr "8 bits"
+
+#: tfrmfpgeditor.afpgpalette.caption
+msgctxt "tfrmfpgeditor.afpgpalette.caption"
+msgid "Paleta de colores"
+msgstr "Color Palette"
+
+#: tfrmfpgeditor.ainvertsel.caption
+msgctxt "tfrmfpgeditor.ainvertsel.caption"
+msgid "Invertir selección"
+msgstr "Invert selection"
+
+#: tfrmfpgeditor.ainvertselimgs.caption
+msgctxt "tfrmfpgeditor.ainvertselimgs.caption"
+msgid "Invertir selección"
+msgstr "Invert selection"
+
+#: tfrmfpgeditor.aopenimg.caption
+msgctxt "tfrmfpgeditor.aopenimg.caption"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmfpgeditor.apasteimg.caption
+msgctxt "tfrmfpgeditor.apasteimg.caption"
+msgid "Pegar imagen"
+msgstr "Paste image"
+
+#: tfrmfpgeditor.areload.caption
+msgctxt "tfrmfpgeditor.areload.caption"
+msgid "Recargar"
+msgstr "Reload"
+
+#: tfrmfpgeditor.aselectall.caption
+msgctxt "tfrmfpgeditor.aselectall.caption"
+msgid "Seleccionar todo"
+msgstr "Select All"
+
+#: tfrmfpgeditor.aselectallimgs.caption
+msgctxt "tfrmfpgeditor.aselectallimgs.caption"
+msgid "Seleccionar todo"
+msgstr "Select all"
+
+#: tfrmfpgeditor.caption
+msgctxt "tfrmfpgeditor.caption"
+msgid "FPG Editor"
+msgstr "FPG Editor"
+
+#: tfrmfpgeditor.cbtipofpg.text
+msgctxt "tfrmfpgeditor.cbtipofpg.text"
+msgid "FPG 32 bits (BennuGD )"
+msgstr "FPG 32 bits (BennuGD )"
+
+#: tfrmfpgeditor.gbfpg.caption
+msgctxt "tfrmfpgeditor.gbfpg.caption"
+msgid " FPG (Ficheros de gráficos) "
+msgstr " FPG (Graphics File) "
+
+#: tfrmfpgeditor.gbimages.caption
+msgctxt "tfrmfpgeditor.gbimages.caption"
+msgid " Imagenes "
+msgstr "Images"
+
+#: tfrmfpgeditor.lvfpg.columns[0].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[0].caption"
+msgid "Código"
+msgstr "Code"
+
+#: tfrmfpgeditor.lvfpg.columns[1].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[1].caption"
+msgid "Nombre de Archivo"
+msgstr "File Name"
+
+#: tfrmfpgeditor.lvfpg.columns[2].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[2].caption"
+msgid "Nombre"
+msgstr "name"
+
+#: tfrmfpgeditor.lvfpg.columns[3].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[3].caption"
+msgid "Ancho"
+msgstr "Width"
+
+#: tfrmfpgeditor.lvfpg.columns[4].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[4].caption"
+msgid "Alto"
+msgstr "Height"
+
+#: tfrmfpgeditor.lvfpg.columns[5].caption
+msgctxt "tfrmfpgeditor.lvfpg.columns[5].caption"
+msgid "Puntos de control"
+msgstr "Control points"
+
+#: tfrmfpgeditor.lvimages.columns[0].caption
+msgctxt "tfrmfpgeditor.lvimages.columns[0].caption"
+msgid "Nombre"
+msgstr "Name"
+
+#: tfrmfpgeditor.lvimages.columns[1].caption
+msgctxt "tfrmfpgeditor.lvimages.columns[1].caption"
+msgid "Ancho"
+msgstr "Width"
+
+#: tfrmfpgeditor.lvimages.columns[2].caption
+msgctxt "tfrmfpgeditor.lvimages.columns[2].caption"
+msgid "Alto"
+msgstr "height"
+
+#: tfrmfpgeditor.lvimages.columns[3].caption
+msgctxt "tfrmfpgeditor.lvimages.columns[3].caption"
+msgid "Bits Por Pixel"
+msgstr "bpp"
+
+#: tfrmfpgeditor.menuitem2.caption
+#, fuzzy
+#| msgid " Código "
+msgctxt "tfrmfpgeditor.menuitem2.caption"
+msgid "Código"
+msgstr "Code"
+
+#: tfrmfpgeditor.menuitem3.caption
+#, fuzzy
+#| msgid "Nombre"
+msgctxt "tfrmfpgeditor.menuitem3.caption"
+msgid "Nombre Archivo"
+msgstr "Name"
+
+#: tfrmfpgeditor.menuitem4.caption
+msgctxt "tfrmfpgeditor.menuitem4.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.menuitem6.caption
+#, fuzzy
+#| msgid "Nombre"
+msgctxt "tfrmfpgeditor.menuitem6.caption"
+msgid "Nombre"
+msgstr "Name"
+
+#: tfrmfpgeditor.miaddimgs.caption
+msgctxt "tfrmfpgeditor.miaddimgs.caption"
+msgid "Añadir selección"
+msgstr "Add selection"
+
+#: tfrmfpgeditor.miconvert.caption
+msgctxt "tfrmfpgeditor.miconvert.caption"
+msgid "Convertir a"
+msgstr "Convert to"
+
+#: tfrmfpgeditor.mideletesel.caption
+msgctxt "tfrmfpgeditor.mideletesel.caption"
+msgid "Eliminar selección"
+msgstr "Remove Selection"
+
+#: tfrmfpgeditor.mieditsel.caption
+msgctxt "tfrmfpgeditor.mieditsel.caption"
+msgid "Editar selección"
+msgstr "Edit selection"
+
+#: tfrmfpgeditor.mieditselimg.caption
+msgctxt "tfrmfpgeditor.mieditselimg.caption"
+msgid "Editar seleccion"
+msgstr "Edit selection"
+
+#: tfrmfpgeditor.mifpg.caption
+#, fuzzy
+#| msgid "FPG"
+msgctxt "tfrmfpgeditor.mifpg.caption"
+msgid "Archivo"
+msgstr "FPG"
+
+#: tfrmfpgeditor.mifpgdetails.caption
+msgctxt "tfrmfpgeditor.mifpgdetails.caption"
+msgid "Detalles"
+msgstr "Details"
+
+#: tfrmfpgeditor.mifpgimages.caption
+msgctxt "tfrmfpgeditor.mifpgimages.caption"
+msgid "Imágenes"
+msgstr "Images"
+
+#: tfrmfpgeditor.mifpglist.caption
+msgctxt "tfrmfpgeditor.mifpglist.caption"
+msgid "Lista"
+msgstr "List"
+
+#: tfrmfpgeditor.mihideshowdirs.caption
+msgctxt "tfrmfpgeditor.mihideshowdirs.caption"
+msgid "Ocultar/Mostrar directorios"
+msgstr "Hide / Show directories"
+
+#: tfrmfpgeditor.miimages.caption
+msgctxt "tfrmfpgeditor.miimages.caption"
+msgid "Imágenes"
+msgstr "Icons"
+
+#: tfrmfpgeditor.miimgdetails.caption
+msgctxt "tfrmfpgeditor.miimgdetails.caption"
+msgid "Detalles"
+msgstr "Details"
+
+#: tfrmfpgeditor.miimgimages.caption
+msgctxt "tfrmfpgeditor.miimgimages.caption"
+msgid "Imágenes"
+msgstr "Images"
+
+#: tfrmfpgeditor.miimglist.caption
+msgctxt "tfrmfpgeditor.miimglist.caption"
+msgid "Lista"
+msgstr "List"
+
+#: tfrmfpgeditor.minew.caption
+msgctxt "tfrmfpgeditor.minew.caption"
+msgid "Nuevo"
+msgstr "New"
+
+#: tfrmfpgeditor.miopen.caption
+msgctxt "tfrmfpgeditor.miopen.caption"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmfpgeditor.miseparator1.caption
+msgctxt "tfrmfpgeditor.miseparator1.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator10.caption
+msgctxt "tfrmfpgeditor.miseparator10.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator11.caption
+msgctxt "tfrmfpgeditor.miseparator11.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator2.caption
+msgctxt "tfrmfpgeditor.miseparator2.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator3.caption
+msgctxt "tfrmfpgeditor.miseparator3.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator4.caption
+msgctxt "tfrmfpgeditor.miseparator4.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator5.caption
+msgctxt "tfrmfpgeditor.miseparator5.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator6.caption
+msgctxt "tfrmfpgeditor.miseparator6.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator7.caption
+msgctxt "tfrmfpgeditor.miseparator7.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator8.caption
+msgctxt "tfrmfpgeditor.miseparator8.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.miseparator9.caption
+msgctxt "tfrmfpgeditor.miseparator9.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.mishowhideuppanel.caption
+msgctxt "tfrmfpgeditor.mishowhideuppanel.caption"
+msgid "Mostrar/Ocultar panel superior"
+msgstr "Show / Hide top panel"
+
+#: tfrmfpgeditor.misort.caption
+msgid "Ordenar"
+msgstr "Sort"
+
+#: tfrmfpgeditor.mitools.caption
+msgctxt "tfrmfpgeditor.mitools.caption"
+msgid "Herramientas"
+msgstr "Tools"
+
+#: tfrmfpgeditor.miviewfpg.caption
+msgctxt "tfrmfpgeditor.miviewfpg.caption"
+msgid "&Ver"
+msgstr "&View"
+
+#: tfrmfpgeditor.miviewimg.caption
+msgctxt "tfrmfpgeditor.miviewimg.caption"
+msgid "Ver"
+msgstr "View"
+
+#: tfrmfpgeditor.miwallpaper.caption
+msgctxt "tfrmfpgeditor.miwallpaper.caption"
+msgid "Portapapeles"
+msgstr "Clipboard"
+
+#: tfrmfpgeditor.n15.caption
+msgctxt "tfrmfpgeditor.n15.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.n20.caption
+msgctxt "tfrmfpgeditor.n20.caption"
+msgid "-"
+msgstr "-"
+
+#: tfrmfpgeditor.pfpgcode.caption
+msgctxt "tfrmfpgeditor.pfpgcode.caption"
+msgid "Código de FPG"
+msgstr "FPG Code"
+
+#: tfrmfpgeditor.ppcopyimage.caption
+msgctxt "tfrmfpgeditor.ppcopyimage.caption"
+msgid "&Copiar al portapapeles"
+msgstr "&Copy to clipboard"
+
+#: tfrmfpgeditor.ppfpgopen.caption
+msgctxt "tfrmfpgeditor.ppfpgopen.caption"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmfpgimages.bbaceptchanges.caption
+msgctxt "tfrmfpgimages.bbaceptchanges.caption"
+msgid "&Aceptar"
+msgstr "&Accept"
+
+#: tfrmfpgimages.bbcancelchanges.caption
+msgctxt "tfrmfpgimages.bbcancelchanges.caption"
+msgid "&Cancelar"
+msgstr "&Cancel"
+
+#: tfrmfpgimages.bmodify.caption
+msgid "Modificar datos de imagen"
+msgstr "Modify image properties"
+
+#: tfrmfpgimages.caption
+msgctxt "tfrmfpgimages.caption"
+msgid "Editar propiedades de la imagen"
+msgstr "Edit properties of the image"
+
+#: tfrmfpgimages.gbcode.caption
+#, fuzzy
+#| msgid " Código "
+msgctxt "tfrmfpgimages.gbcode.caption"
+msgid "Código"
+msgstr "Code"
+
+#: tfrmfpgimages.gbfname.caption
+msgctxt "tfrmfpgimages.gbfname.caption"
+msgid "Nombre Archivo"
+msgstr "Name"
+
+#: tfrmfpgimages.gbname.caption
+#, fuzzy
+#| msgid " Nombre "
+msgctxt "tfrmfpgimages.gbname.caption"
+msgid "Nombre"
+msgstr "File Name"
+
+#: tfrmfpgimages.groupbox5.caption
+msgid " X "
+msgstr " X "
+
+#: tfrmfpgimages.groupbox6.caption
+msgid " Y "
+msgstr " Y "
+
+#: tfrmfpgimages.lbheight.caption
+msgctxt "tfrmfpgimages.lbheight.caption"
+msgid "Alto"
+msgstr " Height"
+
+#: tfrmfpgimages.lbnumcp.caption
+msgid "Puntos Ctrl"
+msgstr "Ctrl points"
+
+#: tfrmfpgimages.lbwidth.caption
+msgctxt "tfrmfpgimages.lbwidth.caption"
+msgid "Ancho"
+msgstr "Width"
+
+#: tfrmfpgimages.lb_ctrl_points.caption
+msgid "Puntos de control:"
+msgstr "Control points"
+
+#: tfrmfpgimages.lb_heigth.caption
+msgid "Alto:"
+msgstr "Width"
+
+#: tfrmfpgimages.lb_width.caption
+msgctxt "tfrmfpgimages.lb_width.caption"
+msgid "Ancho:"
+msgstr "Height"
+
+#: tfrmfpgimages.lvcontrolpoints.columns[0].caption
+msgctxt "tfrmfpgimages.lvcontrolpoints.columns[0].caption"
+msgid "Número"
+msgstr "Number"
+
+#: tfrmfpgimages.lvcontrolpoints.columns[1].caption
+msgid "X"
+msgstr "X"
+
+#: tfrmfpgimages.lvcontrolpoints.columns[2].caption
+msgid "Y"
+msgstr "Y"
+
+#: tfrmfpgimages.sbadd.hint
+msgctxt "tfrmfpgimages.sbadd.hint"
+msgid "Añadir punto de control"
+msgstr "Add control point"
+
+#: tfrmfpgimages.sbaddpoint.caption
+msgctxt "tfrmfpgimages.sbaddpoint.caption"
+msgid "Añadir punto"
+msgstr "Add point"
+
+#: tfrmfpgimages.sbchangecolor.caption
+msgctxt "tfrmfpgimages.sbchangecolor.caption"
+msgid "Cambiar color de puntos"
+msgstr "Change color of points"
+
+#: tfrmfpgimages.sbdelete.hint
+msgctxt "tfrmfpgimages.sbdelete.hint"
+msgid "Eliminar punto de control"
+msgstr "Delete control point"
+
+#: tfrmfpgimages.sbedit.hint
+msgid "Editar punto de control"
+msgstr "Modify controlpoints"
+
+#: tfrmfpgimages.sbimageselect.caption
+msgctxt "tfrmfpgimages.sbimageselect.caption"
+msgid "Poner puntos en imagen"
+msgstr "Put points in image"
+
+#: tfrmfpgimages.sbloadcp.caption
+msgctxt "tfrmfpgimages.sbloadcp.caption"
+msgid "Cargar puntos de control"
+msgstr "Load control points"
+
+#: tfrmfpgimages.sbputcenter.caption
+msgid "Poner Centro"
+msgstr "Set Center"
+
+#: tfrmfpgimages.sbremoveall.caption
+msgctxt "tfrmfpgimages.sbremoveall.caption"
+msgid "Borrar todos los puntos"
+msgstr "Delete all points"
+
+#: tfrmfpgimages.sbsetcenter.caption
+msgctxt "tfrmfpgimages.sbsetcenter.caption"
+msgid "Poner centro real"
+msgstr "Put real center"
+
+#: tfrmfpgimages.sbsetcontrolpoint.caption
+msgctxt "tfrmfpgimages.sbsetcontrolpoint.caption"
+msgid "Añadir punto"
+msgstr "Add point"
+
+#: tfrmfpgimages.sbviewcontrolpoints.caption
+msgctxt "tfrmfpgimages.sbviewcontrolpoints.caption"
+msgid "Ver puntos de la imagen"
+msgstr "View points in image"
+
+#: tfrmfpgimages.tscontrolpoints.caption
+msgid "Puntos de Control"
+msgstr "Control points"
+
+#: tfrmfpgimages.tsproperties.caption
+msgctxt "tfrmfpgimages.tsproperties.caption"
+msgid "Propiedades"
+msgstr "Properties"
+
+#: tfrmlangtranslator.aabrir.caption
+msgctxt "tfrmlangtranslator.aabrir.caption"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmlangtranslator.acopiar.caption
+msgctxt "tfrmlangtranslator.acopiar.caption"
+msgid "Copiar"
+msgstr "Copy"
+
+#: tfrmlangtranslator.aguardar.caption
+msgctxt "tfrmlangtranslator.aguardar.caption"
+msgid "Guardar"
+msgstr "Save"
+
+#: tfrmlangtranslator.apegar.caption
+msgctxt "tfrmlangtranslator.apegar.caption"
+msgid "Pegar"
+msgstr "Paste"
+
+#: tfrmlangtranslator.aunir.caption
+msgctxt "tfrmlangtranslator.aunir.caption"
+msgid "Unir"
+msgstr "Merge"
+
+#: tfrmlangtranslator.button1.caption
+msgctxt "tfrmlangtranslator.button1.caption"
+msgid "Ayuda"
+msgstr "Help"
+
+#: tfrmlangtranslator.button2.caption
+msgctxt "tfrmlangtranslator.button2.caption"
+msgid "Unir"
+msgstr "Merge"
+
+#: tfrmlangtranslator.button3.caption
+msgctxt "tfrmlangtranslator.button3.caption"
+msgid "Guardar"
+msgstr "Save"
+
+#: tfrmlangtranslator.caption
+msgctxt "tfrmlangtranslator.caption"
+msgid "Traductor de Idiomas"
+msgstr "Language Translator"
+
+#: tfrmlangtranslator.edit1.hint
+msgctxt "tfrmlangtranslator.edit1.hint"
+msgid "http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes"
+msgstr ""
+
+#: tfrmlangtranslator.edit1.text
+msgctxt "tfrmlangtranslator.edit1.text"
+msgid "en"
+msgstr "en"
+
+#: tfrmlangtranslator.groupbox1.caption
+msgctxt "tfrmlangtranslator.groupbox1.caption"
+msgid "Archivo Original"
+msgstr "Original File"
+
+#: tfrmlangtranslator.groupbox2.caption
+msgctxt "tfrmlangtranslator.groupbox2.caption"
+msgid "Archivo Traducido"
+msgstr "File Translated"
+
+#: tfrmlangtranslator.label1.caption
+msgctxt "tfrmlangtranslator.label1.caption"
+msgid "Siglas lng:"
+msgstr "lng Acronyms"
+
+#: tfrmlangtranslator.label1.hint
+msgctxt "tfrmlangtranslator.label1.hint"
+msgid "http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes"
+msgstr ""
+
+#: tfrmlangtranslator.menuitem1.caption
+msgctxt "tfrmlangtranslator.menuitem1.caption"
+msgid "Archivo"
+msgstr "File"
+
+#: tfrmlangtranslator.menuitem4.caption
+msgctxt "tfrmlangtranslator.menuitem4.caption"
+msgid "Salir"
+msgstr "Quit"
+
+#: tfrmlangtranslator.menuitem5.caption
+msgctxt "tfrmlangtranslator.menuitem5.caption"
+msgid "Acciones"
+msgstr "Actions"
+
+#: tfrmlanguageconverter.bcerrar.caption
+msgctxt "tfrmlanguageconverter.bcerrar.caption"
+msgid "&Cerrar"
+msgstr "&Close"
+
+#: tfrmlanguageconverter.bconvertir.caption
+msgid "C&onvertir"
+msgstr "C&onvert"
+
+#: tfrmlanguageconverter.caption
+msgid "Conversor de ficheros de idioma"
+msgstr "Languages File Converter"
+
+#: tfrmlanguageconverter.lblficheroantiguo.caption
+msgid "Archivo Antiguo:"
+msgstr "Old file:"
+
+#: tfrmlanguageconverter.lblficheronuevo.caption
+msgid "Archivo Nuevo:"
+msgstr "New file"
+
+#: tfrmlanguageconverter.sbficheroantiguo.caption
+msgctxt "tfrmlanguageconverter.sbficheroantiguo.caption"
+msgid ".."
+msgstr ".."
+
+#: tfrmlanguageconverter.sbficheronuevo.caption
+msgctxt "tfrmlanguageconverter.sbficheronuevo.caption"
+msgid ".."
+msgstr ".."
+
+#: tfrmmain.aabout.caption
+msgctxt "tfrmmain.aabout.caption"
+msgid "Acerca de ..."
+msgstr "About ..."
+
+#: tfrmmain.abennu.caption
+msgid "[BennuGD] http://bennugd.org"
+msgstr ""
+
+#: tfrmmain.acdiv.caption
+msgid "[ CDIV ] http://cdiv.sourceforge.net"
+msgstr ""
+
+#: tfrmmain.adiv2.caption
+#, fuzzy
+#| msgid "[ DIV2 ] http://www.div-arena.com/"
+msgctxt "tfrmmain.adiv2.caption"
+msgid "[ DIV2 ] http://www.div-arena.com"
+msgstr "[ DIV2 ] http://www.div-arena.com/"
+
+#: tfrmmain.afenix.caption
+#, fuzzy
+#| msgid "[ FENIX ] http://fenix.divsite.net/"
+msgctxt "tfrmmain.afenix.caption"
+msgid "[ FENIX ] http://fenix.divsite.net"
+msgstr "[ FENIX ] http://fenix.divsite.net/"
+
+#: tfrmmain.afntgen.caption
+msgid "Generar..."
+msgstr "Generate..."
+
+#: tfrmmain.afpgnew.caption
+msgctxt "tfrmmain.afpgnew.caption"
+msgid "Nuevo..."
+msgstr "New..."
+
+#: tfrmmain.afpgopen.caption
+msgctxt "tfrmmain.afpgopen.caption"
+msgid "Abrir..."
+msgstr "Open..."
+
+#: tfrmmain.agemix.caption
+msgctxt "tfrmmain.agemix.caption"
+msgid "[GEMIX] http://www.gemixstudio.com"
+msgstr "[GEMIX] http://www.gemixstudio.com"
+
+#: tfrmmain.alngconvert.caption
+msgctxt "tfrmmain.alngconvert.caption"
+msgid "Convertidor de lng"
+msgstr "Lng Converter"
+
+#: tfrmmain.alngtranslator.caption
+msgctxt "tfrmmain.alngtranslator.caption"
+msgid "Traductor de Idiomas"
+msgstr "Language Translator"
+
+#: tfrmmain.aprgnew.caption
+msgctxt "tfrmmain.aprgnew.caption"
+msgid "Nuevo..."
+msgstr "New..."
+
+#: tfrmmain.aprgopen.caption
+msgctxt "tfrmmain.aprgopen.caption"
+msgid "Abrir..."
+msgstr "Open..."
+
+#: tfrmmain.azipcompress.caption
+msgid "Compresor..."
+msgstr "Compressor..."
+
+#: tfrmmain.caption
+msgctxt "tfrmmain.caption"
+msgid "FPG Editor"
+msgstr "FPG Editor"
+
+#: tfrmmain.menuitem1.caption
+msgid "Programas"
+msgstr "Programs"
+
+#: tfrmmain.menuitem11.caption
+msgctxt "tfrmmain.menuitem11.caption"
+msgid "Herramientas"
+msgstr "Tools"
+
+#: tfrmmain.menuitem13.caption
+msgctxt "tfrmmain.menuitem13.caption"
+msgid "Ayuda"
+msgstr "Help"
+
+#: tfrmmain.menuitem4.caption
+msgid "Ficheros"
+msgstr "Files"
+
+#: tfrmmain.menuitem7.caption
+msgid "Tipografías"
+msgstr "Fonts"
+
+#: tfrmmainfnt.bgsize.caption
+msgctxt "tfrmmainfnt.bgsize.caption"
+msgid "Tamaño"
+msgstr "Size"
+
+#: tfrmmainfnt.caption
+msgid "Generador de fuentes"
+msgstr "Font Generator"
+
+#: tfrmmainfnt.cbcharset.text
+msgid "ISO8859_15"
+msgstr "ISO8859_15"
+
+#: tfrmmainfnt.cbextended.caption
+msgid "Extendido"
+msgstr "Extended"
+
+#: tfrmmainfnt.cbminus.caption
+msgid "Minúsculas"
+msgstr "Lowercase"
+
+#: tfrmmainfnt.cbnumbers.caption
+msgid "Números"
+msgstr "Numbers"
+
+#: tfrmmainfnt.cbsymbol.caption
+msgid "Símbolos"
+msgstr "Symbols"
+
+#: tfrmmainfnt.cbupper.caption
+msgid "Mayúsculas"
+msgstr "Shift"
+
+#: tfrmmainfnt.edsizefont.text
+msgid "8"
+msgstr "8"
+
+#: tfrmmainfnt.gbcharset.caption
+msgctxt "tfrmmainfnt.gbcharset.caption"
+msgid "Charset"
+msgstr "Charset"
+
+#: tfrmmainfnt.gbedge.caption
+msgctxt "TFRMMAINFNT.GBEDGE.CAPTION"
+msgid "Reborde"
+msgstr "Border"
+
+#: tfrmmainfnt.gbfont.caption
+msgid "Fuente en FNT"
+msgstr "Font in FNT"
+
+#: tfrmmainfnt.gbloadfont.caption
+msgid "Nombre de la fuente"
+msgstr "Font name"
+
+#: tfrmmainfnt.gbselectcolor.caption
+msgid "Selección de colores"
+msgstr "Choose colors"
+
+#: tfrmmainfnt.gbshadow.caption
+msgctxt "TFRMMAINFNT.GBSHADOW.CAPTION"
+msgid "Sombra"
+msgstr "Shadow"
+
+#: tfrmmainfnt.gbstyle.caption
+msgid "Estilo"
+msgstr "Style"
+
+#: tfrmmainfnt.gbsymboltype.caption
+msgid "Contenido"
+msgstr "Content"
+
+#: tfrmmainfnt.label1.caption
+msgctxt "TFRMMAINFNT.LABEL1.CAPTION"
+msgid "Alfa"
+msgstr "Alpha"
+
+#: tfrmmainfnt.label2.caption
+msgctxt "TFRMMAINFNT.LABEL2.CAPTION"
+msgid "Alfa"
+msgstr "Alpha"
+
+#: tfrmmainfnt.label3.caption
+msgid "Mostrar texto:"
+msgstr "Display text:"
+
+#: tfrmmainfnt.label4.caption
+msgctxt "tfrmmainfnt.label4.caption"
+msgid "Alfa"
+msgstr "Alpha"
+
+#: tfrmmainfnt.label5.caption
+msgid "Mostrar char:"
+msgstr "Show char:"
+
+#: tfrmmainfnt.lbnamefont.caption
+msgctxt "TFRMMAINFNT.LBNAMEFONT.CAPTION"
+msgid "No hay fuente"
+msgstr "There is not font"
+
+#: tfrmmainfnt.lbnamefontb.caption
+msgctxt "tfrmmainfnt.lbnamefontb.caption"
+msgid "No hay fuente"
+msgstr "There is not font"
+
+#: tfrmmainfnt.lbshadow.caption
+msgid "Posici"
+msgstr "Position"
+
+#: tfrmmainfnt.lbsizeedge.caption
+msgctxt "TFRMMAINFNT.LBSIZEEDGE.CAPTION"
+msgid "Tamaño"
+msgstr "Size"
+
+#: tfrmmainfnt.odimportfnt.title
+msgid "Importar una fuente de una imagen"
+msgstr "Import a font from an image"
+
+#: tfrmmainfnt.rbsedge.caption
+msgctxt "tfrmmainfnt.rbsedge.caption"
+msgid "Reborde"
+msgstr "Border"
+
+#: tfrmmainfnt.rbsfont.caption
+msgid "Fuente"
+msgstr "Font"
+
+#: tfrmmainfnt.rbsshadow.caption
+msgctxt "tfrmmainfnt.rbsshadow.caption"
+msgid "Sombra"
+msgstr "Shadow"
+
+#: tfrmmainfnt.sbchangebgcolor.caption
+msgid "Color de fondo"
+msgstr "Background Color"
+
+#: tfrmmainfnt.sbchangebgcolor.hint
+msgid "Cambiar el color de fondo"
+msgstr "Change the background color"
+
+#: tfrmmainfnt.sbexport.caption
+msgctxt "tfrmmainfnt.sbexport.caption"
+msgid "Exportar"
+msgstr "Export"
+
+#: tfrmmainfnt.sbexport.hint
+msgid "Exportar fuente de texto"
+msgstr "Export text font"
+
+#: tfrmmainfnt.sbimport.caption
+msgid "Importar"
+msgstr "Import"
+
+#: tfrmmainfnt.sbimport.hint
+msgid "Importar fuente de texto"
+msgstr "Import text font"
+
+#: tfrmmainfnt.sbloadfont.caption
+msgid "&Cargar Fuente"
+msgstr "&Load Font"
+
+#: tfrmmainfnt.sbloadfont.hint
+msgid "Cambiar el tipo de letra"
+msgstr "Change the font"
+
+#: tfrmmainfnt.sbmakefont.caption
+msgid "Generar"
+msgstr "Generate"
+
+#: tfrmmainfnt.sbmakefont.hint
+msgid "Generar fuente"
+msgstr "Generate Font"
+
+#: tfrmmainfnt.sbopen.hint
+msgid "Abrir fuente de texto"
+msgstr "Open Font text"
+
+#: tfrmmainfnt.sboptions.caption
+msgctxt "tfrmmainfnt.sboptions.caption"
+msgid "Opciones"
+msgstr "Options"
+
+#: tfrmmainfnt.sboptions.hint
+msgid "Opciones generales"
+msgstr "General Options"
+
+#: tfrmmainfnt.sbsave.hint
+msgid "Guardar fuente de texto"
+msgstr "Save text font"
+
+#: tfrmmainfnt.sbsaveas.hint
+msgid "Guardar fuente de texto como"
+msgstr "Save as text font"
+
+#: tfrmmainfnt.sbsavetext.caption
+msgctxt "tfrmmainfnt.sbsavetext.caption"
+msgid "Guardar texto"
+msgstr "Save text"
+
+#: tfrmmainfnt.sbsavetext.hint
+msgid "Guardar el texto escrito"
+msgstr "Save composed text"
+
+#: tfrmmainfnt.sbselectcolor.caption
+msgid "Color"
+msgstr "Color"
+
+#: tfrmmainfnt.sbselectcolor.hint
+msgid "Establece un color"
+msgstr "Sets a color"
+
+#: tfrmmainfnt.sbselectimage.caption
+msgctxt "tfrmmainfnt.sbselectimage.caption"
+msgid "Imagen"
+msgstr "Image"
+
+#: tfrmmainfnt.sbselectimage.hint
+msgid "Establece una imagen"
+msgstr "Set image"
+
+#: tfrmmainfnt.sbshowfnt.caption
+msgctxt "TFRMMAINFNT.SBSHOWFNT.CAPTION"
+msgid "Ver FNT"
+msgstr "View FNT"
+
+#: tfrmmainfnt.sbshowfnt.hint
+msgctxt "tfrmmainfnt.sbshowfnt.hint"
+msgid "Ver FNT"
+msgstr "View FNT"
+
+#: tfrmmainfnt.sdsavetext.title
+msgctxt "TFRMMAINFNT.SDSAVETEXT.TITLE"
+msgid "Guardar texto"
+msgstr "Save text"
+
+#: tfrmmainfnt.toolbar1.caption
+msgctxt "tfrmmainfnt.toolbar1.caption"
+msgid "ToolBar1"
+msgstr "ToolBar1"
+
+#: tfrmmapeditor.action1.caption
+msgctxt "tfrmmapeditor.action1.caption"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmmapeditor.action2.caption
+msgctxt "tfrmmapeditor.action2.caption"
+msgid "Guardar"
+msgstr "Save"
+
+#: tfrmmapeditor.action3.caption
+msgid "Guardar como .."
+msgstr "Save as.."
+
+#: tfrmmapeditor.action4.caption
+msgctxt "tfrmmapeditor.action4.caption"
+msgid "Salir"
+msgstr "Quit"
+
+#: tfrmmapeditor.action5.caption
+msgctxt "tfrmmapeditor.action5.caption"
+msgid "Lápiz"
+msgstr "Pen (dots)"
+
+#: tfrmmapeditor.action6.caption
+msgctxt "tfrmmapeditor.action6.caption"
+msgid "Línea"
+msgstr "Line"
+
+#: tfrmmapeditor.action7.caption
+msgctxt "tfrmmapeditor.action7.caption"
+msgid "Elipse"
+msgstr "Ellipse"
+
+#: tfrmmapeditor.action8.caption
+msgctxt "tfrmmapeditor.action8.caption"
+msgid "Deshacer"
+msgstr "Undo"
+
+#: tfrmmapeditor.caption
+msgid "Map Editor"
+msgstr "Map Editor"
+
+#: tfrmmapeditor.figurecombo.text
+msgctxt "tfrmmapeditor.figurecombo.text"
+msgid "Lápiz"
+msgstr "Pen (dots)"
+
+#: tfrmmapeditor.gbgamuts.caption
+msgctxt "tfrmmapeditor.gbgamuts.caption"
+msgid "Gamas de colores"
+msgstr "Color ranges"
+
+#: tfrmmapeditor.gbpalette.caption
+msgctxt "tfrmmapeditor.gbpalette.caption"
+msgid "Paleta de colores"
+msgstr "Color Palette"
+
+#: tfrmmapeditor.groupbox1.caption
+msgid "Contorno"
+msgstr "Contour"
+
+#: tfrmmapeditor.groupbox2.caption
+msgid "Relleno"
+msgstr "Fill"
+
+#: tfrmmapeditor.groupbox3.caption
+msgid "General"
+msgstr "General"
+
+#: tfrmmapeditor.label1.caption
+msgid "Zoom"
+msgstr "Zoom"
+
+#: tfrmmapeditor.label10.caption
+msgid "Modo:"
+msgstr "Mode:"
+
+#: tfrmmapeditor.label11.caption
+msgid "Color de fondo:"
+msgstr "Background color:"
+
+#: tfrmmapeditor.label12.caption
+msgid "Herramienta:"
+msgstr "Tool:"
+
+#: tfrmmapeditor.label13.caption
+msgid "Rellleno:"
+msgstr "Fill style:"
+
+#: tfrmmapeditor.label2.caption
+msgid "Contorno:"
+msgstr "Border style:"
+
+#: tfrmmapeditor.label3.caption
+msgctxt "tfrmmapeditor.label3.caption"
+msgid "Ancho:"
+msgstr "Width:"
+
+#: tfrmmapeditor.label4.caption
+msgctxt "tfrmmapeditor.label4.caption"
+msgid "Alfa:"
+msgstr "Alpha:"
+
+#: tfrmmapeditor.label5.caption
+msgctxt "tfrmmapeditor.label5.caption"
+msgid "Alfa:"
+msgstr "Alpha:"
+
+#: tfrmmapeditor.label6.caption
+msgctxt "tfrmmapeditor.label6.caption"
+msgid "Color:"
+msgstr "Color:"
+
+#: tfrmmapeditor.label7.caption
+msgctxt "tfrmmapeditor.label7.caption"
+msgid "Estilo:"
+msgstr "Style:"
+
+#: tfrmmapeditor.label8.caption
+msgctxt "tfrmmapeditor.label8.caption"
+msgid "Estilo:"
+msgstr "Style:"
+
+#: tfrmmapeditor.label9.caption
+msgctxt "tfrmmapeditor.label9.caption"
+msgid "Color:"
+msgstr "Color:"
+
+#: tfrmmapeditor.lblgamutreference.caption
+msgctxt "tfrmmapeditor.lblgamutreference.caption"
+msgid "16:"
+msgstr "16:"
+
+#: tfrmmapeditor.menuitem1.caption
+msgctxt "tfrmmapeditor.menuitem1.caption"
+msgid "Archivo"
+msgstr "File"
+
+#: tfrmmapeditor.menuitem10.caption
+msgctxt "tfrmmapeditor.menuitem10.caption"
+msgid "Editar"
+msgstr "Edit"
+
+#: tfrmmapeditor.menuitem12.caption
+msgid "&Triángulo"
+msgstr "&Triangle"
+
+#: tfrmmapeditor.menuitem13.caption
+msgid "&Rectángulo"
+msgstr "&Rectangle"
+
+#: tfrmmapeditor.menuitem14.caption
+msgid "&Copiar Color"
+msgstr "&Pick Color"
+
+#: tfrmmapeditor.menuitem15.caption
+msgctxt "tfrmmapeditor.menuitem15.caption"
+msgid "Ver"
+msgstr "View"
+
+#: tfrmmapeditor.menuitem16.caption
+msgid "Barra de propiedades"
+msgstr "Poperties panel"
+
+#: tfrmmapeditor.menuitem17.caption
+msgctxt "tfrmmapeditor.menuitem17.caption"
+msgid "Paleta de colores"
+msgstr "Color Palette"
+
+#: tfrmmapeditor.menuitem18.caption
+msgctxt "tfrmmapeditor.menuitem18.caption"
+msgid "Ayuda"
+msgstr "Help"
+
+#: tfrmmapeditor.menuitem19.caption
+msgctxt "tfrmmapeditor.menuitem19.caption"
+msgid "Gamas de colores"
+msgstr "Color ranges"
+
+#: tfrmmapeditor.menuitem20.caption
+msgid "Relle&nar"
+msgstr "&Fill"
+
+#: tfrmmapeditor.menuitem6.caption
+msgid "Herramienta"
+msgstr "Tool"
+
+#: tfrmmapeditor.menuitem7.caption
+msgctxt "tfrmmapeditor.menuitem7.caption"
+msgid "&Lápiz"
+msgstr "&Pen (dots)"
+
+#: tfrmmapeditor.menuitem8.caption
+msgctxt "tfrmmapeditor.menuitem8.caption"
+msgid "L&ínea"
+msgstr "&Line"
+
+#: tfrmmapeditor.menuitem9.caption
+msgid "&Elipse"
+msgstr "&Elipse"
+
+#: tfrmmessagebox.bbbutton0.caption
+msgid "&Si"
+msgstr "&Yes"
+
+#: tfrmmessagebox.bbbutton1.caption
+msgid "&No"
+msgstr "&No"
+
+#: tfrmmessagebox.bbbutton2.caption
+msgctxt "tfrmmessagebox.bbbutton2.caption"
+msgid "&Cancelar"
+msgstr "&Cancel"
+
+#: tfrmmessagebox.caption
+msgid "frmMessageBox"
+msgstr "Message Box"
+
+#: tfrmprgeditor.acompile.caption
+msgid "Compilar"
+msgstr "Compile"
+
+#: tfrmprgeditor.aexecute.caption
+msgctxt "tfrmprgeditor.aexecute.caption"
+msgid "Ejecutar"
+msgstr "Execute"
+
+#: tfrmprgeditor.aexit.caption
+msgctxt "tfrmprgeditor.aexit.caption"
+msgid "Salir"
+msgstr "Quit"
+
+#: tfrmprgeditor.aoptions.caption
+#, fuzzy
+#| msgid "Opciones"
+msgctxt "tfrmprgeditor.aoptions.caption"
+msgid "Opciones..."
+msgstr "Options"
+
+#: tfrmprgeditor.asave.caption
+msgid "&Guardar"
+msgstr "&Save"
+
+#: tfrmprgeditor.cbcharset.text
+msgctxt "tfrmprgeditor.cbcharset.text"
+msgid "cp850"
+msgstr ""
+
+#: tfrmprgeditor.cbconvert.text
+msgctxt "tfrmprgeditor.cbconvert.text"
+msgid "cp850"
+msgstr ""
+
+#: tfrmprgeditor.editcopy1.caption
+msgid "&Copiar"
+msgstr "&Copy"
+
+#: tfrmprgeditor.editcopy1.hint
+msgctxt "tfrmprgeditor.editcopy1.hint"
+msgid "Copiar"
+msgstr "Copy"
+
+#: tfrmprgeditor.editcut1.caption
+msgid "Cor&tar"
+msgstr "&Cut"
+
+#: tfrmprgeditor.editcut1.hint
+msgid "Cortar"
+msgstr "Cut"
+
+#: tfrmprgeditor.editdelete1.caption
+msgid "&Suprimir"
+msgstr "&Delete"
+
+#: tfrmprgeditor.editdelete1.hint
+msgid "Suprimir"
+msgstr "Delete"
+
+#: tfrmprgeditor.editpaste1.caption
+msgid "&Pegar"
+msgstr "&Paste"
+
+#: tfrmprgeditor.editpaste1.hint
+msgctxt "tfrmprgeditor.editpaste1.hint"
+msgid "Pegar"
+msgstr "Paste"
+
+#: tfrmprgeditor.editselectall1.caption
+msgid "Seleccion&ar todo"
+msgstr "&Select all"
+
+#: tfrmprgeditor.editselectall1.hint
+msgid "Seleccionar Todo"
+msgstr "Select all"
+
+#: tfrmprgeditor.editundo1.caption
+msgid "&Deshacer"
+msgstr "&Undo"
+
+#: tfrmprgeditor.editundo1.hint
+msgctxt "tfrmprgeditor.editundo1.hint"
+msgid "Deshacer"
+msgstr "Undo"
+
+#: tfrmprgeditor.fileopen1.caption
+msgid "&Abrir..."
+msgstr "&Open..."
+
+#: tfrmprgeditor.fileopen1.hint
+msgctxt "tfrmprgeditor.fileopen1.hint"
+msgid "Abrir"
+msgstr "Open"
+
+#: tfrmprgeditor.filesaveas1.caption
+msgid "Gu&ardar Como..."
+msgstr "&Save As..."
+
+#: tfrmprgeditor.filesaveas1.hint
+msgid "Guardar Como"
+msgstr "Save As..."
+
+#: tfrmprgeditor.lblcharset.caption
+msgid "Ver como"
+msgstr "View As"
+
+#: tfrmprgeditor.lblconvert.caption
+msgctxt "tfrmprgeditor.lblconvert.caption"
+msgid "Convertir a"
+msgstr "Convert To"
+
+#: tfrmprgeditor.menuitem1.caption
+msgctxt "tfrmprgeditor.menuitem1.caption"
+msgid "Archivo"
+msgstr "File"
+
+#: tfrmprgeditor.menuitem12.caption
+msgid "Buscar"
+msgstr "Search For"
+
+#: tfrmprgeditor.menuitem14.caption
+msgctxt "tfrmprgeditor.menuitem14.caption"
+msgid "Herramientas"
+msgstr "Tools"
+
+#: tfrmprgeditor.menuitem18.caption
+msgctxt "tfrmprgeditor.menuitem18.caption"
+msgid "Ejecutar"
+msgstr "Execute"
+
+#: tfrmprgeditor.menuitem5.caption
+msgctxt "tfrmprgeditor.menuitem5.caption"
+msgid "Editar"
+msgstr "Edit"
+
+#: tfrmprgeditor.searchfind1.caption
+msgid "&Buscar..."
+msgstr "&Find..."
+
+#: tfrmprgeditor.searchfindfirst1.caption
+msgid "Buscar Pr&imero"
+msgstr "&Find First"
+
+#: tfrmprgeditor.searchfindnext1.caption
+msgid "Buscar Siguiente"
+msgstr "Find Next"
+
+#: tfrmprgeditor.searchreplace1.caption
+msgid "&Reemplazar"
+msgstr "&Replace"
+
+#: tfrmprgoptions.btnaceptar.caption
+msgctxt "tfrmprgoptions.btnaceptar.caption"
+msgid "Aceptar"
+msgstr "Accept"
+
+#: tfrmprgoptions.btncancelar.caption
+msgctxt "tfrmprgoptions.btncancelar.caption"
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: tfrmprgoptions.caption
+msgctxt "tfrmprgoptions.caption"
+msgid "Opciones del editor de Archivos de programa"
+msgstr "Sourcecode Editor Options"
+
+#: tfrmprgoptions.lblcompilador.caption
+msgctxt "tfrmprgoptions.lblcompilador.caption"
+msgid "Compilador:"
+msgstr "Compiler:"
+
+#: tfrmprgoptions.lblinterprete.caption
+msgctxt "tfrmprgoptions.lblinterprete.caption"
+msgid "Intérprete:"
+msgstr "Interpreter:"
+
+#: tfrmselectcolor.baceptar.caption
+msgctxt "tfrmselectcolor.baceptar.caption"
+msgid "Aceptar"
+msgstr "Accept"
+
+#: tfrmselectcolor.bcancelar.caption
+msgctxt "tfrmselectcolor.bcancelar.caption"
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: tfrmselectcolor.caption
+msgid "Seleccionar Color"
+msgstr "Select color"
+
+#: tfrmselectcolor.gbpalette.caption
+msgctxt "tfrmselectcolor.gbpalette.caption"
+msgid "Paleta de colores"
+msgstr "Color Palette"
+
+#: tfrmsplash.caption
+msgid "frmSplash"
+msgstr ""
+
+#: tfrmsplash.lblrevision.caption
+msgid "r00"
+msgstr ""
+
+#: tfrmview.caption
+msgid "frmView"
+msgstr "View Frame"
+
+#: tfrmview.gbdetails.caption
+msgctxt "tfrmview.gbdetails.caption"
+msgid "Detalles de la imagen"
+msgstr "Image Details"
+
+#: tfrmview.lbalto.caption
+msgctxt "tfrmview.lbalto.caption"
+msgid "Alto"
+msgstr "Height"
+
+#: tfrmview.lbancho.caption
+msgctxt "tfrmview.lbancho.caption"
+msgid "Ancho"
+msgstr "Width"
+
+#: tfrmview.lbbpp.caption
+msgid "Bpp"
+msgstr "Bits per pixel"
+
+#: tfrmview.lbheight.caption
+msgid "Alto :"
+msgstr "Height:"
+
+#: tfrmview.lbpp.caption
+msgid "Bpp :"
+msgstr "Bpp :"
+
+#: tfrmview.lbwidth.caption
+msgid "Ancho :"
+msgstr "Width:"
+
+#: tfrmview.lzoom.caption
+msgid "Zoom :"
+msgstr "Zoom :"
+
+#: tfrmzipfenix.bbcompress.caption
+msgid "&Comprimir fichero"
+msgstr "&Compress file"
+
+#: tfrmzipfenix.caption
+msgid "Compresor de ficheros"
+msgstr "Compress files"
+
+#: tfrmzipfenix.lbzipfile.caption
+msgid "Comprimiendo fichero..."
+msgstr "Compressing file..."
+
+#: ufpg.strfnt
+msgid "FNT 8 bits (All)"
+msgstr "FNT 8 bits (All)"
+
+#: ufpg.strfnx1
+msgid "FNT 1 bit (Fenix/BennuGD)"
+msgstr "FNT 1 bit (Fenix/BennuGD)"
+
+#: ufpg.strfnx16
+msgid "FNT 16 bits (Fenix/BennuGD)"
+msgstr "FNT 16 bits (Fenix/BennuGD)"
+
+#: ufpg.strfnx24
+msgid "FNT 24 bits "
+msgstr "FNT 24 bits "
+
+#: ufpg.strfnx32
+msgid "FNT 32 bits (BennuGD)"
+msgstr "FNT 32 bits (BennuGD)"
+
+#: ufpg.strfnx8
+msgid "FNT 8 bits (Fenix/BennuGD)"
+msgstr "FNT 8 bits (Fenix/BennuGD)"
+
+#: ufpg.strfpg1
+msgid "FPG 1 bit (Fenix/BennuGD)"
+msgstr "FPG 1 bit (Fenix/BennuGD)"
+
+#: ufpg.strfpg16
+msgid "FPG 16 bits (Fenix/BennuGD)"
+msgstr "FPG 16 bits (Fenix/BennuGD)"
+
+#: ufpg.strfpg24
+msgid "FPG 24 bits "
+msgstr "FPG 24 bits "
+
+#: ufpg.strfpg32
+msgid "FPG 32 bits (BennuGD)"
+msgstr "FPG 32 bits (BennuGD)"
+
+#: ufpg.strfpg8
+msgid "FPG 8 bits (All)"
+msgstr "FPG 8 bits (All)"
+
+#: ufpg.strfpgcdiv16
+msgid "FPG 16 bits (CDIV)"
+msgstr "FPG 16 bits (CDIV)"
+
+#: ufpgconvert.lng_lostcolors
+msgid "perdidos"
+msgstr "lost"
+
+#: ufpgconvert.lng_savedcolors
+msgid "colores"
+msgstr "colors"
+
+#: ufrmmainfnt.lng_bold
+msgid "Negrita"
+msgstr "Bold"
+
+#: ufrmmainfnt.lng_labeled
+msgid "Tachado"
+msgstr "Strikethrough"
+
+#: ufrmmainfnt.lng_normal
+msgid "Normal"
+msgstr "Normal"
+
+#: ufrmmainfnt.lng_underline
+msgid "Subrayado"
+msgstr "Underlined"
+
+#: ufrmprgeditor.lng_prg_editor
+msgctxt "ufrmprgeditor.lng_prg_editor"
+msgid "Editor de Archivos de Programa"
+msgstr "Program editor"
+
+#: ulanguage.lng_abort
+msgid "Anular"
+msgstr "Abort"
+
+#: ulanguage.lng_about_as
+msgctxt "ulanguage.lng_about_as"
+msgid "Acerca de ..."
+msgstr "About ..."
+
+#: ulanguage.lng_accept
+msgctxt "ulanguage.lng_accept"
+msgid "Aceptar"
+msgstr "Accept"
+
+#: ulanguage.lng_adapt_images
+msgid "Adaptando imagen(es)"
+msgstr "Adapting image(s)"
+
+#: ulanguage.lng_add
+msgctxt "ulanguage.lng_add"
+msgid "Añadir"
+msgstr "Add"
+
+#: ulanguage.lng_add_control_point
+msgctxt "ulanguage.lng_add_control_point"
+msgid "Añadir punto de control"
+msgstr "Add control point"
+
+#: ulanguage.lng_add_images
+msgid "Añadir imagen(es)"
+msgstr "Add image(s)"
+
+#: ulanguage.lng_add_images_to_fpg
+msgid "Añadir imagen(es) al FPG"
+msgstr "Add image(s) to FPG"
+
+#: ulanguage.lng_add_point
+msgctxt "ulanguage.lng_add_point"
+msgid "Añadir punto"
+msgstr "Add point"
+
+#: ulanguage.lng_analising_images
+msgid "Analizando imagen(es)"
+msgstr "Analyzing image(s)"
+
+#: ulanguage.lng_animate
+msgctxt "ulanguage.lng_animate"
+msgid "Animar"
+msgstr "Animate"
+
+#: ulanguage.lng_animate_images
+msgid "Animar imágenes"
+msgstr "Animate images"
+
+#: ulanguage.lng_animate_selected_images
+msgid "Animar imágenes seleccionadas"
+msgstr "Animate selected images"
+
+#: ulanguage.lng_animation
+msgid "Animación"
+msgstr "Animation"
+
+#: ulanguage.lng_are_you_sure_delete_images
+msgid "¿Seguro que desea borrar esta(s) imagen(es)?"
+msgstr "Are you sure to erase the selected image(s)?"
+
+#: ulanguage.lng_autoload_images
+msgid "Auto-carga de imágenes"
+msgstr "Autoload images"
+
+#: ulanguage.lng_autoload_images_after_remove
+msgid "Auto-cargar al eliminar"
+msgstr "Autoload images after remove"
+
+#: ulanguage.lng_cancel
+msgctxt "ulanguage.lng_cancel"
+msgid "Cancelar"
+msgstr "Cancel"
+
+#: ulanguage.lng_change_code_of_image_insert
+msgid "Cambiar código de inserción de imagen"
+msgstr "Change code of image insert"
+
+#: ulanguage.lng_change_color_of_points
+msgctxt "ulanguage.lng_change_color_of_points"
+msgid "Cambiar color de puntos"
+msgstr "Change color of points"
+
+#: ulanguage.lng_change_insert_code
+msgid "Cambiar código de inserción"
+msgstr "Change insert code"
+
+#: ulanguage.lng_change_language_of_program
+msgid "Cambiar lenguaje del programa"
+msgstr "Change language of program"
+
+#: ulanguage.lng_characteristic
+msgctxt "ulanguage.lng_characteristic"
+msgid "Caracteristicas"
+msgstr "Characteristics"
+
+#: ulanguage.lng_clear_clipboard
+msgctxt "ulanguage.lng_clear_clipboard"
+msgid "Vaciar portapapeles"
+msgstr "Clear clipboard"
+
+#: ulanguage.lng_clipboard
+msgctxt "ulanguage.lng_clipboard"
+msgid "Portapapeles"
+msgstr "Clipboard"
+
+#: ulanguage.lng_close
+msgid "Cerrar"
+msgstr "Close"
+
+#: ulanguage.lng_code
+msgctxt "ulanguage.lng_code"
+msgid "Código"
+msgstr "Code"
+
+#: ulanguage.lng_code_of_image_insertion
+msgid "Código de inserción de imagen"
+msgstr "Image insertion code"
+
+#: ulanguage.lng_compressing_file
+msgid "Comprimiendo archivo..."
+msgstr "Compressing file..."
+
+#: ulanguage.lng_compressor
+msgid "Compresor"
+msgstr "Compressor"
+
+#: ulanguage.lng_compress_file
+msgid "Comprimir archivo"
+msgstr "Compress file"
+
+#: ulanguage.lng_control_points
+msgctxt "ulanguage.lng_control_points"
+msgid "Puntos de control"
+msgstr "Control points"
+
+#: ulanguage.lng_convert_to
+msgid "Convertir a ..."
+msgstr "Convert to ..."
+
+#: ulanguage.lng_copy_image
+msgid "Copiar imagen"
+msgstr "Copy image"
+
+#: ulanguage.lng_copy_image_to_clipboard
+msgid "Copiar imagen al portapapeles"
+msgstr "Copy image to clipboard."
+
+#: ulanguage.lng_correct_saving
+msgid "Archivo FPG guardado correctamente"
+msgstr "File FPG saved correctly"
+
+#: ulanguage.lng_creating_convert_table
+msgid "Creando tabla de conversión"
+msgstr "Creating conversion table"
+
+#: ulanguage.lng_credits
+msgctxt "ulanguage.lng_credits"
+msgid "Creditos"
+msgstr "Credits"
+
+#: ulanguage.lng_delete
+msgctxt "ulanguage.lng_delete"
+msgid "Eliminar"
+msgstr "Remove"
+
+#: ulanguage.lng_delete_all_points
+msgctxt "ulanguage.lng_delete_all_points"
+msgid "Borrar todos los puntos"
+msgstr "Delete all points"
+
+#: ulanguage.lng_delete_control_point
+msgctxt "ulanguage.lng_delete_control_point"
+msgid "Eliminar punto de control"
+msgstr "Delete control point"
+
+#: ulanguage.lng_delete_images
+msgid "Eliminar imagen(es)"
+msgstr "Delete image(s)"
+
+#: ulanguage.lng_delete_images_selecteds
+msgid "Eliminar imagen(es) seleccionada(s)"
+msgstr "Delete selected image(s)"
+
+#: ulanguage.lng_details
+msgctxt "ulanguage.lng_details"
+msgid "Detalles"
+msgstr "Details"
+
+#: ulanguage.lng_details_of_image
+msgctxt "ulanguage.lng_details_of_image"
+msgid "Detalles de la imagen"
+msgstr "Image details"
+
+#: ulanguage.lng_directory
+msgid "Directorio"
+msgstr "Directory"
+
+#: ulanguage.lng_disabled
+msgid "Inactivo"
+msgstr "Disabled"
+
+#: ulanguage.lng_edit
+msgctxt "ulanguage.lng_edit"
+msgid "Editar"
+msgstr "Edit"
+
+#: ulanguage.lng_edit_image
+msgid "Editar imagen"
+msgstr "Edit image"
+
+#: ulanguage.lng_edit_image_with_external_program
+msgid "Editar imagen con un editor externo"
+msgstr "Edit image with external program"
+
+#: ulanguage.lng_edit_properties_of_the_image
+msgctxt "ulanguage.lng_edit_properties_of_the_image"
+msgid "Editar propiedades de la imagen"
+msgstr "Edit properties of the image"
+
+#: ulanguage.lng_edit_selection
+msgctxt "ulanguage.lng_edit_selection"
+msgid "Editar selección"
+msgstr "Edit selection"
+
+#: ulanguage.lng_enabled
+msgid "Activo"
+msgstr "Enabled"
+
+#: ulanguage.lng_enviroment
+msgctxt "ulanguage.lng_enviroment"
+msgid "Entorno"
+msgstr "Environment"
+
+#: ulanguage.lng_error
+msgid "Error"
+msgstr "Error"
+
+#: ulanguage.lng_exists_file_overwrite
+msgid "El archivo existe, ¿Desea sobreescribirlo?"
+msgstr "The file exists, are you really sure to overwrite it?"
+
+#: ulanguage.lng_exist_code
+msgid "El código establecido ya existe."
+msgstr "This map code already exists"
+
+#: ulanguage.lng_exit
+msgctxt "ulanguage.lng_exit"
+msgid "Salir"
+msgstr "Quit"
+
+#: ulanguage.lng_export
+msgctxt "ulanguage.lng_export"
+msgid "Exportar"
+msgstr "Export"
+
+#: ulanguage.lng_export_images_from_fpg_to_disk
+msgid "Exportar imagen(es) del FPG a disco"
+msgstr "Export image(s) from FPG to disk"
+
+#: ulanguage.lng_export_resources_from_fpg
+msgid "Exportar recursos del FPG"
+msgstr "Export resources from FPG"
+
+#: ulanguage.lng_file_exist
+msgid "El archivo ya existe."
+msgstr "The file already exists."
+
+#: ulanguage.lng_file_language_incorrect
+msgid "Archivo de lenguaje incorrecto."
+msgstr "File of incorrect language."
+
+#: ulanguage.lng_file_name
+msgctxt "ulanguage.lng_file_name"
+msgid "Nombre de Archivo"
+msgstr "File Name"
+
+#: ulanguage.lng_file_notexist
+msgid "El archivo no existe."
+msgstr "The file does not exist."
+
+#: ulanguage.lng_flat_buttons
+msgid "Botones tipo \"FLAT\""
+msgstr "flat type buttons"
+
+#: ulanguage.lng_fpg
+#| msgid "FPG#9"
+msgctxt "ulanguage.lng_fpg"
+msgid "FPG"
+msgstr "FPG"
+
+#: ulanguage.lng_fpg_code
+msgid "Código de FPG:"
+msgstr "FPG Code:"
+
+#: ulanguage.lng_fpg_editor_cofiguration
+msgid "Configurar FPG Editor"
+msgstr "FPG Editor Cofiguration"
+
+#: ulanguage.lng_fpg_file_of_graphics
+msgid "FPG (Archivo de gráficos)"
+msgstr "FPG (File of graphics)"
+
+#: ulanguage.lng_fpg_select_only_one
+msgid "Debe seleccionar solamente una imagen."
+msgstr "You must select one image in the FPG."
+
+#: ulanguage.lng_height
+msgctxt "ulanguage.lng_height"
+msgid "Alto"
+msgstr "Height"
+
+#: ulanguage.lng_help
+#| msgid "Help"
+msgctxt "ulanguage.lng_help"
+msgid "Ayuda"
+msgstr "Help"
+
+#: ulanguage.lng_hide_show_directories
+msgctxt "ulanguage.lng_hide_show_directories"
+msgid "Ocultar/Mostrar directorios"
+msgstr "Hide / Show directories"
+
+#: ulanguage.lng_hide_show_up_panel
+msgid "Ocultar/Mostrar panel superior"
+msgstr "Hide/Show up panel"
+
+#: ulanguage.lng_ignore
+msgid "Ignorar"
+msgstr "Ignore"
+
+#: ulanguage.lng_images
+#| msgid "Images"
+msgctxt "ulanguage.lng_images"
+msgid "Imágenes"
+msgstr "Images"
+
+#: ulanguage.lng_images_moved_recicledbin
+msgid "Imagen(es) movida(s) a la papelera de reciclaje"
+msgstr "Image(s) moved to the recycled bin"
+
+#: ulanguage.lng_image_to
+msgid "Imagen(es) a"
+msgstr "Image(s) to"
+
+#: ulanguage.lng_image_to_clipboard
+msgid "Imagen copiada al portapapeles."
+msgstr "Image copied to the clipboard."
+
+#: ulanguage.lng_incorrect_sizeoficon
+msgid "El tamaño de los iconos de imagen es incorrecto."
+msgstr "The size of icons it's incorrect."
+
+#: ulanguage.lng_info
+msgid "Información"
+msgstr "Information"
+
+#: ulanguage.lng_insert_coord
+msgid "Debe introducir la coordenada"
+msgstr "You must specify a coordinate."
+
+#: ulanguage.lng_invert_selection
+msgctxt "ulanguage.lng_invert_selection"
+msgid "Invertir selección"
+msgstr "Invert selection"
+
+#: ulanguage.lng_language
+msgctxt "ulanguage.lng_language"
+msgid "Lenguaje"
+msgstr "Language"
+
+#: ulanguage.lng_list
+msgctxt "ulanguage.lng_list"
+msgid "Lista"
+msgstr "List"
+
+#: ulanguage.lng_loading_files
+msgid "Cargando imágenes"
+msgstr "Loading image(s)"
+
+#: ulanguage.lng_load_control_points
+msgctxt "ulanguage.lng_load_control_points"
+msgid "Cargar puntos de control"
+msgstr "Load control points"
+
+#: ulanguage.lng_load_palette
+msgid "Cargar Paleta"
+msgstr "Load Palette"
+
+#: ulanguage.lng_locate_program_for_edition_of_images
+msgid "Localizar programa para edición de imágenes"
+msgstr "Location of external image editor"
+
+#: ulanguage.lng_milliseconds
+msgctxt "ulanguage.lng_milliseconds"
+msgid "Milisegundos"
+msgstr "Milliseconds"
+
+#: ulanguage.lng_modify_control_point
+msgid "Modificar punto de control"
+msgstr "Modify control point"
+
+#: ulanguage.lng_name
+msgctxt "ulanguage.lng_name"
+msgid "Nombre"
+msgstr "Name"
+
+#: ulanguage.lng_new
+msgctxt "ulanguage.lng_new"
+msgid "Nuevo"
+msgstr "New"
+
+#: ulanguage.lng_no
+msgid "No"
+msgstr "No"
+
+#: ulanguage.lng_notfpg
+msgid "El fichero no es un archivo FPG o puede estar comprimido."
+msgstr "This is not an FPG file and can't be compressed."
+
+#: ulanguage.lng_notload_palette
+msgid "No ha cargado una paleta gráfica, ( en 8 bits debe seleccionar una paleta gráfica de 256 colores )"
+msgstr "The image palette has not been loaded, in 8 bit mode you must load a 256 color palette first."
+
+#: ulanguage.lng_not_clipboard_image
+msgid "No encuentra imagen en el portapapeles."
+msgstr "There is no image in the clipboard."
+
+#: ulanguage.lng_not_exist_fpg
+msgid "No existe FPG."
+msgstr "The FPG does not exist."
+
+#: ulanguage.lng_not_found_palette
+msgid "no contiene paleta de 256 colores."
+msgstr "does not contain a palette of 256 colors."
+
+#: ulanguage.lng_not_images_for_convert
+msgid "No hay imagen(es) para convertir."
+msgstr "No images for conversion have been specified."
+
+#: ulanguage.lng_not_open_file
+msgid "No se pudo abrir el archivo, compruebe que otro programa no este utilizando este archivo."
+msgstr "The file could not be opened, make sure that another program is not using the file at the same time."
+
+#: ulanguage.lng_number
+msgctxt "ulanguage.lng_number"
+msgid "Número"
+msgstr "Number"
+
+#: ulanguage.lng_only_one_image_edit
+msgid "Solo se puede editar una imagen."
+msgstr "One image can be edited."
+
+#: ulanguage.lng_open
+msgctxt "ulanguage.lng_open"
+msgid "Abrir"
+msgstr "Open"
+
+#: ulanguage.lng_palette_fpg_8_bits
+msgid "Paleta (FPG 8 bits)"
+msgstr "Palette (FPG 8 bits)"
+
+#: ulanguage.lng_palette_of_256_colors
+msgctxt "ulanguage.lng_palette_of_256_colors"
+msgid "Paleta de 256 colores"
+msgstr "256 color palette"
+
+#: ulanguage.lng_palette_precision
+msgid "La paleta generada tiene una precisión del"
+msgstr "The generated palette has a precision of"
+
+#: ulanguage.lng_palette_to
+msgid "Paleta a"
+msgstr "Palette to"
+
+#: ulanguage.lng_paste_image
+msgctxt "ulanguage.lng_paste_image"
+msgid "Pegar imagen"
+msgstr "Paste Picture"
+
+#: ulanguage.lng_pixels
+msgctxt "ulanguage.lng_pixels"
+msgid "Pixels"
+msgstr "Pixels"
+
+#: ulanguage.lng_procesing_images
+msgid "Procesando imagen(es)"
+msgstr "Processing image(s)"
+
+#: ulanguage.lng_properties_
+msgctxt "ulanguage.lng_properties_"
+msgid "Propiedades"
+msgstr "Properties"
+
+#: ulanguage.lng_publisher_of_images
+msgid "Editor de imágenes"
+msgstr "Image editor"
+
+#: ulanguage.lng_put_center
+msgid "Poner centro"
+msgstr "Put center"
+
+#: ulanguage.lng_put_points_in_image
+msgctxt "ulanguage.lng_put_points_in_image"
+msgid "Poner puntos en imagen"
+msgstr "Put points in image"
+
+#: ulanguage.lng_put_real_center
+msgctxt "ulanguage.lng_put_real_center"
+msgid "Poner centro real"
+msgstr "Put real center"
+
+#: ulanguage.lng_reload
+msgctxt "ulanguage.lng_reload"
+msgid "Recargar"
+msgstr "Reload"
+
+#: ulanguage.lng_reload_images_from_directory
+msgid "Recargar imágenes de un directorio"
+msgstr "Reload image(s) from directory"
+
+#: ulanguage.lng_reload_images_with_filter
+msgid "Recarga las imágenes con filtro"
+msgstr "Reload images with filter"
+
+#: ulanguage.lng_retry
+msgid "Reintentar"
+msgstr "Retry"
+
+#: ulanguage.lng_save
+msgctxt "ulanguage.lng_save"
+msgid "Guardar"
+msgstr "Save"
+
+#: ulanguage.lng_save_as
+msgid "Guardar como ..."
+msgstr "Save as ..."
+
+#: ulanguage.lng_save_changes
+msgid "¿Guardar los cambios?"
+msgstr "Save the changes?"
+
+#: ulanguage.lng_save_fpg
+msgid "Guardando FPG"
+msgstr "Saving FPG"
+
+#: ulanguage.lng_select_all
+msgctxt "ulanguage.lng_select_all"
+msgid "Seleccionar todo"
+msgstr "Select All"
+
+#: ulanguage.lng_select_more_images_for_animate
+msgid "Debe seleccionar varias imágenes para hacer la animación"
+msgstr "You must select a couple of images to make an animation."
+
+#: ulanguage.lng_set_insertion_code_in_fpg
+msgid "Establece el código de insercción en el FPG"
+msgstr "Set insertion code in FPG"
+
+#: ulanguage.lng_show_start_screen
+msgctxt "ulanguage.lng_show_start_screen"
+msgid "Mostrar pantalla de inicio"
+msgstr "Show home screen"
+
+#: ulanguage.lng_size_of_icons
+msgid "Tamaño de iconos"
+msgstr "Size of icons"
+
+#: ulanguage.lng_sure_delete_allpoints
+msgid "¿Seguro que desea borrar todos los puntos de control?"
+msgstr "Are you sure to erase all the control points?"
+
+#: ulanguage.lng_the_code_exists_or_not_its_valid
+msgid "El código ya existe o no es valido"
+msgstr "The code already exists or is not valid."
+
+#: ulanguage.lng_the_number_must_be_between_1_and_999_both_including
+msgid "El número debe estar entre 1 y 999 ambos incluidos"
+msgstr "The number must be between 1 and 999"
+
+#: ulanguage.lng_time_between_image
+msgid "Tiempo entre imagen"
+msgstr "Time between image"
+
+#: ulanguage.lng_tools
+#| msgid "Tools"
+msgctxt "ulanguage.lng_tools"
+msgid "Utilidades"
+msgstr "Tools"
+
+#: ulanguage.lng_type_of_fpg
+msgid "Tipo de FPG"
+msgstr "Type of FPG"
+
+#: ulanguage.lng_type_of_resource
+msgid "Tipo de recurso"
+msgstr "Type of resource"
+
+#: ulanguage.lng_unzip_fpg
+msgid "Descomprimiendo FPG"
+msgstr "Decompressing FPG"
+
+#: ulanguage.lng_update_images
+msgid "Actualizando imagen(es)"
+msgstr "Updating image(s)"
+
+#: ulanguage.lng_view
+msgctxt "ulanguage.lng_view"
+msgid "Ver"
+msgstr "See"
+
+#: ulanguage.lng_view_icons
+#| msgid "Images"
+msgctxt "ulanguage.lng_view_icons"
+msgid "Imágenes"
+msgstr "Images"
+
+#: ulanguage.lng_view_palette
+msgid "Visualizar Paleta"
+msgstr "View Palette"
+
+#: ulanguage.lng_view_points_in_image
+msgctxt "ulanguage.lng_view_points_in_image"
+msgid "Ver puntos de la imagen"
+msgstr "View points in image"
+
+#: ulanguage.lng_warning
+msgid "Aviso"
+msgstr "Warning"
+
+#: ulanguage.lng_width
+msgctxt "ulanguage.lng_width"
+msgid "Ancho"
+msgstr "Width"
+
+#: ulanguage.lng_will_be_select_image
+msgid "Debe tener la imagen a editar seleccionada."
+msgstr "You must select one image to edit."
+
+#: ulanguage.lng_wrong_fpg
+msgid "Archivo FPG incorrecto"
+msgstr "FPG file is incorrect"
+
+#: ulanguage.lng_yes
+msgid "Si"
+msgstr "Yes"
+
+#: ulngconverter.lng_correct
+msgid "Fichero creado correctamente"
+msgstr "File created successfully"
+
+#: ulngconverter.lng_file_no_exist
+msgid "No existe el fichero:"
+msgstr "No such file"
+
+#: ulngconverter.lng_file_reference_no_exist
+msgid "No existe el fichero de referencia:"
+msgstr "No such reference file:"
+
+#: ulngtranslator.lng_message_correct_join
+msgid "Archivo Juntado Correctamente"
+msgstr "File Joined Correctly"
+
+#: ulngtranslator.lng_message_help_translator
+msgid "Abre el archivo .po a traducir.\\nCopia el cotenido al portapapeles.\\nPégalo en tu traductor favorito y tradúcelo.\\nCopia el texto traducido y pégalo en el cuadro de abajo.\\nPulsa Unir.\\nEscribe las dos siglas del idioma destino.\\nFinalmente guarda el archivo."
+msgstr "Open the .po to translate.\\nCopy the content to the clipboard.\\nPaste it into your favorite translator and translate it.\\Copy and paste the translated text in the box below.\\nPress Join.\\nWrite two letters of the target language.\\n And finaly save the file. "
+
+#: ulngtranslator.lng_message_saved
+msgid "Archivo Guardado Correctamente"
+msgstr "File saved correctly"
+
+#: umainmap.lng_copycolor
+msgid "Copiar Color"
+msgstr "Copy Color"
+
+#: umainmap.lng_ellipse
+msgctxt "umainmap.lng_ellipse"
+msgid "Elipse"
+msgstr "Ellipse"
+
+#: umainmap.lng_fill
+msgid "Rellenar"
+msgstr "Fill"
+
+#: umainmap.lng_line
+msgid "Linea"
+msgstr "Line"
+
+#: umainmap.lng_mapedit_help
+msgid "Con control pulsado y haciendo clic, puedes cambiar los colores de la paleta."
+msgstr "Hold down the button, and you can change the colors of the palette."
+
+#: umainmap.lng_pen
+msgctxt "umainmap.lng_pen"
+msgid "Lápiz"
+msgstr "Pen (dots)"
+
+#: umainmap.lng_rectangle
+msgid "Rectangulo"
+msgstr "Rectangle"
+
+#: umainmap.lng_triangle
+msgid "Triangulo"
+msgstr "Triangle"
+
