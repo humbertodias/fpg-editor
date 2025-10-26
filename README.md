@@ -38,6 +38,7 @@ Run the application on Linux:
 ```bash
 make run/lin
 ```
+<img width="538" height="372" alt="Screenshot From 2025-10-26 16-55-37" src="https://github.com/user-attachments/assets/4d9c36d4-b7ac-4b4d-9964-ed372f6929bd" />
 
 On macOS:
 
