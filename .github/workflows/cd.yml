@@ -76,7 +76,7 @@ jobs:
 
       - name: Install Lazarus
 #        uses: ollydev/setup-lazarus@v2
-        uses: humbertodias/lazarus@v4
+        uses: humbertodias/lazarus@v4.0
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
