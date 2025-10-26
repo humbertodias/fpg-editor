@@ -9,26 +9,8 @@ It supports Linux, macOS, and Windows.
 
 [Download the latest release](https://github.com/humbertodias/fpg-editor/releases).
 
-## Build
 
-To build the application for Linux:
-
-```bash
-make build/lin
-````
-
-For macOS:
-
-```bash
-make build/mac
-```
-
-For Windows:
-
-```bash
-make build/win
-```
-
+Forked from [fpg-editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for 64-bit compatibility.
 
 
 ## Run
@@ -53,29 +35,6 @@ On Windows:
 ```bash
 make run/win
 ```
-
-
-## Package / Release
-
-Create a distributable archive for Linux:
-
-```bash
-make release/lin
-```
-
-For macOS:
-
-```bash
-make release/mac
-```
-
-For Windows:
-
-```bash
-make release/win
-```
-
-The generated `.tar.gz` files will contain the application binary and the `languages/` folder.
 
 
 ## Notes
