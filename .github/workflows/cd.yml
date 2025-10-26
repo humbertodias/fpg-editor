@@ -75,7 +75,7 @@ jobs:
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
-        uses: ollydev/setup-lazarus@v3
+        uses: ollydev/setup-lazarus@v2
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
