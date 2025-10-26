@@ -79,6 +79,7 @@ jobs:
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
+          use-cache: true
 
       - name: Build
 #        run: lazbuild --cpu=${{ matrix.config.cpu }} --widgetset=${{ matrix.config.widgetset }} pfpgeditor.lpi
