@@ -52,19 +52,19 @@ jobs:
             widgetset: qt5
             cpu: x86_64
 #            install_dependencies: sudo apt install -y qt6-base-dev qt6-base-dev-tools
-            install_dependencies: "sudo apt install qt5-default qtbase5-dev"
+            install_dependencies: "sudo apt install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools"
             build_executable: fpg-editor
             build_command: make build/lin release/lin
             
-        #   - os: macos-latest
-        #     name: MacOS 64
-        #     laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-        #     fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-        #     widgetset: cocoa
-        #     cpu: x86_64
-        #     install_dependencies: ""
-        #     build_executable: fpg-editor
-        #     build_command: make build/mac
+          - os: macos-latest
+            name: MacOS 64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
+            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+            widgetset: cocoa
+            cpu: x86_64
+            install_dependencies: ""
+            build_executable: fpg-editor
+            build_command: make build/mac release/mac
   
 
     steps:
