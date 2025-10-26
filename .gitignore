@@ -66,3 +66,8 @@ __recovery/
 
 # --- Free Pascal temporary symbol order file ---
 symbol_order.fpc
+
+# Free Pascal / Lazarus temporary linker scripts
+ppas.sh
+ppaslink.sh
+ppas.bat
