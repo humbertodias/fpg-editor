@@ -5,7 +5,7 @@
 # FPG Editor
 
 **FPG Editor** is a cross-platform desktop application for editing **FPG**, **FNT** and **PRG** files used in [BennuGD](https://www.bennugd.org/), [Fenix](https://fenix.divsite.net) and related game engines.
-It runs on **Linux**, **macOS**, and **Windows**, built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads).
+It runs on **Linux**, **macOS**, and **Windows** built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads).
 
 Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for **modern 64-bit systems**.
 
@@ -47,7 +47,7 @@ make run/mac
 make run/win
 ```
 
-### File Types
+### Supported Files
 
 #### 1. FPG – Fenix Picture Group
 <details>
@@ -78,7 +78,7 @@ make run/win
 #### 4. Others
 
 <details>
-  <summary>Type with description</summary>
+  <summary>File type with description</summary>
 
 | Extension | Meaning             | Function                                            |
 | --------- | ------------------- | --------------------------------------------------- |
