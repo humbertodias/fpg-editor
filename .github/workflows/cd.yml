@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - '*' 
-  #workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -51,7 +51,7 @@ jobs:
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
-        uses: humbertodias/lazarus@v4.0
+        uses: ollydev/setup-lazarus@v3.6
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
