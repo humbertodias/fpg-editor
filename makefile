@@ -2,33 +2,32 @@
 LPI = pfpgeditor.lpi
 APP = fpg-editor
 LANG_DIR = languages
+ARCH = x86_64
 
 # Build commands
-BUILD_CMD = lazbuild --cpu=$(CPU) --widgetset=$(WIDGET) --verbose $(LPI)
+BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --verbose $(LPI)
 
-# Platform-specific settings
-LINUX = cpu=x86_64 WIDGET=gtk2
-MACOS = cpu=x86_64 WIDGET=cocoa
-WINDOWS = cpu=x86_64 WIDGET=win32
+# Platform-specific widgets
+LINUX_WIDGET = gtk2
+MACOS_WIDGET  = cocoa
+WINDOWS_WIDGET = win32
 
-# Generic build, run, package targets
 .PHONY: all clean build run package
 
-build/lin: CPU=x86_64
-build/lin: WIDGET=gtk2
+# Build targets
+build/lin: WIDGET=$(LINUX_WIDGET)
 build/lin:
 	$(BUILD_CMD)
 
-build/mac: CPU=x86_64
-build/mac: WIDGET=cocoa
+build/mac: WIDGET=$(MACOS_WIDGET)
 build/mac:
 	$(BUILD_CMD)
 
-build/win: CPU=x86_64
-build/win: WIDGET=win32
+build/win: WIDGET=$(WINDOWS_WIDGET)
 build/win:
 	$(BUILD_CMD)
 
+# Run targets
 run/lin:
 	@if [ ! -f $(APP) ]; then $(MAKE) build/lin; fi
 	GTK_PATH="" ./$(APP)
@@ -41,14 +40,15 @@ run/win:
 	@if [ ! -f $(APP).exe ]; then $(MAKE) build/win; fi
 	./$(APP).exe
 
+# Package targets
 package/lin: build/lin
-	tar cvfz $(APP)-lin.tar.gz $(APP) $(LANG_DIR)
+	tar cvfz $(APP)-lin-$(ARCH).tar.gz $(APP) $(LANG_DIR)
 
 package/mac: build/mac
-	tar cvfz $(APP)-mac.tar.gz $(APP) $(LANG_DIR)
+	tar cvfz $(APP)-mac-$(ARCH).tar.gz $(APP) $(LANG_DIR)
 
 package/win: build/win
-	tar cvfz $(APP)-win.tar.gz $(APP).exe $(LANG_DIR)
+	tar cvfz $(APP)-win-$(ARCH).tar.gz $(APP).exe $(LANG_DIR)
 
 # Clean
 clean:
