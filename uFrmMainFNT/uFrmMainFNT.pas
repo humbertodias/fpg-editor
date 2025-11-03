@@ -2669,8 +2669,8 @@ end;
 
 procedure TfrmMainFNT.EnableButtons;
 begin
-   sbShowFNT.Enabled:=((Byte(fnt_container.header.file_type[1])+Byte(fnt_container.header.file_type[2])
-   +Byte(fnt_container.header.file_type[3])) <> 0);
+   sbShowFNT.Enabled:=((Byte(fnt_container.header.file_type[0])+Byte(fnt_container.header.file_type[1])
+   +Byte(fnt_container.header.file_type[2])) <> 0);
 end;
 
 end.
