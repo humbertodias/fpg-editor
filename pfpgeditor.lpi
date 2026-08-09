@@ -2,7 +2,7 @@
 <CONFIG>
   <ProjectOptions>
     <Version Value="12"/>
-    <PathDelim Value="\"/>
+    <PathDelim Value="/"/>
     <General>
       <Flags>
         <CompatibilityMode Value="True"/>
@@ -28,14 +28,14 @@
         </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
-          <PathDelim Value="\"/>
+          <PathDelim Value="/"/>
           <Target>
             <Filename Value="fpg-editor"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uLanguage;uUtils;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;umainmap"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
             <SmallerCode Value="True"/>
@@ -55,14 +55,14 @@
         </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
-          <PathDelim Value="\"/>
+          <PathDelim Value="/"/>
           <Target>
             <Filename Value="fpg-editor"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
             <Optimizations>
@@ -88,14 +88,14 @@
         </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
-          <PathDelim Value="\"/>
+          <PathDelim Value="/"/>
           <Target>
             <Filename Value="fpg-editor"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
             <SmallerCode Value="True"/>
@@ -122,7 +122,7 @@
     </Target>
     <SearchPaths>
         <IncludeFiles Value="$(ProjOutDir)"/>
-        <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
+        <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
         <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
@@ -139,13 +139,13 @@
         </MacroValues>
         <CompilerOptions>
           <Version Value="11"/>
-          <PathDelim Value="\"/>
+          <PathDelim Value="/"/>
           <Target>
             <Filename Value="fpg-editor"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
+            <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
@@ -174,13 +174,13 @@
     </PublishOptions>
     <RunParams>
       <local>
-        <CommandLineParams Value="BennuPRGs\FNXsTester.prg"/>
+        <CommandLineParams Value="samples/BennuPRGs/FNXsTester.prg"/>
       </local>
       <FormatVersion Value="2"/>
       <Modes Count="1">
         <Mode0 Name="default">
           <local>
-            <CommandLineParams Value="BennuPRGs\FNXsTester.prg"/>
+            <CommandLineParams Value="samples/BennuPRGs/FNXsTester.prg"/>
           </local>
         </Mode0>
       </Modes>
@@ -205,29 +205,29 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="ufpgeditor\ufrmfpgeditor.pas"/>
+        <Filename Value="src/editors/fpg/ufpgeditor/ufrmfpgeditor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmFPGEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit1>
       <Unit2>
-        <Filename Value="uFrmView\ufrmView.pas"/>
+        <Filename Value="src/editors/fpg/uFrmView/ufrmView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit2>
       <Unit3>
-        <Filename Value="uFPG\uFPG.pas"/>
+        <Filename Value="src/formats/uFPG/uFPG.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="uPCX\uPCX.pas"/>
+        <Filename Value="src/formats/uPCX/uPCX.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="uFrmPalette\ufrmPalette.pas"/>
+        <Filename Value="src/ui/uFrmPalette/ufrmPalette.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmPalette"/>
         <HasResources Value="True"/>
@@ -235,222 +235,222 @@
         <UnitName Value="uFrmPalette"/>
       </Unit5>
       <Unit6>
-        <Filename Value="uBMP\uBMP.pas"/>
+        <Filename Value="src/formats/uBMP/uBMP.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="uFrmAnimate\ufrmAnimate.pas"/>
+        <Filename Value="src/editors/fpg/uFrmAnimate/ufrmAnimate.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmAnimate"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit7>
       <Unit8>
-        <Filename Value="uIniFile\uinifile.pas"/>
+        <Filename Value="src/core/uIniFile/uinifile.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="uFPGConvert\uFPGConvert.pas"/>
+        <Filename Value="src/formats/uFPGConvert/uFPGConvert.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="uSort\uSort.pas"/>
+        <Filename Value="src/core/uSort/uSort.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit10>
       <Unit11>
-        <Filename Value="uPAL\uPAL.pas"/>
+        <Filename Value="src/formats/uPAL/uPAL.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
       <Unit12>
-        <Filename Value="uTools\uTools.pas"/>
+        <Filename Value="src/core/uTools/uTools.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="uFrmExport\uFrmExport.pas"/>
+        <Filename Value="src/editors/fpg/uFrmExport/uFrmExport.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmExport"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit13>
       <Unit14>
-        <Filename Value="uLoadImage\uLoadImage.pas"/>
+        <Filename Value="src/formats/uLoadImage/uLoadImage.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="uFrmExport\uExportToFiles\uExportToFiles.pas"/>
+        <Filename Value="src/editors/fpg/uFrmExport/uExportToFiles/uExportToFiles.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="uColor16bits\uColor16bits.pas"/>
+        <Filename Value="src/core/uColor16bits/uColor16bits.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="uMessages\uFrmInputBox\uFrmInputBox.pas"/>
+        <Filename Value="src/ui/uMessages/uFrmInputBox/uFrmInputBox.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmInputBox"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit17>
       <Unit18>
-        <Filename Value="uMessages\uFrmMessageBox\uFrmMessageBox.pas"/>
+        <Filename Value="src/ui/uMessages/uFrmMessageBox/uFrmMessageBox.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMessageBox"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit18>
       <Unit19>
-        <Filename Value="uFrmConfig\ufrmConfig.pas"/>
+        <Filename Value="src/ui/uFrmConfig/ufrmConfig.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmConfig"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit19>
       <Unit20>
-        <Filename Value="uFPGFrmImages\ufrmFPGImages.pas"/>
+        <Filename Value="src/editors/fpg/uFPGFrmImages/ufrmFPGImages.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmFPGImages"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit20>
       <Unit21>
-        <Filename Value="uFPGFrmNew\ufrmNewFPG.pas"/>
+        <Filename Value="src/editors/fpg/uFPGFrmNew/ufrmNewFPG.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmNewFPG"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit21>
       <Unit22>
-        <Filename Value="uFrmSplash\uFrmSplahs.pas"/>
+        <Filename Value="src/app/uFrmSplash/uFrmSplahs.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmSplash"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit22>
       <Unit23>
-        <Filename Value="uPAL\ucopypalette.pas"/>
+        <Filename Value="src/formats/uPAL/ucopypalette.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit23>
       <Unit24>
-        <Filename Value="uFrmZipFenix\ufrmZipFenix.pas"/>
+        <Filename Value="src/ui/uFrmZipFenix/ufrmZipFenix.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmZipFenix"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit24>
       <Unit25>
-        <Filename Value="uAAtext\uAAText.pas"/>
+        <Filename Value="src/core/uAAtext/uAAText.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit25>
       <Unit26>
-        <Filename Value="uColorTable\uColorTable.pas"/>
+        <Filename Value="src/core/uColorTable/uColorTable.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit26>
       <Unit27>
-        <Filename Value="uFNT\uFNT.pas"/>
+        <Filename Value="src/editors/fnt/uFNT/uFNT.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit27>
       <Unit28>
-        <Filename Value="uFrmBpp\uFrmBpp.pas"/>
+        <Filename Value="src/editors/fnt/uFrmBpp/uFrmBpp.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="fBPP"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit28>
       <Unit29>
-        <Filename Value="uFrmCFG\uFrmCFG.pas"/>
+        <Filename Value="src/ui/uFrmCFG/uFrmCFG.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmCFG"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit29>
       <Unit30>
-        <Filename Value="uFrmMainFNT\uFrmMainFNT.pas"/>
+        <Filename Value="src/editors/fnt/uFrmMainFNT/uFrmMainFNT.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMainFNT"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit30>
       <Unit31>
-        <Filename Value="uFrmAbout\uFrmAbout.pas"/>
+        <Filename Value="src/ui/uFrmAbout/uFrmAbout.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit31>
       <Unit32>
-        <Filename Value="uFrmFNTView\uFrmFNTView.pas"/>
+        <Filename Value="src/editors/fnt/uFrmFNTView/uFrmFNTView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmFNTView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit32>
       <Unit33>
-        <Filename Value="uFPGListView\ufpglistview.pas"/>
+        <Filename Value="src/editors/fpg/uFPGListView/ufpglistview.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit33>
       <Unit34>
-        <Filename Value="uMap\umapgraphic.pas"/>
+        <Filename Value="src/editors/map/uMap/umapgraphic.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit34>
       <Unit35>
-        <Filename Value="uLanguage\uLanguage.pas"/>
+        <Filename Value="src/core/uLanguage/uLanguage.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit35>
       <Unit36>
-        <Filename Value="uLanguage\ulngconverter.pas"/>
+        <Filename Value="src/core/uLanguage/ulngconverter.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmLanguageConverter"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit36>
       <Unit37>
-        <Filename Value="uLanguage\ulngtranslator.pas"/>
+        <Filename Value="src/core/uLanguage/ulngtranslator.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmLangTranslator"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit37>
       <Unit38>
-        <Filename Value="umainmap\umainmap.pas"/>
+        <Filename Value="src/editors/map/umainmap/umainmap.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMapEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit38>
       <Unit39>
-        <Filename Value="umainmap\uselectcolor.pas"/>
+        <Filename Value="src/editors/map/umainmap/uselectcolor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmSelectColor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit39>
       <Unit40>
-        <Filename Value="uFPG\ufpgcompare.pas"/>
+        <Filename Value="src/formats/uFPG/ufpgcompare.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmFPGCompare"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit40>
       <Unit41>
-        <Filename Value="uprgeditor\ufrmprgeditor.pas"/>
+        <Filename Value="src/editors/prg/uprgeditor/ufrmprgeditor.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmPRGEditor"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit41>
       <Unit42>
-        <Filename Value="uprgeditor\ufrmprgoptions.pas"/>
+        <Filename Value="src/editors/prg/uprgeditor/ufrmprgoptions.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmprgoptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit42>
       <Unit43>
-        <Filename Value="uprgeditor\usynprghl.pas"/>
+        <Filename Value="src/editors/prg/uprgeditor/usynprghl.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit43>
       <Unit44>
-        <Filename Value="uFrmMain\uFrmMain.pas"/>
+        <Filename Value="src/app/uFrmMain/uFrmMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
@@ -460,14 +460,14 @@
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
-    <PathDelim Value="\"/>
+    <PathDelim Value="/"/>
     <Target>
       <Filename Value="fpg-editor"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="uFrmMain;uBMP;uMap;uTools;uSort;uPCX;uFrmView;uLoadImage;uPAL;uColor16bits;uFPGConvert;uFPGFrmImages;uFPGFrmNew;uFrmAnimate;uFrmConfig;uFrmExport;uFrmPalette;uFrmSplash;uIniFile;uMessages\uFrmInputBox;uMessages\uFrmMessageBox;uFrmExport\uExportToFiles;uAAtext;uColorTable;uFNT;uFrmBpp;uFrmCFG;uFrmMainFNT;uFrmAbout;uFrmFNTView;uFPG;uFPGListView;uFrmZipFenix;uLanguage;uUtils;umainmap;uprgeditor;ufpgeditor"/>
-      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="src/app/uFrmMain;src/app/uFrmSplash;src/core/uAAtext;src/core/uColor16bits;src/core/uColorTable;src/core/uIniFile;src/core/uLanguage;src/core/uSort;src/core/uTools;src/core/uUtils;src/formats/uBMP;src/formats/uFPG;src/formats/uFPGConvert;src/formats/uLoadImage;src/formats/uPAL;src/formats/uPCX;src/ui/uFrmAbout;src/ui/uFrmCFG;src/ui/uFrmConfig;src/ui/uFrmPalette;src/ui/uFrmZipFenix;src/ui/uMessages/uFrmInputBox;src/ui/uMessages/uFrmMessageBox;src/editors/fpg/uFPGFrmImages;src/editors/fpg/uFPGFrmNew;src/editors/fpg/uFPGListView;src/editors/fpg/uFrmAnimate;src/editors/fpg/uFrmExport;src/editors/fpg/uFrmExport/uExportToFiles;src/editors/fpg/uFrmView;src/editors/fpg/ufpgeditor;src/editors/fnt/uFNT;src/editors/fnt/uFrmBpp;src/editors/fnt/uFrmFNTView;src/editors/fnt/uFrmMainFNT;src/editors/prg/uprgeditor;src/editors/map/uMap;src/editors/map/umainmap"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <CodeGeneration>
       <Optimizations>
