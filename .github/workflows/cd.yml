@@ -23,8 +23,7 @@ jobs:
           - os: windows-latest
             name: Windows 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
-            install_dependencies: ""
-            build_executable: fpg-editor.exe
+            qt_arch: win64_mingw
             build_command: make package/win
 
           - os: ubuntu-latest
@@ -33,28 +32,97 @@ jobs:
             fpc-url: |
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
-            install_dependencies: ""
             build_command: make package/lin
 
           - os: macos-latest
             name: MacOS 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
             fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-            install_dependencies: ""
             build_command: make package/mac
 
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install dependencies
-        if: ${{ matrix.config.install_dependencies != '' }}
-        run: ${{ matrix.config.install_dependencies }}
+      - name: Install Qt6Pas (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y wget qt6-base-dev
+          LIBQT6PAS_VERSION="6.2.10"
+          BASE="https://github.com/davidbannon/libqt6pas/releases/download/v${LIBQT6PAS_VERSION}"
+          wget -q "${BASE}/libqt6pas6_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6.deb
+          wget -q "${BASE}/libqt6pas6-dev_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6-dev.deb
+          sudo apt-get install -y /tmp/libqt6pas6.deb /tmp/libqt6pas6-dev.deb
+
+      - name: Install Qt6 (Windows)
+        if: runner.os == 'Windows'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.5.3'
+          host: windows
+          target: desktop
+          arch: ${{ matrix.config.qt_arch }}
+          cache: true
+
+      - name: Install Qt6 (macOS)
+        if: runner.os == 'macOS'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.5.3'
+          host: mac
+          target: desktop
+          cache: true
 
       - name: Install Lazarus
         uses: ollydev/setup-lazarus@v3.6
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
+
+      - name: Build Qt6Pas bindings (Windows/macOS)
+        if: runner.os != 'Linux'
+        run: |
+          set -euo pipefail
+          set -x
+          LAZBUILD="$(command -v lazbuild)"
+          LAZ_DIR="$(dirname "$(dirname "$LAZBUILD")")"
+          BINDINGS=""
+          for candidate in \
+            "$LAZ_DIR/lcl/interfaces/qt6/cbindings" \
+            "/c/lazarus/lcl/interfaces/qt6/cbindings" \
+            "$HOME/lazarus/lcl/interfaces/qt6/cbindings" \
+            "/Applications/Lazarus/lcl/interfaces/qt6/cbindings" \
+            "/usr/local/share/lazarus/lcl/interfaces/qt6/cbindings"
+          do
+            if [ -d "$candidate" ]; then
+              BINDINGS="$candidate"
+              break
+            fi
+          done
+          if [ -z "$BINDINGS" ]; then
+            echo "Qt6Pas cbindings not found under Lazarus install"
+            find "$(dirname "$LAZBUILD")" -type d -name cbindings 2>/dev/null || true
+            exit 1
+          fi
+          echo "Building Qt6Pas in $BINDINGS"
+          pushd "$BINDINGS"
+          qmake6 Qt6Pas.pro 2>/dev/null || qmake Qt6Pas.pro
+          if command -v mingw32-make >/dev/null 2>&1; then
+            mingw32-make -j2
+          else
+            make -j2
+          fi
+          mkdir -p "$HOME/lib"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            find . -name 'Qt6Pas*.dll' -exec cp -a {} "$HOME/lib/" \;
+            echo "$HOME/lib" >> "$GITHUB_PATH"
+          else
+            find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \;
+            echo "$HOME/lib" >> "$GITHUB_PATH"
+            echo "DYLD_LIBRARY_PATH=$HOME/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          fi
+          popd
 
       - name: Build
         run: |

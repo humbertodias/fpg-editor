@@ -5,7 +5,7 @@
 # FPG Editor
 
 **FPG Editor** is a cross-platform desktop application for editing **FPG**, **FNT** and **PRG** files used in [BennuGD](https://www.bennugd.org/), [Fenix](https://fenix.divsite.net) and related game engines.
-It runs on **Linux**, **macOS**, and **Windows** built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads).
+It runs on **Linux**, **macOS**, and **Windows** built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads) using the **Qt6** widgetset on all platforms (`libqt6pas` / Qt6Pas required).
 
 Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for **modern 64-bit systems**.
 
@@ -15,7 +15,7 @@ Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-edit
 ## Run Instructions
 
 <details>
-  <summary>gtk2</summary>
+  <summary>qt6 (Linux)</summary>
   <p align="center">
     <img width="538" height="372" alt="Screenshot Linux" src="https://github.com/user-attachments/assets/4d9c36d4-b7ac-4b4d-9964-ed372f6929bd" />
   </p>
@@ -26,7 +26,7 @@ make run/lin
 ```
 
 <details>
-  <summary>cocoa</summary>
+  <summary>qt6 (macOS)</summary>
   <p align="center">
     <img width="528" height="325" alt="Screenshot macOS" src="https://github.com/user-attachments/assets/46c77c75-335a-4321-b7d7-f172ca7c3e97" />
   </p>
@@ -37,7 +37,7 @@ make run/mac
 ```
 
 <details>
-  <summary>win32</summary>
+  <summary>qt6 (Windows)</summary>
   <p align="center">
     <img width="418" height="237" alt="Screenshot Windows" src="https://github.com/user-attachments/assets/7f95de45-0495-4a1a-b434-5bd5abab590e" />
   </p>
