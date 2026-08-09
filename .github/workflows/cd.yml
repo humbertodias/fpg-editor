@@ -86,10 +86,12 @@ jobs:
           set -euo pipefail
           set -x
           LAZBUILD="$(command -v lazbuild)"
-          LAZ_DIR="$(dirname "$(dirname "$LAZBUILD")")"
+          # lazbuild lives inside the Lazarus root (e.g. D:/a/_temp/lazarus/lazbuild)
+          LAZ_DIR="$(cd "$(dirname "$LAZBUILD")" && pwd -P)"
           BINDINGS=""
           for candidate in \
             "$LAZ_DIR/lcl/interfaces/qt6/cbindings" \
+            "$(dirname "$LAZ_DIR")/lazarus/lcl/interfaces/qt6/cbindings" \
             "/c/lazarus/lcl/interfaces/qt6/cbindings" \
             "$HOME/lazarus/lcl/interfaces/qt6/cbindings" \
             "/Applications/Lazarus/lcl/interfaces/qt6/cbindings" \
@@ -101,8 +103,8 @@ jobs:
             fi
           done
           if [ -z "$BINDINGS" ]; then
-            echo "Qt6Pas cbindings not found under Lazarus install"
-            find "$(dirname "$LAZBUILD")" -type d -name cbindings 2>/dev/null || true
+            echo "Qt6Pas cbindings not found under Lazarus install (LAZ_DIR=$LAZ_DIR)"
+            find "$LAZ_DIR" -type d -name cbindings 2>/dev/null || true
             exit 1
           fi
           echo "Building Qt6Pas in $BINDINGS"
