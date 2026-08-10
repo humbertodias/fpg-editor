@@ -25,9 +25,12 @@ jobs:
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.8/lazarus-4.8-fpc-3.2.2-win64.exe
             install_dependencies: |
               set -euo pipefail
-              python -m pip install aqtinstall
-              # Qt 6.6 + matching MinGW (needed to build Qt6Pas6.dll and for windeployqt)
-              python -m aqt install-qt windows desktop 6.6.3 win64_mingw -O "$HOME/Qt"
+              # Pin py7zr==1.1.0: newer py7zr raises Bad7zFile on Windows GHA
+              # (https://github.com/miurahr/aqtinstall/issues/995)
+              python -m pip install aqtinstall 'py7zr==1.1.0'
+              # Qt 6.6 MinGW + tools (qmake, windeployqt, matching mingw)
+              python -m aqt install-qt windows desktop 6.6.3 win64_mingw -O "$HOME/Qt" \
+                --archives qtbase qttools
               python -m aqt install-tool windows desktop tools_mingw1310 -O "$HOME/Qt" || \
                 python -m aqt install-tool windows desktop tools_mingw1120 -O "$HOME/Qt" || \
                 python -m aqt install-tool windows desktop tools_mingw90 -O "$HOME/Qt"
@@ -41,6 +44,8 @@ jobs:
               if [ -n "$MINGW" ]; then
                 echo "$MINGW/bin" >> "$GITHUB_PATH"
               fi
+              command -v qmake || command -v qmake6
+              command -v mingw32-make || command -v mingw64-make || true
             build_command: |
               set -euo pipefail
               # Locate Lazarus install (setup-lazarus / official installer)
