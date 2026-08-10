@@ -68,15 +68,40 @@ jobs:
               xattr -cr "$FPC_DMG"
               file "$LAZ_ZIP" | grep -qi 'Zip archive'
               unzip -t "$LAZ_ZIP" >/dev/null
-              # Confirm dmg is 3.2.4rc1a (3.2.2 .mpkg is rejected on macOS 26)
+
+              # Install FPC (3.2.2 .mpkg is rejected on macOS 26; use 3.2.4rc1a)
               hdiutil attach "$FPC_DMG" -nobrowse -readonly -mountpoint /tmp/fpc-dmg
-              find /tmp/fpc-dmg -maxdepth 3 \( -name '*.pkg' -o -name '*.mpkg' \) -print
               if find /tmp/fpc-dmg -maxdepth 3 -name '*3.2.2*' | grep -q .; then
                 echo "Refusing FPC 3.2.2 installer (incompatible with macOS 26)"
                 hdiutil detach /tmp/fpc-dmg || true
                 exit 1
               fi
+              FPC_PKG="$(find /tmp/fpc-dmg -maxdepth 3 \( -name '*.pkg' -o -name '*.mpkg' \) | head -n1)"
+              echo "Installing FPC from $FPC_PKG"
+              sudo installer -pkg "$FPC_PKG" -target /
               hdiutil detach /tmp/fpc-dmg || true
+
+              # Unpack Lazarus IDE (provides lazbuild); setup-lazarus is skipped when laz-url=""
+              LAZ_HOME="${HOME}/lazarus"
+              rm -rf "$LAZ_HOME"
+              mkdir -p "$LAZ_HOME"
+              unzip -q "$LAZ_ZIP" -d "$LAZ_HOME"
+              # Zip may contain a single top-level folder
+              if [ ! -x "$LAZ_HOME/lazbuild" ]; then
+                INNER="$(find "$LAZ_HOME" -maxdepth 2 -type f -name lazbuild | head -n1)"
+                if [ -n "$INNER" ]; then
+                  LAZ_HOME="$(cd "$(dirname "$INNER")" && pwd)"
+                fi
+              fi
+              xattr -cr "$LAZ_HOME"
+              test -x "$LAZ_HOME/lazbuild"
+              # Expose fpc + lazbuild to later steps
+              echo "/usr/local/bin" >> "$GITHUB_PATH"
+              echo "$LAZ_HOME" >> "$GITHUB_PATH"
+              hash -r || true
+              export PATH="/usr/local/bin:$LAZ_HOME:$PATH"
+              fpc -iV
+              lazbuild --version
               ls -lh "$LAZ_ZIP" "$FPC_DMG"
             build_command: make package/mac ARCH=x86_64
 
