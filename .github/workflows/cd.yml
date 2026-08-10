@@ -39,13 +39,17 @@ jobs:
               test -n "$QTDIR"
               echo "QTDIR=$QTDIR"
               echo "MINGW=$MINGW"
+              # GITHUB_PATH only applies to later steps — update PATH in this shell too
+              export PATH="${QTDIR}/bin${MINGW:+:${MINGW}/bin}:${PATH}"
               echo "QTDIR=$QTDIR" >> "$GITHUB_ENV"
               echo "$QTDIR/bin" >> "$GITHUB_PATH"
               if [ -n "$MINGW" ]; then
                 echo "$MINGW/bin" >> "$GITHUB_PATH"
               fi
+              ls -lh "${QTDIR}/bin"/qmake* "${QTDIR}/bin"/windeployqt* 2>/dev/null || true
               command -v qmake || command -v qmake6
               command -v mingw32-make || command -v mingw64-make || true
+              qmake -query QT_VERSION || qmake6 -query QT_VERSION
             build_command: |
               set -euo pipefail
               # Locate Lazarus install (setup-lazarus / official installer)
