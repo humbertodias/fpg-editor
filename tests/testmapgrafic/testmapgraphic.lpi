@@ -17,7 +17,7 @@
       <StringTable ProductVersion=""/>
     </VersionInfo>
     <MacroValues Count="1">
-      <Macro1 Name="LCLWidgetType" Value="qt"/>
+      <Macro1 Name="LCLWidgetType" Value="qt6"/>
     </MacroValues>
     <BuildModes Count="1">
       <Item1 Name="Default" Default="True"/>
@@ -53,7 +53,7 @@
         <UnitName Value="utestmapgraphic"/>
       </Unit1>
       <Unit2>
-        <Filename Value="../../uMap/umapgraphic.pas"/>
+        <Filename Value="../../src/editors/map/uMap/umapgraphic.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uMAPGraphic"/>
       </Unit2>
@@ -66,7 +66,7 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="../../uMap"/>
+      <OtherUnitFiles Value="../../src/editors/map/uMap"/>
       <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
@@ -82,7 +82,7 @@
       </CompilerMessages>
       <CompilerPath Value="$(CompPath)"/>
     </Other>
-    <LCLWidgetType Value="qt"/>
+    <LCLWidgetType Value="qt6"/>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

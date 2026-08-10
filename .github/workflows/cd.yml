@@ -3,7 +3,7 @@ name: cd
 on:
   push:
     tags:
-      - '*' 
+      - '*'
   workflow_dispatch:
 
 permissions:
@@ -19,39 +19,175 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:          
+        config:
           - os: windows-latest
             name: Windows 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.2/lazarus-4.2-fpc-3.2.2-win64.exe
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.8/lazarus-4.8-fpc-3.2.2-win64.exe
             install_dependencies: ""
             build_executable: fpg-editor.exe
             build_command: make package/win
 
           - os: ubuntu-latest
             name: Linux 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/lazarus-project_4.2.0-0_amd64.deb
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/lazarus-project_4.8.0-0_amd64.deb
             fpc-url: |
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-laz_3.2.2-210709_amd64.deb
-              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.2/fpc-src_3.2.2-210709_amd64.deb
-            install_dependencies: ""
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-laz_3.2.2-210709_amd64.deb
+              https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-src_3.2.2-210709_amd64.deb
+            # libQt6Pas is not in Ubuntu apt; use davidbannon prebuilt debs (provides -lQt6Pas).
+            install_dependencies: |
+              set -euo pipefail
+              sudo apt-get update -y
+              sudo apt-get install -y wget qt6-base-dev
+              LIBQT6PAS_VERSION="6.2.10"
+              BASE="https://github.com/davidbannon/libqt6pas/releases/download/v${LIBQT6PAS_VERSION}"
+              wget -q "${BASE}/libqt6pas6_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6.deb
+              wget -q "${BASE}/libqt6pas6-dev_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6-dev.deb
+              sudo apt-get install -y /tmp/libqt6pas6.deb /tmp/libqt6pas6-dev.deb
+              sudo ldconfig
+              find /usr/lib /usr/local/lib -name 'libQt6Pas.so*' -ls
             build_command: make package/lin
 
-          - os: macos-latest
+          - os: macos-26-intel
             name: MacOS 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
-            install_dependencies: ""
-            build_command: make package/mac
+            # FPC 3.2.2 .mpkg is rejected on macOS 26 ("Legacy Installer Package").
+            # Use 3.2.4rc1a (Tahoe-compatible) from the official mirror.
+            laz-url: ""
+            fpc-url: ""
+            install_dependencies: |
+              set -euo pipefail
+              # Qt6 via Homebrew (no qt6pas formula — build bindings from Lazarus sources)
+              brew install qt
+              eval "$(brew shellenv)"
+              QT_PREFIX="$(brew --prefix qt)"
+              export PATH="${QT_PREFIX}/bin:${PATH}"
+              command -v qmake6 >/dev/null || command -v qmake >/dev/null
+              echo "Qt prefix: $QT_PREFIX"
+
+              DEST="${RUNNER_TEMP}/installers"
+              mkdir -p "$DEST"
+              LAZ_ZIP="$DEST/lazarus-darwin-x86_64-4.8.zip"
+              FPC_DMG="$DEST/fpc-3.2.4rc1a.intelarm64-macosx.dmg"
+              LAZ_URL="https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/lazarus-darwin-x86_64-4.8.zip"
+              FPC_URL="https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/fpc-3.2.4rc1a.intelarm64-macosx.dmg"
+              curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "$LAZ_ZIP" "$LAZ_URL"
+              curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "$FPC_DMG" "$FPC_URL"
+              # Lazarus README: clear quarantine before install/unzip
+              xattr -cr "$LAZ_ZIP"
+              xattr -cr "$FPC_DMG"
+              file "$LAZ_ZIP" | grep -qi 'Zip archive'
+              unzip -t "$LAZ_ZIP" >/dev/null
+
+              # Install FPC (3.2.2 .mpkg is rejected on macOS 26; use 3.2.4rc1a)
+              hdiutil attach "$FPC_DMG" -nobrowse -readonly -mountpoint /tmp/fpc-dmg
+              if find /tmp/fpc-dmg -maxdepth 3 -name '*3.2.2*' | grep -q .; then
+                echo "Refusing FPC 3.2.2 installer (incompatible with macOS 26)"
+                hdiutil detach /tmp/fpc-dmg || true
+                exit 1
+              fi
+              FPC_PKG="$(find /tmp/fpc-dmg -maxdepth 3 \( -name '*.pkg' -o -name '*.mpkg' \) | head -n1)"
+              echo "Installing FPC from $FPC_PKG"
+              sudo installer -pkg "$FPC_PKG" -target /
+              hdiutil detach /tmp/fpc-dmg || true
+
+              # Unpack Lazarus IDE (provides lazbuild); setup-lazarus is skipped when laz-url=""
+              LAZ_HOME="${HOME}/lazarus"
+              rm -rf "$LAZ_HOME"
+              mkdir -p "$LAZ_HOME"
+              unzip -q "$LAZ_ZIP" -d "$LAZ_HOME"
+              # Zip may contain a single top-level folder
+              if [ ! -x "$LAZ_HOME/lazbuild" ]; then
+                INNER="$(find "$LAZ_HOME" -maxdepth 2 -type f -name lazbuild | head -n1)"
+                if [ -n "$INNER" ]; then
+                  LAZ_HOME="$(cd "$(dirname "$INNER")" && pwd)"
+                fi
+              fi
+              xattr -cr "$LAZ_HOME"
+              test -x "$LAZ_HOME/lazbuild"
+              # Packaged configs point at /Developer/lazarus; that path is read-only on
+              # modern macOS (SIP), so rewrite configs and always pass --lazarusdir.
+              mkdir -p "$LAZ_HOME/config"
+              printf '%s\n' "--primary-config-path=$LAZ_HOME/config" > "$LAZ_HOME/lazarus.cfg"
+              while IFS= read -r -d '' f; do
+                sed -i.bak "s|/Developer/lazarus|$LAZ_HOME|g" "$f" || true
+              done < <(find "$LAZ_HOME" \( -name '*.xml' -o -name '*.cfg' -o -name '*.ini' \) -print0 2>/dev/null)
+              ENV_XML="$LAZ_HOME/config/environmentoptions.xml"
+              if [ ! -f "$ENV_XML" ]; then
+                printf '%s\n' \
+                  '<?xml version="1.0" encoding="UTF-8"?>' \
+                  '<CONFIG>' \
+                  '  <EnvironmentOptions>' \
+                  '    <Version Value="110"/>' \
+                  "    <LazarusDirectory Value=\"$LAZ_HOME\"/>" \
+                  '    <CompilerFilename Value="/usr/local/bin/fpc"/>' \
+                  '  </EnvironmentOptions>' \
+                  '</CONFIG>' > "$ENV_XML"
+              fi
+
+              # Build and install Qt6Pas.framework (required for LCLWidgetType=qt6)
+              BINDINGS="$LAZ_HOME/lcl/interfaces/qt6/cbindings"
+              test -d "$BINDINGS"
+              pushd "$BINDINGS"
+              # Xcode / macOS 26 SDK removed AGL; Qt mkspecs may still inject it
+              find "$QT_PREFIX" \( -name 'mac.conf' -o -name '*.prl' -o -name '*.pri' \) -type f -print0 2>/dev/null \
+                | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
+              if [ -f Qt6Pas.pro ] && ! grep -q 'LIBS -= -framework AGL' Qt6Pas.pro; then
+                printf '\n# macOS 26 SDK: AGL was removed\nLIBS -= -framework AGL\n' >> Qt6Pas.pro
+              fi
+              qmake6 Qt6Pas.pro 2>/dev/null || qmake Qt6Pas.pro
+              find . -name 'Makefile*' -type f -print0 \
+                | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
+              make -j"$(sysctl -n hw.ncpu)"
+              FRAMEWORK="$(find "$BINDINGS" -type d -name 'Qt6Pas.framework' | head -n1)"
+              test -n "$FRAMEWORK"
+              echo "Installing Qt6Pas from $FRAMEWORK"
+              sudo mkdir -p /Library/Frameworks
+              sudo rm -rf /Library/Frameworks/Qt6Pas.framework
+              sudo cp -a "$FRAMEWORK" /Library/Frameworks/
+              # FPC uses first fpc.cfg found; keep unit paths via #INCLUDE
+              SYS_CFG=""
+              for c in /etc/fpc.cfg /usr/local/etc/fpc.cfg "/usr/local/lib/fpc/$(fpc -iV 2>/dev/null)/fpc.cfg"; do
+                [ -f "$c" ] && SYS_CFG="$c" && break
+              done
+              if [ -f "$HOME/.fpc.cfg" ] && grep -q -- '-Fu' "$HOME/.fpc.cfg"; then
+                grep -q -- '-Fl/Library/Frameworks' "$HOME/.fpc.cfg" || echo '-Fl/Library/Frameworks' >> "$HOME/.fpc.cfg"
+                grep -q -- '-k-F/Library/Frameworks' "$HOME/.fpc.cfg" || echo '-k-F/Library/Frameworks' >> "$HOME/.fpc.cfg"
+              elif [ -n "$SYS_CFG" ]; then
+                {
+                  echo "#INCLUDE $SYS_CFG"
+                  echo "-Fl/Library/Frameworks"
+                  echo "-k-F/Library/Frameworks"
+                } > "$HOME/.fpc.cfg"
+              else
+                echo "Could not locate system fpc.cfg" >&2
+                exit 1
+              fi
+              popd
+
+              # Expose fpc + lazbuild to later steps
+              echo "/usr/local/bin" >> "$GITHUB_PATH"
+              echo "$LAZ_HOME" >> "$GITHUB_PATH"
+              echo "${QT_PREFIX}/bin" >> "$GITHUB_PATH"
+              echo "LAZ_HOME=$LAZ_HOME" >> "$GITHUB_ENV"
+              echo "DYLD_FRAMEWORK_PATH=/Library/Frameworks:${QT_PREFIX}/lib:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
+              hash -r || true
+              export PATH="/usr/local/bin:$LAZ_HOME:${QT_PREFIX}/bin:$PATH"
+              fpc -iV
+              lazbuild --lazarusdir="$LAZ_HOME" --version
+              test -d "$LAZ_HOME/lcl"
+              test -d /Library/Frameworks/Qt6Pas.framework
+              ls -lh "$LAZ_ZIP" "$FPC_DMG"
+            build_command: make package/mac ARCH=x86_64 LAZ_OPTS=--lazarusdir=$LAZ_HOME
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Install dependencies
         if: ${{ matrix.config.install_dependencies != '' }}
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
-        uses: ollydev/setup-lazarus@v3.6
+        if: ${{ matrix.config.laz-url != '' }}
+        uses: ollydev/setup-lazarus@v4
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
@@ -64,14 +200,14 @@ jobs:
 
       - name: Upload artifact
         if: success()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.config.name }}
           path: '*.tar.gz'
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

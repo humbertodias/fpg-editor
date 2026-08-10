@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
   ActnList, ExtCtrls, LCLIntf, StdCtrls ,
   ufrmprgeditor, ufrmfpgeditor, uFrmMainFNT, ufrmZipFenix, uinifile,
-  uFrmSplahs, ulngConverter, ulngTranslator, uFrmAbout
+  uFrmSplahs, ulngConverter, ulngTranslator, uFrmAbout, ufrmConfig, uLanguage
   ;
 
 type
@@ -25,6 +25,7 @@ type
     alngTranslator: TAction;
     aLngConvert: TAction;
     aZipCompress: TAction;
+    aConfig: TAction;
     afntGen: TAction;
     aFpgNew: TAction;
     aFpgOpen: TAction;
@@ -37,6 +38,7 @@ type
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
     MenuItem12: TMenuItem;
+    miConfig: TMenuItem;
     MenuItem13: TMenuItem;
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
@@ -65,6 +67,7 @@ type
     procedure aGemixExecute(Sender: TObject);
     procedure aLngConvertExecute(Sender: TObject);
     procedure alngTranslatorExecute(Sender: TObject);
+    procedure aConfigExecute(Sender: TObject);
     procedure aPrgNewExecute(Sender: TObject);
     procedure aPrgOpenExecute(Sender: TObject);
     procedure aZipCompressExecute(Sender: TObject);
@@ -160,9 +163,30 @@ begin
   frmZipFenix.Show;
 end;
 
+procedure TfrmMain.aConfigExecute(Sender: TObject);
+begin
+  with frmConfig do
+  begin
+    edProgram.Text := inifile_program_edit;
+    edLanguage.Text := inifile_language;
+    seAnimateDelay.Value := inifile_animate_delay;
+    seSizeOfIcon.Value := inifile_sizeof_icon;
+    cbAutoLoadImages.Checked := inifile_autoload_images;
+    cbAutoLoadRemove.Checked := inifile_autoload_remove;
+    cbFlat.Checked := inifile_show_flat;
+    cbSplash.Checked := inifile_show_splash;
+    cbbgcolor.Selected := inifile_bg_color;
+    cbbgcolorFPG.Selected := inifile_bg_colorFPG;
+  end;
+
+  if frmConfig.ShowModal = mrYes then
+    SetDefaultLangByFile(inifile_language);
+end;
+
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   load_inifile;
+  SetDefaultLangByFile(inifile_language);
   miLngConvert.Visible:= (inifile_admin_tools = 1);
   miLngTranslator.Visible:= (inifile_admin_tools = 1);
 

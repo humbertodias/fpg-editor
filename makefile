@@ -3,34 +3,29 @@ LPI = pfpgeditor.lpi
 APP = fpg-editor
 LANG_DIR = languages
 ARCH = x86_64
+WIDGET = qt6
+# Extra lazbuild flags (e.g. macOS: LAZ_OPTS=--add-options=-Fl/Library/Frameworks)
+LAZ_OPTS ?=
 
 # Build commands
-BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --verbose $(LPI)
-
-# Platform-specific widgets
-LINUX_WIDGET = gtk2
-MACOS_WIDGET  = cocoa
-WINDOWS_WIDGET = win32
+BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LAZ_OPTS) $(LPI)
 
 .PHONY: all clean build run package
 
-# Build targets
-build/lin: WIDGET=$(LINUX_WIDGET)
+# Build targets (Qt6 on all platforms)
 build/lin:
 	$(BUILD_CMD)
 
-build/mac: WIDGET=$(MACOS_WIDGET)
 build/mac:
 	$(BUILD_CMD)
 
-build/win: WIDGET=$(WINDOWS_WIDGET)
 build/win:
 	$(BUILD_CMD)
 
 # Run targets
 run/lin:
 	@if [ ! -f $(APP) ]; then $(MAKE) build/lin; fi
-	GTK_PATH="" ./$(APP)
+	./$(APP)
 
 run/mac:
 	@if [ ! -f $(APP) ]; then $(MAKE) build/mac; fi
@@ -49,6 +44,10 @@ package/mac: build/mac
 
 package/win: build/win
 	tar cvfz $(APP)-win-$(ARCH).tar.gz $(APP).exe $(LANG_DIR)
+
+install/deps:
+	sudo apt update
+	sudo apt install -y fpc fp-compiler-3.2.2 libqt6pas-dev libqt6pas6 qt6-base-dev
 
 # Clean
 clean:

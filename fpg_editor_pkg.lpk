@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <CONFIG>
   <Package Version="4">
-    <PathDelim Value="\"/>
+    <PathDelim Value="/"/>
     <Name Value="fpg_editor_pkg"/>
     <CompilerOptions>
       <Version Value="11"/>
-      <PathDelim Value="\"/>
+      <PathDelim Value="/"/>
       <SearchPaths>
-        <OtherUnitFiles Value="uFPGListView;uFPG;uMap;uLoadImage;uTools;uprgeditor"/>
-        <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+        <OtherUnitFiles Value="src/editors/fpg/uFPGListView;src/formats/uFPG;src/editors/map/uMap;src/formats/uLoadImage;src/core/uTools;src/editors/prg/uprgeditor"/>
+        <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
       </SearchPaths>
       <Other>
         <CompilerMessages>
@@ -19,28 +19,28 @@
     </CompilerOptions>
     <Files Count="6">
       <Item1>
-        <Filename Value="uFPGListView\ufpglistview.pas"/>
+        <Filename Value="src/editors/fpg/uFPGListView/ufpglistview.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="uFPGListView"/>
       </Item1>
       <Item2>
-        <Filename Value="uFPG\uFPG.pas"/>
+        <Filename Value="src/formats/uFPG/uFPG.pas"/>
         <UnitName Value="uFPG"/>
       </Item2>
       <Item3>
-        <Filename Value="uMap\umapgraphic.pas"/>
+        <Filename Value="src/editors/map/uMap/umapgraphic.pas"/>
         <UnitName Value="uMAPGraphic"/>
       </Item3>
       <Item4>
-        <Filename Value="uLoadImage\uLoadImage.pas"/>
+        <Filename Value="src/formats/uLoadImage/uLoadImage.pas"/>
         <UnitName Value="uLoadImage"/>
       </Item4>
       <Item5>
-        <Filename Value="uTools\uTools.pas"/>
+        <Filename Value="src/core/uTools/uTools.pas"/>
         <UnitName Value="uTools"/>
       </Item5>
       <Item6>
-        <Filename Value="uprgeditor\usynprghl.pas"/>
+        <Filename Value="src/editors/prg/uprgeditor/usynprghl.pas"/>
         <HasRegisterProc Value="True"/>
         <UnitName Value="usynprghl"/>
       </Item6>

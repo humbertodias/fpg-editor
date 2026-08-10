@@ -72,8 +72,8 @@ object frmLanguageConverter: TfrmLanguageConverter
     TabOrder = 3
   end
   object OpenDialogFA: TOpenDialog
-    Filter = 'Archivos ini (*.ini)|*.ini'
-    InitialDir = 'lng'
+    Filter = 'Archivos PO (*.po)|*.po'
+    InitialDir = 'languages'
     left = 40
     top = 126
   end

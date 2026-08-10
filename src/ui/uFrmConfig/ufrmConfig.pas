@@ -147,19 +147,23 @@ end;
 
 procedure TfrmConfig.bbLanguajeClick(Sender: TObject);
 var
- temp : string;
+  langDir: string;
 begin
- OpenDialog.Filter := 'PO|*.po|(*.*)|*.*';
- OpenDialog.InitialDir := ExtractFileDir(Application.ExeName) + DirectorySeparator+'languages';
- 
- if OpenDialog.Execute then
- begin
-  temp := inifile_language;
+  langDir := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'languages';
+  OpenDialog.Title := 'Selecionar idioma / Select language';
+  OpenDialog.Filter := 'Traduções (*.po)|*.po|Todos (*.*)|*.*';
+  OpenDialog.DefaultExt := 'po';
+  OpenDialog.FilterIndex := 1;
+  if DirectoryExists(langDir) then
+    OpenDialog.InitialDir := langDir
+  else
+    OpenDialog.InitialDir := ExtractFileDir(Application.ExeName);
 
-  inifile_language := OpenDialog.FileName;
-
-  edLanguage.Text := OpenDialog.FileName;
- end;
+  if OpenDialog.Execute then
+  begin
+    inifile_language := OpenDialog.FileName;
+    edLanguage.Text := OpenDialog.FileName;
+  end;
 end;
 
 procedure TfrmConfig.FormActivate(Sender: TObject);

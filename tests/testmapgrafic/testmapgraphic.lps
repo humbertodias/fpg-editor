@@ -27,7 +27,7 @@
         <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="../uMap/umapgraphic.pas"/>
+        <Filename Value="../../src/editors/map/uMap/umapgraphic.pas"/>
         <UnitName Value="uMAPGraphic"/>
         <WindowIndex Value="0"/>
         <TopLine Value="623"/>
@@ -74,7 +74,7 @@
         <UsageCount Value="20"/>
       </Unit7>
       <Unit8>
-        <Filename Value="../../uMap/umapgraphic.pas"/>
+        <Filename Value="../../src/editors/map/uMap/umapgraphic.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="uMAPGraphic"/>
         <WindowIndex Value="0"/>
@@ -94,14 +94,14 @@
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="../../uMap/umapgraphic.pas"/>
+        <Source Value="../../src/editors/map/uMap/umapgraphic.pas"/>
         <Line Value="348"/>
       </Item1>
       <Item2>
         <Kind Value="bpkSource"/>
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="../../uMap/umapgraphic.pas"/>
+        <Source Value="../../src/editors/map/uMap/umapgraphic.pas"/>
         <Line Value="110"/>
       </Item2>
     </BreakPoints>
