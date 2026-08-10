@@ -109,18 +109,46 @@ jobs:
           fi
           echo "Building Qt6Pas in $BINDINGS"
           pushd "$BINDINGS"
+
+          # Xcode 26 / macOS 26 SDK removed AGL; Qt 6.8.3 still injects -framework AGL
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            QT_BASE="${QT_ROOT_DIR:-${Qt6_DIR:-}}"
+            if [ -n "$QT_BASE" ]; then
+              echo "Stripping AGL from Qt under $QT_BASE"
+              find "$QT_BASE" \( -name 'mac.conf' -o -name '*.prl' -o -name '*.pri' \) -type f -print0 2>/dev/null \
+                | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
+            fi
+            if [ -f Qt6Pas.pro ] && ! grep -q 'LIBS -= -framework AGL' Qt6Pas.pro; then
+              printf '\n# GitHub Actions / macOS 26 SDK: AGL was removed\nLIBS -= -framework AGL\n' >> Qt6Pas.pro
+            fi
+          fi
+
           qmake6 Qt6Pas.pro 2>/dev/null || qmake Qt6Pas.pro
+
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            # Belt-and-suspenders: strip AGL from generated Makefiles
+            find . -name 'Makefile*' -type f -print0 \
+              | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
+          fi
+
           if command -v mingw32-make >/dev/null 2>&1; then
             mingw32-make -j2
           else
             make -j2
           fi
-          mkdir -p "$HOME/lib"
+
+          mkdir -p "$HOME/lib" "$HOME/Frameworks"
           if [ "${{ runner.os }}" = "Windows" ]; then
             find . -name 'Qt6Pas*.dll' -exec cp -a {} "$HOME/lib/" \;
             echo "$HOME/lib" >> "$GITHUB_PATH"
           else
-            find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \;
+            # Prefer framework layout produced by qmake on macOS
+            if [ -d Qt6Pas.framework ]; then
+              cp -a Qt6Pas.framework "$HOME/Frameworks/"
+              echo "$HOME/Frameworks" >> "$GITHUB_PATH"
+              echo "DYLD_FRAMEWORK_PATH=$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
+            fi
+            find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \; || true
             echo "$HOME/lib" >> "$GITHUB_PATH"
             echo "DYLD_LIBRARY_PATH=$HOME/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
           fi
