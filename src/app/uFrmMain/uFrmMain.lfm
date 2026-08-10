@@ -195,6 +195,9 @@ object frmMain: TfrmMain
     end
     object MenuItem11: TMenuItem
       Caption = 'Herramientas'
+      object miConfig: TMenuItem
+        Action = aConfig
+      end
       object MenuItem12: TMenuItem
         Action = aZipCompress
       end
@@ -260,6 +263,11 @@ object frmMain: TfrmMain
       Caption = 'Compresor...'
       OnExecute = aZipCompressExecute
     end
+    object aConfig: TAction
+      Category = 'Herramientas'
+      Caption = 'Configuración / Idioma...'
+      OnExecute = aConfigExecute
+    end
     object aLngConvert: TAction
       Category = 'Herramientas'
       Caption = 'Convertidor de lng'
@@ -301,4 +309,4 @@ object frmMain: TfrmMain
       OnExecute = aAboutExecute
     end
   end
-end
+end

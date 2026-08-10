@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Buttons, IniFiles, ulngTranslator;
+  Buttons, ulngTranslator;
 
 type
 
@@ -38,13 +38,9 @@ type
 var
   frmLanguageConverter: TfrmLanguageConverter;
 
-const
- NUM_OF_STRINGS                 = 200;
-
 resourcestring
-  LNG_FILE_NO_EXIST = 'No existe el fichero:';
-  LNG_FILE_REFERENCE_NO_EXIST = 'No existe el fichero de referencia:';
-  LNG_CORRECT = 'Fichero creado correctamente';
+  LNG_INI_CONVERTER_REMOVED =
+    'El conversor de idiomas .ini ha sido eliminado. Use los archivos .po en languages/.';
 
 implementation
 
@@ -81,72 +77,8 @@ begin
 end;
 
 procedure TfrmLanguageConverter.convertLanguage;
-var
- lngfileReference : TIniFile;
- lngfileOld : TIniFile;
- lngfileNew : TStringList;
- i,j : integer;
- tmpLine : String;
- tmpSentence : String;
- tmpSentenceRef : String;
- lineIndex: Integer;
- FilenameReference : String;
 begin
- // Si no existe el fichero cambia al lenguaje por defecto
- if not FileExists(eficheroAntiguo.Text) { *Converted from FileExists*  } then
- begin
-   ShowMessage(LNG_FILE_NO_EXIST+' '+eficheroAntiguo.Text);
-   exit;
- end;
- if not FileExists(eficheroNuevo.Text) { *Converted from FileExists*  } then
- begin
-   ShowMessage(LNG_FILE_NO_EXIST+' '+eficheroNuevo.Text);
-   exit;
- end;
- FilenameReference:= 'lng'+DirectorySeparator+'Spanish.ini';
- if not FileExists(FilenameReference) { *Converted from FileExists*  } then
- begin
-   ShowMessage(LNG_FILE_REFERENCE_NO_EXIST+' '+FilenameReference);
-   exit;
- end;
-
- lngfileReference := TIniFile.Create(FilenameReference);
- lngfileOld := TIniFile.Create(eficheroAntiguo.Text);
-
- lngfileNew := TStringList.Create;
- lngfileNew.LoadFromFile(eficheroNuevo.Text);
-
- //LNG_DESCRIPTION := lngfileOld.ReadString('LNG', 'Description', 'NULL');
- //LNG_INF := lngfileOld.ReadString('LNG', 'INFO', 'NULL');
-
- for i := 0 to NUM_OF_STRINGS - 1 do
- begin
-  tmpSentenceRef := lngfileReference.ReadString('LNG', IntToStr(i), 'NULL');
-  tmpLine := 'msgid "'+tmpSentenceRef+'"';
-  lineIndex := -1;
-  for j := 0 to lngfileNew.Count-1 do
-  begin
-    if tmpline = lngfileNew.Strings[j] then
-    begin
-       lineIndex := j;
-       break;
-    end;
-  end;
-  if lineIndex > -1 then
-  begin
-     tmpSentenceRef := lngfileOld.ReadString('LNG', IntToStr(i), 'NULL');
-     lngfileNew.Strings[lineIndex+1] := 'msgstr "'+tmpSentenceRef+'"';
-  end
- end;
- lngfileNew.SaveToFile(eficheroNuevo.Text);
- lngfileNew.Free;
- lngfileReference.Free;
- lngfileOld.Free;
- ShowMessage(LNG_CORRECT);
-
+  ShowMessage(LNG_INI_CONVERTER_REMOVED);
 end;
 
-
-
 end.
-

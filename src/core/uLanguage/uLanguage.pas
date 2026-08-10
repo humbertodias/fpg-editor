@@ -205,10 +205,10 @@ var
   lcfn: string;
 
 begin
-  if not FileExists(Lang) then
+  lcfn := Lang;
+  if not FileExists(lcfn) then
      exit;
   LocalTranslator := nil;
-  lcfn := lang;
   // search first po translation resources
    if (lcfn <> '') AND (ExtractFileExt(lcfn) = '.po') then
    begin

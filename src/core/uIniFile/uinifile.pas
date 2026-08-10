@@ -1,5 +1,5 @@
 (*
- *  FPG EDIT : Edit FPG file from DIV2, FENIX and CDIV 
+ *  FPG EDIT : Edit FPG file from DIV2, FENIX and CDIV
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
  *)
- 
+
 unit uinifile;
 
 {$mode objfpc}{$H+}
@@ -29,7 +29,7 @@ uses inifiles, SysUtils, graphics, LCLIntf, LCLType, Forms, FileUtil;
 
 const
  sINIFILE         =  DirectorySeparator+'fpg-editor.ini';
- sDEFAULT_LNG     = DirectorySeparator+'lng'+DirectorySeparator+'Spanish.ini';
+ sDEFAULT_LNG     = DirectorySeparator+'languages'+DirectorySeparator+'fpg-editor.en.po';
 
  sMAIN            = 'FPG';
  sFONT            = 'FNT';
@@ -51,7 +51,7 @@ var
  inifile_language        : string;
  inifile_autoload_images,
  inifile_autoload_remove,
- inifile_show_splash,     
+ inifile_show_splash,
  inifile_show_flat       : boolean;
  inifile_sizeof_icon,
  inifile_repaint_number,
@@ -97,17 +97,17 @@ begin
 
   lf.lfHeight := inifile_fnt_height;
   lf.lfCharSet := inifile_fnt_charset;
-  
+
   StrCopy(lf.lfFaceName, PChar(inifile_fnt_name));
 
   nFnt.Handle := CreateFontIndirect(lf);
 end;
- 
+
 procedure load_inifile;
 var
  inifile : TIniFile;
  strinifile : string;
- 
+
 begin
 
  strinifile := ExtractFileDir( ParamStr(0) ) + sINIFILE;
@@ -147,7 +147,7 @@ begin
   inifile_admin_tools := 0;
 
   write_inifile;
-  
+
  end
  else
  begin
@@ -186,7 +186,7 @@ begin
   inifile_edge_image    := inifile.ReadString (sFONT, 'EDGE IMAGE'  , '');
   inifile_shadow_image  := inifile.ReadString (sFONT, 'SHADOW IMAGE', '');
 
-  
+
   inifile.Destroy;
  end;
 end;
@@ -232,7 +232,7 @@ begin
   inifile.WriteString (sFONT, 'EDGE IMAGE'  , inifile_edge_image);
   inifile.WriteString (sFONT, 'SHADOW IMAGE', inifile_shadow_image);
 
- 
+
  inifile.Destroy;
 end;
 
