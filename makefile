@@ -4,7 +4,7 @@ APP = fpg-editor
 LANG_DIR = languages
 ARCH = x86_64
 WIDGET = qt6
-# Extra lazbuild flags (e.g. macOS: LAZ_OPTS=--add-options=-Fl/Library/Frameworks)
+# Extra lazbuild flags (e.g. --lazarusdir=... or --opt=-Fl/path)
 LAZ_OPTS ?=
 
 # Build commands

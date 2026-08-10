@@ -79,8 +79,11 @@ jobs:
               fi
               ls -lh "$GITHUB_WORKSPACE"/Qt6Pas*.dll
               popd
-              make package/win ARCH=x86_64 \
-                LAZ_OPTS="--add-options=-Fl${GITHUB_WORKSPACE}"
+              # Put workspace + Qt bin on PATH so linker/runtime find Qt6Pas6.dll.
+              # Use Git Bash pwd (/d/a/...) — Windows D:\ paths break lazbuild --opt=-Fl.
+              WS_UNIX="$(pwd)"
+              export PATH="${WS_UNIX}:${QTDIR}/bin:${PATH}"
+              make package/win ARCH=x86_64 LAZ_OPTS="--opt=-Fl${WS_UNIX}"
 
           - os: ubuntu-latest
             name: Linux 64
