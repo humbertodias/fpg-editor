@@ -156,9 +156,41 @@ jobs:
             sudo rm -rf /Library/Frameworks/Qt6Pas.framework
             sudo cp -a "$FRAMEWORK" /Library/Frameworks/
             cp -a "$FRAMEWORK" "$HOME/Frameworks/"
-            ls -la /Library/Frameworks/Qt6Pas.framework
-            # Do not write ~/.fpc.cfg here: FPC uses the first config found and a
-            # minimal home file would shadow /etc (or fpc) unit paths (System.UITypes).
+            ls -laR /Library/Frameworks/Qt6Pas.framework | head -n 40
+            # Xcode's ld often needs an explicit -F path for third-party frameworks.
+            # FPC uses the first config found; never write a bare ~/.fpc.cfg (that
+            # hid RTL unit paths / System.UITypes). Prefer appending to an existing
+            # home config, otherwise #INCLUDE the system config first.
+            if [ -f "$HOME/.fpc.cfg" ] && grep -q -- '-Fu' "$HOME/.fpc.cfg"; then
+              echo "Appending framework search path to existing $HOME/.fpc.cfg"
+              grep -q -- '-Fl/Library/Frameworks' "$HOME/.fpc.cfg" \
+                || echo '-Fl/Library/Frameworks' >> "$HOME/.fpc.cfg"
+              grep -q -- '-k-F/Library/Frameworks' "$HOME/.fpc.cfg" \
+                || echo '-k-F/Library/Frameworks' >> "$HOME/.fpc.cfg"
+            else
+              SYS_CFG=""
+              for c in \
+                /etc/fpc.cfg \
+                /usr/local/etc/fpc.cfg \
+                "/usr/local/lib/fpc/$(fpc -iV 2>/dev/null)/fpc.cfg"
+              do
+                if [ -f "$c" ]; then
+                  SYS_CFG="$c"
+                  break
+                fi
+              done
+              if [ -z "$SYS_CFG" ]; then
+                echo "Could not locate system fpc.cfg"
+                find /usr/local /etc -name 'fpc.cfg' 2>/dev/null | head || true
+                exit 1
+              fi
+              echo "Writing $HOME/.fpc.cfg with #INCLUDE $SYS_CFG"
+              {
+                echo "#INCLUDE $SYS_CFG"
+                echo "-Fl/Library/Frameworks"
+                echo "-k-F/Library/Frameworks"
+              } > "$HOME/.fpc.cfg"
+            fi
             echo "$HOME/Frameworks" >> "$GITHUB_PATH"
             echo "DYLD_FRAMEWORK_PATH=/Library/Frameworks:$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
             find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \; || true
@@ -173,6 +205,8 @@ jobs:
           set -x
           if [ "${{ runner.os }}" = "macOS" ]; then
             test -d /Library/Frameworks/Qt6Pas.framework
+            test -f "$HOME/.fpc.cfg"
+            grep -E 'INCLUDE|/Library/Frameworks' "$HOME/.fpc.cfg"
           fi
           ${{ matrix.config.build_command }}
 
