@@ -33,7 +33,7 @@ jobs:
             fpc-url: |
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-laz_3.2.2-210709_amd64.deb
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-src_3.2.2-210709_amd64.deb
-            install_dependencies: ""
+            install_dependencies: "apt install -y libqt6pas-dev libqt6pas6 qt6-base-dev"
             build_command: make package/lin
 
           - os: macos-latest
