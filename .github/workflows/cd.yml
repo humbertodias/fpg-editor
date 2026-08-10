@@ -49,8 +49,8 @@ jobs:
 
           - os: macos-latest
             name: MacOS 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/lazarus-darwin-x86_64-4.2.zip
-            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.2/fpc-3.2.2.intelarm64-macosx.dmg
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.4/lazarus-darwin-x86_64-4.4.zip
+            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.4/fpc-3.2.2.intelarm64-macosx.dmg
             install_dependencies: ""
             build_command: make package/mac
 
