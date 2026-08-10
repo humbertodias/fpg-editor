@@ -51,16 +51,16 @@ jobs:
             name: MacOS 64
             # FPC 3.2.2 .mpkg is rejected on macOS 26 ("Legacy Installer Package").
             # Use 3.2.4rc1a (Tahoe-compatible) from the official mirror.
-            laz-url: https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/lazarus-darwin-x86_64-4.8.zip
-            fpc-url: https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/fpc-3.2.4rc1a.intelarm64-macosx.dmg
+            laz-url: ""
+            fpc-url: ""
             install_dependencies: |
               set -euo pipefail
               DEST="${RUNNER_TEMP}/installers"
               mkdir -p "$DEST"
               LAZ_ZIP="$DEST/lazarus-darwin-x86_64-4.8.zip"
               FPC_DMG="$DEST/fpc-3.2.4rc1a.intelarm64-macosx.dmg"
-              LAZ_URL="https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/lazarus-darwin-x86_64-4.8.zip"
-              FPC_URL="https://download.lazarus-ide.org/Lazarus%20macOS%20x86-64/Lazarus%204.8/fpc-3.2.4rc1a.intelarm64-macosx.dmg"
+              LAZ_URL="https://download.lazarus-ide.org/Lazarus macOS x86-64/Lazarus 4.8/lazarus-darwin-x86_64-4.8.zip"
+              FPC_URL="https://download.lazarus-ide.org/Lazarus macOS x86-64/Lazarus 4.8/fpc-3.2.4rc1a.intelarm64-macosx.dmg"
               curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "$LAZ_ZIP" "$LAZ_URL"
               curl -fL --retry 5 --retry-all-errors --retry-delay 2 -o "$FPC_DMG" "$FPC_URL"
               # Lazarus README: clear quarantine before install/unzip
@@ -88,7 +88,8 @@ jobs:
         run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
-        uses: ollydev/setup-lazarus@v4.2
+        if: ${{ matrix.config.laz-url != '' }}
+        uses: ollydev/setup-lazarus@v4
         with:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
