@@ -4,9 +4,11 @@ APP = fpg-editor
 LANG_DIR = languages
 ARCH = x86_64
 WIDGET = qt6
+# Extra lazbuild flags (e.g. macOS: LAZ_OPTS=--add-options=-Fl/Library/Frameworks)
+LAZ_OPTS ?=
 
 # Build commands
-BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LPI)
+BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LAZ_OPTS) $(LPI)
 
 .PHONY: all clean build run package
 

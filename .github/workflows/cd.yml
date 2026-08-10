@@ -142,12 +142,26 @@ jobs:
             find . -name 'Qt6Pas*.dll' -exec cp -a {} "$HOME/lib/" \;
             echo "$HOME/lib" >> "$GITHUB_PATH"
           else
-            # Prefer framework layout produced by qmake on macOS
-            if [ -d Qt6Pas.framework ]; then
-              cp -a Qt6Pas.framework "$HOME/Frameworks/"
-              echo "$HOME/Frameworks" >> "$GITHUB_PATH"
-              echo "DYLD_FRAMEWORK_PATH=$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
+            # ld looks in /Library/Frameworks by default; $HOME/Frameworks /
+            # DYLD_FRAMEWORK_PATH are not enough for the link step.
+            FRAMEWORK="$(find "$BINDINGS" -type d -name 'Qt6Pas.framework' 2>/dev/null | head -n1 || true)"
+            if [ -z "$FRAMEWORK" ]; then
+              echo "Qt6Pas.framework was not produced; build outputs:"
+              find "$BINDINGS" \( -name '*Qt6Pas*' -o -name 'libQt6Pas*' \) 2>/dev/null || true
+              exit 1
             fi
+            echo "Installing Qt6Pas framework from $FRAMEWORK"
+            # ld default search path includes /Library/Frameworks (not $HOME/Frameworks).
+            sudo mkdir -p /Library/Frameworks
+            sudo rm -rf /Library/Frameworks/Qt6Pas.framework
+            sudo cp -a "$FRAMEWORK" /Library/Frameworks/
+            cp -a "$FRAMEWORK" "$HOME/Frameworks/"
+            ls -la /Library/Frameworks/Qt6Pas.framework
+            # Belt-and-suspenders for FPC framework search (-Fl on Darwin)
+            grep -q -- '-Fl/Library/Frameworks' "$HOME/.fpc.cfg" 2>/dev/null \
+              || echo '-Fl/Library/Frameworks' >> "$HOME/.fpc.cfg"
+            echo "$HOME/Frameworks" >> "$GITHUB_PATH"
+            echo "DYLD_FRAMEWORK_PATH=/Library/Frameworks:$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
             find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \; || true
             echo "$HOME/lib" >> "$GITHUB_PATH"
             echo "DYLD_LIBRARY_PATH=$HOME/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
@@ -158,6 +172,9 @@ jobs:
         run: |
           set -e
           set -x
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            test -d /Library/Frameworks/Qt6Pas.framework
+          fi
           ${{ matrix.config.build_command }}
 
       - name: Upload artifact
