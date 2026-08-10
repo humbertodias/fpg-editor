@@ -286,22 +286,25 @@ bundle_win() {
   cp -a "$bin" "$stage/"
   [[ -d "$LANG_DIR" ]] && cp -a "$LANG_DIR" "$stage/"
 
-  # Locate Qt6Pas.dll
+  # Locate Qt6Pas6.dll (Lazarus qt62.pas: Qt6PasLib = 'Qt6Pas6.dll')
   local pas=""
   for pas in \
+    "$ROOT/Qt6Pas6.dll" \
     "$ROOT/Qt6Pas.dll" \
+    /mingw64/bin/Qt6Pas6.dll \
     /mingw64/bin/Qt6Pas.dll \
+    "$HOME/lazarus/lcl/interfaces/qt6/cbindings"/Qt6Pas6.dll \
     "$HOME/lazarus/lcl/interfaces/qt6/cbindings"/Qt6Pas.dll \
-    "$HOME/lazarus/lcl/interfaces/qt6/cbindings"/lib/Qt6Pas.dll \
-    /c/Windows/System32/Qt6Pas.dll
+    "$HOME/lazarus/lcl/interfaces/qt6/cbindings"/lib/Qt6Pas6.dll \
+    "$HOME/lazarus/lcl/interfaces/qt6/cbindings"/lib/Qt6Pas.dll
   do
     [[ -f "$pas" ]] && break
     pas=""
   done
   if [[ -z "$pas" ]]; then
-    pas="$(find "$HOME" /mingw64 /c/Qt "$ROOT" -name 'Qt6Pas.dll' 2>/dev/null | head -n1 || true)"
+    pas="$(find "$HOME" /mingw64 /c/Qt "$ROOT" \( -name 'Qt6Pas6.dll' -o -name 'Qt6Pas.dll' \) 2>/dev/null | head -n1 || true)"
   fi
-  [[ -n "$pas" && -f "$pas" ]] || die "Qt6Pas.dll not found"
+  [[ -n "$pas" && -f "$pas" ]] || die "Qt6Pas6.dll not found"
   cp -a "$pas" "$stage/"
 
   local windeployqt
@@ -329,7 +332,8 @@ bundle_win() {
     fi
   fi
 
-  # Always ensure Qt6Pas.dll sits beside the exe
+  # Always ensure Qt6Pas6.dll sits beside the exe (name expected by LCL)
+  cp -a "$pas" "$stage/Qt6Pas6.dll"
   cp -a "$pas" "$stage/Qt6Pas.dll"
 
   tar -C "$DIST" -czf "${APP}-win-${ARCH}.tar.gz" "$(basename "$stage")"

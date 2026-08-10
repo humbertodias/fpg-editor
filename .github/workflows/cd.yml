@@ -26,7 +26,7 @@ jobs:
             install_dependencies: |
               set -euo pipefail
               python -m pip install aqtinstall
-              # Qt 6.6 + matching MinGW (needed to build Qt6Pas.dll and for windeployqt)
+              # Qt 6.6 + matching MinGW (needed to build Qt6Pas6.dll and for windeployqt)
               python -m aqt install-qt windows desktop 6.6.3 win64_mingw -O "$HOME/Qt"
               python -m aqt install-tool windows desktop tools_mingw1310 -O "$HOME/Qt" || \
                 python -m aqt install-tool windows desktop tools_mingw1120 -O "$HOME/Qt" || \
@@ -63,10 +63,21 @@ jobs:
               qmake6 Qt6Pas.pro -spec win32-g++ "CONFIG+=release" 2>/dev/null \
                 || qmake Qt6Pas.pro -spec win32-g++ "CONFIG+=release"
               mingw32-make -j"$(nproc 2>/dev/null || echo 2)"
-              DLL="$(find . -name 'Qt6Pas.dll' | head -n1)"
+              DLL="$(find . \( -name 'Qt6Pas6.dll' -o -name 'Qt6Pas.dll' \) | head -n1)"
               test -n "$DLL"
+              # Lazarus qt62.pas loads 'Qt6Pas6.dll' on Windows
+              cp -a "$DLL" "$GITHUB_WORKSPACE/Qt6Pas6.dll"
+              cp -a "$DLL" "${QTDIR}/bin/Qt6Pas6.dll"
+              # Keep unversioned name too for tooling that still looks for it
               cp -a "$DLL" "$GITHUB_WORKSPACE/Qt6Pas.dll"
               cp -a "$DLL" "${QTDIR}/bin/Qt6Pas.dll"
+              # Import lib helps FPC find -lQt6Pas* when present
+              IMPLIB="$(find . -name 'libQt6Pas*.a' | head -n1 || true)"
+              if [ -n "$IMPLIB" ]; then
+                cp -a "$IMPLIB" "$GITHUB_WORKSPACE/"
+                cp -a "$IMPLIB" "${QTDIR}/lib/" 2>/dev/null || cp -a "$IMPLIB" "${QTDIR}/bin/"
+              fi
+              ls -lh "$GITHUB_WORKSPACE"/Qt6Pas*.dll
               popd
               make package/win ARCH=x86_64 \
                 LAZ_OPTS="--add-options=-Fl${GITHUB_WORKSPACE}"
