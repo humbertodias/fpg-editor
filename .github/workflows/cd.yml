@@ -23,7 +23,8 @@ jobs:
           - os: windows-latest
             name: Windows 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.8/lazarus-4.8-fpc-3.2.2-win64.exe
-            qt_arch: win64_mingw
+            install_dependencies: ""
+            build_executable: fpg-editor.exe
             build_command: make package/win
 
           - os: ubuntu-latest
@@ -32,47 +33,22 @@ jobs:
             fpc-url: |
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-laz_3.2.2-210709_amd64.deb
               https://sourceforge.net/projects/lazarus/files/Lazarus Linux amd64 DEB/Lazarus 4.8/fpc-src_3.2.2-210709_amd64.deb
+            install_dependencies: ""
             build_command: make package/lin
 
           - os: macos-latest
             name: MacOS 64
-            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS aarch64/Lazarus 4.8/lazarus-darwin-aarch64-4.8.zip
-            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS aarch64/Lazarus 4.8/fpc-3.2.4rc1a.intelarm64-macosx.dmg
-            build_command: make package/mac ARCH=aarch64
+            laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.8/lazarus-darwin-x86_64-4.8.zip
+            fpc-url: https://sourceforge.net/projects/lazarus/files/Lazarus macOS x86-64/Lazarus 4.8/fpc-3.2.2.intelarm64-macosx.dmg
+            install_dependencies: ""
+            build_command: make package/mac
 
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Qt6Pas (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y wget qt6-base-dev
-          LIBQT6PAS_VERSION="6.2.10"
-          BASE="https://github.com/davidbannon/libqt6pas/releases/download/v${LIBQT6PAS_VERSION}"
-          wget -q "${BASE}/libqt6pas6_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6.deb
-          wget -q "${BASE}/libqt6pas6-dev_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6-dev.deb
-          sudo apt-get install -y /tmp/libqt6pas6.deb /tmp/libqt6pas6-dev.deb
-
-      - name: Install Qt6 (Windows)
-        if: runner.os == 'Windows'
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: '6.8.3'
-          host: windows
-          target: desktop
-          arch: ${{ matrix.config.qt_arch }}
-          cache: true
-
-      - name: Install Qt6 (macOS)
-        if: runner.os == 'macOS'
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: '6.8.3'
-          host: mac
-          target: desktop
-          cache: true
+      - name: Install dependencies
+        if: ${{ matrix.config.install_dependencies != '' }}
+        run: ${{ matrix.config.install_dependencies }}
 
       - name: Install Lazarus
         uses: ollydev/setup-lazarus@v4.2
@@ -80,134 +56,10 @@ jobs:
           laz-url: ${{ matrix.config.laz-url }}
           fpc-url: ${{ matrix.config.fpc-url }}
 
-      - name: Build Qt6Pas bindings (Windows/macOS)
-        if: runner.os != 'Linux'
-        run: |
-          set -euo pipefail
-          set -x
-          LAZBUILD="$(command -v lazbuild)"
-          # lazbuild lives inside the Lazarus root (e.g. D:/a/_temp/lazarus/lazbuild)
-          LAZ_DIR="$(cd "$(dirname "$LAZBUILD")" && pwd -P)"
-          BINDINGS=""
-          for candidate in \
-            "$LAZ_DIR/lcl/interfaces/qt6/cbindings" \
-            "$(dirname "$LAZ_DIR")/lazarus/lcl/interfaces/qt6/cbindings" \
-            "/c/lazarus/lcl/interfaces/qt6/cbindings" \
-            "$HOME/lazarus/lcl/interfaces/qt6/cbindings" \
-            "/Applications/Lazarus/lcl/interfaces/qt6/cbindings" \
-            "/usr/local/share/lazarus/lcl/interfaces/qt6/cbindings"
-          do
-            if [ -d "$candidate" ]; then
-              BINDINGS="$candidate"
-              break
-            fi
-          done
-          if [ -z "$BINDINGS" ]; then
-            echo "Qt6Pas cbindings not found under Lazarus install (LAZ_DIR=$LAZ_DIR)"
-            find "$LAZ_DIR" -type d -name cbindings 2>/dev/null || true
-            exit 1
-          fi
-          echo "Building Qt6Pas in $BINDINGS"
-          pushd "$BINDINGS"
-
-          # Xcode 26 / macOS 26 SDK removed AGL; Qt 6.8.3 still injects -framework AGL
-          if [ "${{ runner.os }}" = "macOS" ]; then
-            QT_BASE="${QT_ROOT_DIR:-${Qt6_DIR:-}}"
-            if [ -n "$QT_BASE" ]; then
-              echo "Stripping AGL from Qt under $QT_BASE"
-              find "$QT_BASE" \( -name 'mac.conf' -o -name '*.prl' -o -name '*.pri' \) -type f -print0 2>/dev/null \
-                | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
-            fi
-            if [ -f Qt6Pas.pro ] && ! grep -q 'LIBS -= -framework AGL' Qt6Pas.pro; then
-              printf '\n# GitHub Actions / macOS 26 SDK: AGL was removed\nLIBS -= -framework AGL\n' >> Qt6Pas.pro
-            fi
-          fi
-
-          qmake6 Qt6Pas.pro 2>/dev/null || qmake Qt6Pas.pro
-
-          if [ "${{ runner.os }}" = "macOS" ]; then
-            # Belt-and-suspenders: strip AGL from generated Makefiles
-            find . -name 'Makefile*' -type f -print0 \
-              | xargs -0 sed -i '' -E 's/-framework[[:space:]]*AGL//g' || true
-          fi
-
-          if command -v mingw32-make >/dev/null 2>&1; then
-            mingw32-make -j2
-          else
-            make -j2
-          fi
-
-          mkdir -p "$HOME/lib" "$HOME/Frameworks"
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            find . -name 'Qt6Pas*.dll' -exec cp -a {} "$HOME/lib/" \;
-            echo "$HOME/lib" >> "$GITHUB_PATH"
-          else
-            # ld looks in /Library/Frameworks by default; $HOME/Frameworks /
-            # DYLD_FRAMEWORK_PATH are not enough for the link step.
-            FRAMEWORK="$(find "$BINDINGS" -type d -name 'Qt6Pas.framework' 2>/dev/null | head -n1 || true)"
-            if [ -z "$FRAMEWORK" ]; then
-              echo "Qt6Pas.framework was not produced; build outputs:"
-              find "$BINDINGS" \( -name '*Qt6Pas*' -o -name 'libQt6Pas*' \) 2>/dev/null || true
-              exit 1
-            fi
-            echo "Installing Qt6Pas framework from $FRAMEWORK"
-            # ld default search path includes /Library/Frameworks (not $HOME/Frameworks).
-            sudo mkdir -p /Library/Frameworks
-            sudo rm -rf /Library/Frameworks/Qt6Pas.framework
-            sudo cp -a "$FRAMEWORK" /Library/Frameworks/
-            cp -a "$FRAMEWORK" "$HOME/Frameworks/"
-            ls -laR /Library/Frameworks/Qt6Pas.framework | head -n 40
-            # Xcode's ld often needs an explicit -F path for third-party frameworks.
-            # FPC uses the first config found; never write a bare ~/.fpc.cfg (that
-            # hid RTL unit paths / System.UITypes). Prefer appending to an existing
-            # home config, otherwise #INCLUDE the system config first.
-            if [ -f "$HOME/.fpc.cfg" ] && grep -q -- '-Fu' "$HOME/.fpc.cfg"; then
-              echo "Appending framework search path to existing $HOME/.fpc.cfg"
-              grep -q -- '-Fl/Library/Frameworks' "$HOME/.fpc.cfg" \
-                || echo '-Fl/Library/Frameworks' >> "$HOME/.fpc.cfg"
-              grep -q -- '-k-F/Library/Frameworks' "$HOME/.fpc.cfg" \
-                || echo '-k-F/Library/Frameworks' >> "$HOME/.fpc.cfg"
-            else
-              SYS_CFG=""
-              for c in \
-                /etc/fpc.cfg \
-                /usr/local/etc/fpc.cfg \
-                "/usr/local/lib/fpc/$(fpc -iV 2>/dev/null)/fpc.cfg"
-              do
-                if [ -f "$c" ]; then
-                  SYS_CFG="$c"
-                  break
-                fi
-              done
-              if [ -z "$SYS_CFG" ]; then
-                echo "Could not locate system fpc.cfg"
-                find /usr/local /etc -name 'fpc.cfg' 2>/dev/null | head || true
-                exit 1
-              fi
-              echo "Writing $HOME/.fpc.cfg with #INCLUDE $SYS_CFG"
-              {
-                echo "#INCLUDE $SYS_CFG"
-                echo "-Fl/Library/Frameworks"
-                echo "-k-F/Library/Frameworks"
-              } > "$HOME/.fpc.cfg"
-            fi
-            echo "$HOME/Frameworks" >> "$GITHUB_PATH"
-            echo "DYLD_FRAMEWORK_PATH=/Library/Frameworks:$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
-            find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \; || true
-            echo "$HOME/lib" >> "$GITHUB_PATH"
-            echo "DYLD_LIBRARY_PATH=$HOME/lib:${DYLD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
-          fi
-          popd
-
       - name: Build
         run: |
           set -e
           set -x
-          if [ "${{ runner.os }}" = "macOS" ]; then
-            test -d /Library/Frameworks/Qt6Pas.framework
-            test -f "$HOME/.fpc.cfg"
-            grep -E 'INCLUDE|/Library/Frameworks' "$HOME/.fpc.cfg"
-          fi
           ${{ matrix.config.build_command }}
 
       - name: Upload artifact
