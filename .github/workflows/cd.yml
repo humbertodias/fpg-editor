@@ -95,15 +95,26 @@ jobs:
               fi
               xattr -cr "$LAZ_HOME"
               test -x "$LAZ_HOME/lazbuild"
+              # Packaged lazbuild defaults to /Developer/lazarus — point it at our unpack.
+              sudo mkdir -p /Developer
+              sudo ln -sfn "$LAZ_HOME" /Developer/lazarus
+              mkdir -p "$LAZ_HOME/config"
+              # lazarus.cfg next to lazbuild forces --pcp; also keep --lazarusdir in sync.
+              printf '%s\n' "--primary-config-path=$LAZ_HOME/config" > "$LAZ_HOME/lazarus.cfg"
+              if [ -f "$LAZ_HOME/config/environmentoptions.xml" ]; then
+                sed -i.bak "s|/Developer/lazarus|$LAZ_HOME|g" "$LAZ_HOME/config/environmentoptions.xml" || true
+              fi
               # Expose fpc + lazbuild to later steps
               echo "/usr/local/bin" >> "$GITHUB_PATH"
               echo "$LAZ_HOME" >> "$GITHUB_PATH"
+              echo "LAZ_HOME=$LAZ_HOME" >> "$GITHUB_ENV"
               hash -r || true
               export PATH="/usr/local/bin:$LAZ_HOME:$PATH"
               fpc -iV
-              lazbuild --version
+              lazbuild --lazarusdir="$LAZ_HOME" --version
+              test -d /Developer/lazarus/lcl
               ls -lh "$LAZ_ZIP" "$FPC_DMG"
-            build_command: make package/mac ARCH=x86_64
+            build_command: make package/mac ARCH=x86_64 LAZ_OPTS=--lazarusdir=$LAZ_HOME
 
     steps:
       - uses: actions/checkout@v7
