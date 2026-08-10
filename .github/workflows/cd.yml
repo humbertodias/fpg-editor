@@ -95,14 +95,24 @@ jobs:
               fi
               xattr -cr "$LAZ_HOME"
               test -x "$LAZ_HOME/lazbuild"
-              # Packaged lazbuild defaults to /Developer/lazarus — point it at our unpack.
-              sudo mkdir -p /Developer
-              sudo ln -sfn "$LAZ_HOME" /Developer/lazarus
+              # Packaged configs point at /Developer/lazarus; that path is read-only on
+              # modern macOS (SIP), so rewrite configs and always pass --lazarusdir.
               mkdir -p "$LAZ_HOME/config"
-              # lazarus.cfg next to lazbuild forces --pcp; also keep --lazarusdir in sync.
               printf '%s\n' "--primary-config-path=$LAZ_HOME/config" > "$LAZ_HOME/lazarus.cfg"
-              if [ -f "$LAZ_HOME/config/environmentoptions.xml" ]; then
-                sed -i.bak "s|/Developer/lazarus|$LAZ_HOME|g" "$LAZ_HOME/config/environmentoptions.xml" || true
+              while IFS= read -r -d '' f; do
+                sed -i.bak "s|/Developer/lazarus|$LAZ_HOME|g" "$f" || true
+              done < <(find "$LAZ_HOME" \( -name '*.xml' -o -name '*.cfg' -o -name '*.ini' \) -print0 2>/dev/null)
+              ENV_XML="$LAZ_HOME/config/environmentoptions.xml"
+              if [ ! -f "$ENV_XML" ]; then
+                printf '%s\n' \
+                  '<?xml version="1.0" encoding="UTF-8"?>' \
+                  '<CONFIG>' \
+                  '  <EnvironmentOptions>' \
+                  '    <Version Value="110"/>' \
+                  "    <LazarusDirectory Value=\"$LAZ_HOME\"/>" \
+                  '    <CompilerFilename Value="/usr/local/bin/fpc"/>' \
+                  '  </EnvironmentOptions>' \
+                  '</CONFIG>' > "$ENV_XML"
               fi
               # Expose fpc + lazbuild to later steps
               echo "/usr/local/bin" >> "$GITHUB_PATH"
@@ -112,7 +122,7 @@ jobs:
               export PATH="/usr/local/bin:$LAZ_HOME:$PATH"
               fpc -iV
               lazbuild --lazarusdir="$LAZ_HOME" --version
-              test -d /Developer/lazarus/lcl
+              test -d "$LAZ_HOME/lcl"
               ls -lh "$LAZ_ZIP" "$FPC_DMG"
             build_command: make package/mac ARCH=x86_64 LAZ_OPTS=--lazarusdir=$LAZ_HOME
 
