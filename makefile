@@ -9,8 +9,10 @@ LAZ_OPTS ?=
 
 # Build commands
 BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LAZ_OPTS) $(LPI)
+BUNDLE = bash scripts/bundle-qt.sh
 
-.PHONY: all clean build run package
+.PHONY: all clean build run package build/lin build/mac build/win \
+	run/lin run/mac run/win package/lin package/mac package/win install/deps
 
 # Build targets (Qt6 on all platforms)
 build/lin:
@@ -22,7 +24,7 @@ build/mac:
 build/win:
 	$(BUILD_CMD)
 
-# Run targets
+# Run targets (dev: needs system Qt6Pas)
 run/lin:
 	@if [ ! -f $(APP) ]; then $(MAKE) build/lin; fi
 	./$(APP)
@@ -35,15 +37,15 @@ run/win:
 	@if [ ! -f $(APP).exe ]; then $(MAKE) build/win; fi
 	./$(APP).exe
 
-# Package targets
+# Package targets — self-contained tree with Qt6Pas + Qt6 libs
 package/lin: build/lin
-	tar cvfz $(APP)-lin-$(ARCH).tar.gz $(APP) $(LANG_DIR)
+	$(BUNDLE) linux
 
 package/mac: build/mac
-	tar cvfz $(APP)-mac-$(ARCH).tar.gz $(APP) $(LANG_DIR)
+	$(BUNDLE) mac
 
 package/win: build/win
-	tar cvfz $(APP)-win-$(ARCH).tar.gz $(APP).exe $(LANG_DIR)
+	$(BUNDLE) win
 
 install/deps:
 	sudo apt update
@@ -52,3 +54,4 @@ install/deps:
 # Clean
 clean:
 	rm -f *.res $(APP) $(APP).exe
+	rm -rf dist $(APP)-*-*.tar.gz

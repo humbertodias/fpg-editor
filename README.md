@@ -5,7 +5,8 @@
 # FPG Editor
 
 **FPG Editor** is a cross-platform desktop application for editing **FPG**, **FNT** and **PRG** files used in [BennuGD](https://www.bennugd.org/), [Fenix](https://fenix.divsite.net) and related game engines.
-It runs on **Linux**, **macOS**, and **Windows** built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads) using the **Qt6** widgetset on all platforms (`libqt6pas` / Qt6Pas required).
+It runs on **Linux**, **macOS**, and **Windows** built with [Lazarus](https://www.lazarus-ide.org/index.php?page=downloads) using the **Qt6** widgetset on all platforms.
+Release archives produced by `make package/*` are **self-contained**: the binary is shipped together with **Qt6Pas** and the required **Qt6** libraries (no system Qt6Pas install needed to run the release).
 
 Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for **modern 64-bit systems**.
 
@@ -25,6 +26,8 @@ Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-edit
 make run/lin
 ```
 
+Local builds still need Qt6Pas installed on the machine. Release tarballs from `make package/lin` already include `libQt6Pas` + Qt6 libs under `lib/` (run via the launcher script inside the archive).
+
 <details>
   <summary>qt6 (macOS)</summary>
   <p align="center">
@@ -36,6 +39,8 @@ make run/lin
 make run/mac
 ```
 
+Release tarballs from `make package/mac` ship an `.app` with `Qt6Pas.framework` and Qt6 frameworks embedded (no `/Library/Frameworks` install required).
+
 <details>
   <summary>qt6 (Windows)</summary>
   <p align="center">
@@ -46,6 +51,8 @@ make run/mac
 ```shell
 make run/win
 ```
+
+Release tarballs from `make package/win` include `Qt6Pas.dll`, Qt6 DLLs and platform plugins next to the executable.
 
 ### Supported Files
 

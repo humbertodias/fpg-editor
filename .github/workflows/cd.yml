@@ -23,9 +23,53 @@ jobs:
           - os: windows-latest
             name: Windows 64
             laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus Windows 64 bits/Lazarus 4.8/lazarus-4.8-fpc-3.2.2-win64.exe
-            install_dependencies: ""
-            build_executable: fpg-editor.exe
-            build_command: make package/win
+            install_dependencies: |
+              set -euo pipefail
+              python -m pip install aqtinstall
+              # Qt 6.6 + matching MinGW (needed to build Qt6Pas.dll and for windeployqt)
+              python -m aqt install-qt windows desktop 6.6.3 win64_mingw -O "$HOME/Qt"
+              python -m aqt install-tool windows desktop tools_mingw1310 -O "$HOME/Qt" || \
+                python -m aqt install-tool windows desktop tools_mingw1120 -O "$HOME/Qt" || \
+                python -m aqt install-tool windows desktop tools_mingw90 -O "$HOME/Qt"
+              QTDIR="$(find "$HOME/Qt" -maxdepth 2 -type d -name 'mingw*_64' | head -n1)"
+              MINGW="$(find "$HOME/Qt/Tools" -maxdepth 1 -type d -name 'mingw*' 2>/dev/null | head -n1 || true)"
+              test -n "$QTDIR"
+              echo "QTDIR=$QTDIR"
+              echo "MINGW=$MINGW"
+              echo "QTDIR=$QTDIR" >> "$GITHUB_ENV"
+              echo "$QTDIR/bin" >> "$GITHUB_PATH"
+              if [ -n "$MINGW" ]; then
+                echo "$MINGW/bin" >> "$GITHUB_PATH"
+              fi
+            build_command: |
+              set -euo pipefail
+              # Locate Lazarus install (setup-lazarus / official installer)
+              LAZ_HOME=""
+              for d in /c/lazarus "/c/Program Files/lazarus" "$HOME/lazarus"; do
+                if [ -x "$d/lazbuild.exe" ] || [ -f "$d/lazbuild.exe" ]; then
+                  LAZ_HOME="$d"
+                  break
+                fi
+              done
+              if [ -z "$LAZ_HOME" ]; then
+                LAZ_HOME="$(dirname "$(command -v lazbuild)" 2>/dev/null || true)"
+              fi
+              test -n "$LAZ_HOME"
+              echo "LAZ_HOME=$LAZ_HOME"
+              BINDINGS="$LAZ_HOME/lcl/interfaces/qt6/cbindings"
+              test -d "$BINDINGS"
+              export PATH="${QTDIR}/bin:${PATH}"
+              pushd "$BINDINGS"
+              qmake6 Qt6Pas.pro -spec win32-g++ "CONFIG+=release" 2>/dev/null \
+                || qmake Qt6Pas.pro -spec win32-g++ "CONFIG+=release"
+              mingw32-make -j"$(nproc 2>/dev/null || echo 2)"
+              DLL="$(find . -name 'Qt6Pas.dll' | head -n1)"
+              test -n "$DLL"
+              cp -a "$DLL" "$GITHUB_WORKSPACE/Qt6Pas.dll"
+              cp -a "$DLL" "${QTDIR}/bin/Qt6Pas.dll"
+              popd
+              make package/win ARCH=x86_64 \
+                LAZ_OPTS="--add-options=-Fl${GITHUB_WORKSPACE}"
 
           - os: ubuntu-latest
             name: Linux 64
@@ -37,7 +81,7 @@ jobs:
             install_dependencies: |
               set -euo pipefail
               sudo apt-get update -y
-              sudo apt-get install -y wget qt6-base-dev
+              sudo apt-get install -y wget qt6-base-dev libxcb-cursor0 libgl1 libxkbcommon0 libxkbcommon-x11-0
               LIBQT6PAS_VERSION="6.2.10"
               BASE="https://github.com/davidbannon/libqt6pas/releases/download/v${LIBQT6PAS_VERSION}"
               wget -q "${BASE}/libqt6pas6_${LIBQT6PAS_VERSION}-1_amd64.deb" -O /tmp/libqt6pas6.deb
@@ -45,6 +89,7 @@ jobs:
               sudo apt-get install -y /tmp/libqt6pas6.deb /tmp/libqt6pas6-dev.deb
               sudo ldconfig
               find /usr/lib /usr/local/lib -name 'libQt6Pas.so*' -ls
+              command -v qmake6 || command -v qmake
             build_command: make package/lin
 
           - os: macos-26-intel
