@@ -157,9 +157,8 @@ jobs:
             sudo cp -a "$FRAMEWORK" /Library/Frameworks/
             cp -a "$FRAMEWORK" "$HOME/Frameworks/"
             ls -la /Library/Frameworks/Qt6Pas.framework
-            # Belt-and-suspenders for FPC framework search (-Fl on Darwin)
-            grep -q -- '-Fl/Library/Frameworks' "$HOME/.fpc.cfg" 2>/dev/null \
-              || echo '-Fl/Library/Frameworks' >> "$HOME/.fpc.cfg"
+            # Do not write ~/.fpc.cfg here: FPC uses the first config found and a
+            # minimal home file would shadow /etc (or fpc) unit paths (System.UITypes).
             echo "$HOME/Frameworks" >> "$GITHUB_PATH"
             echo "DYLD_FRAMEWORK_PATH=/Library/Frameworks:$HOME/Frameworks:${DYLD_FRAMEWORK_PATH:-}" >> "$GITHUB_ENV"
             find . -name 'libQt6Pas*.dylib*' -exec cp -a {} "$HOME/lib/" \; || true
