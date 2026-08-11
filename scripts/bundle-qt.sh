@@ -178,15 +178,24 @@ EOF
   echo "Created ${APP}-lin-${ARCH}.tar.gz"
 }
 
+# Strip code signature so install_name_tool can rewrite load commands.
+strip_macho_signature() {
+  local macho="$1"
+  [[ -f "$macho" ]] || return 0
+  chmod u+w "$macho" 2>/dev/null || true
+  codesign --remove-signature "$macho" 2>/dev/null || true
+}
+
 # Rewrite absolute / Homebrew / Cellar dylib refs in a Mach-O binary to @rpath.
 # Args: <mach-o-file> <frameworks-dir>
 fix_macho_deps() {
   local macho="$1" fwdir="$2"
-  local dep new fwname inner base
+  local dep new fwname inner base resolved err
   [[ -f "$macho" ]] || return 0
   chmod -R u+w "$(dirname "$macho")" 2>/dev/null || chmod u+w "$macho" 2>/dev/null || true
+  strip_macho_signature "$macho"
+  err="$(mktemp)"
 
-  # Avoid pipe-subshell issues: use process substitution
   while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
     case "$dep" in
@@ -197,15 +206,33 @@ fix_macho_deps() {
       if [[ -d "$fwdir/${fwname}.framework" ]]; then
         inner="$(echo "$dep" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
         new="@rpath/${inner}"
-        install_name_tool -change "$dep" "$new" "$macho" 2>/dev/null || true
+        if ! install_name_tool -change "$dep" "$new" "$macho" 2>"$err"; then
+          echo "WARN: install_name_tool -change failed for $macho:" >&2
+          cat "$err" >&2 || true
+        fi
       fi
       continue
     fi
     base="$(basename "$dep")"
+    # Ensure the dylib is present in Frameworks before rewriting
+    if [[ ! -f "$fwdir/$base" ]]; then
+      resolved="$dep"
+      [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
+      if [[ -n "$resolved" && -e "$resolved" ]]; then
+        echo "Bundling dylib $base from $resolved (during fix)"
+        cp -a "$resolved" "$fwdir/$base"
+        chmod u+w "$fwdir/$base" 2>/dev/null || true
+        strip_macho_signature "$fwdir/$base"
+      fi
+    fi
     if [[ -f "$fwdir/$base" ]]; then
-      install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>/dev/null || true
+      if ! install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>"$err"; then
+        echo "WARN: install_name_tool -change $dep -> @rpath/$base failed on $macho:" >&2
+        cat "$err" >&2 || true
+      fi
     fi
   done < <(otool -L "$macho" 2>/dev/null | awk 'NR>1 {print $1}')
+  rm -f "$err"
 }
 
 # Resolve @loader_path / relative refs against a Mach-O's directory.
@@ -240,8 +267,12 @@ resolve_brew_dylib() {
     "$(brew --prefix glib 2>/dev/null)" \
     "/usr/local/opt/icu4c@78" \
     "/usr/local/opt/icu4c" \
+    "/usr/local/opt/md4c" \
+    "/usr/local/opt/double-conversion" \
     "/opt/homebrew/opt/icu4c@78" \
-    "/opt/homebrew/opt/icu4c"
+    "/opt/homebrew/opt/icu4c" \
+    "/opt/homebrew/opt/md4c" \
+    "/opt/homebrew/opt/double-conversion"
   do
     [[ -z "$prefix" || "$prefix" == "null" ]] && continue
     try="$prefix/lib/$base"
@@ -332,6 +363,7 @@ collect_macos_deps() {
         fi
         fwbin="$(find "$dest" -type f -path "*/Versions/*/${fwname}" 2>/dev/null | head -n1 || true)"
         [[ -z "$fwbin" ]] && fwbin="$dest/$fwname"
+        [[ -f "$fwbin" ]] && strip_macho_signature "$fwbin"
         if [[ -f "$fwbin" ]] && ! grep -Fxq -- "$fwbin" "$seen_file" 2>/dev/null; then
           echo "$fwbin" >> "$queue_file"
         fi
@@ -342,6 +374,7 @@ collect_macos_deps() {
           echo "Bundling dylib $base from $dep"
           cp -a "$dep" "$dest"
           chmod u+w "$dest" 2>/dev/null || true
+          strip_macho_signature "$dest"
         fi
         if ! grep -Fxq -- "$dest" "$seen_file" 2>/dev/null; then
           echo "$dest" >> "$queue_file"
@@ -357,9 +390,19 @@ collect_macos_deps() {
 # Args: <frameworks-dir> <app-exe>
 relink_macos_bundle() {
   local fwdir="$1" exe="$2"
-  local f dep base resolved pass
-  for pass in 1 2 3; do
-    # Collect any remaining absolute third-party deps
+  local f dep base resolved pass fwname inner
+
+  # Make everything writable and drop signatures first (install_name_tool needs this)
+  chmod -R u+w "$fwdir" 2>/dev/null || true
+  while IFS= read -r -d '' f; do
+    file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+    strip_macho_signature "$f"
+  done < <(find "$fwdir" -type f -print0 2>/dev/null)
+  strip_macho_signature "$exe"
+
+  for pass in 1 2 3 4; do
+    echo "macOS relink pass $pass..."
+    # Copy any remaining absolute third-party deps into Frameworks/
     while IFS= read -r -d '' f; do
       file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
       while IFS= read -r dep; do
@@ -371,15 +414,19 @@ relink_macos_bundle() {
               collect_macos_deps "$f" "$fwdir"
             else
               base="$(basename "$dep")"
-              if [[ ! -f "$fwdir/$base" ]]; then
-                resolved="$dep"
-                [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
-                if [[ -n "$resolved" && -e "$resolved" ]]; then
-                  echo "Bundling leftover dylib $base from $resolved"
-                  cp -a "$resolved" "$fwdir/$base"
-                  chmod u+w "$fwdir/$base" 2>/dev/null || true
-                  collect_macos_deps "$fwdir/$base" "$fwdir"
-                fi
+              resolved="$dep"
+              [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
+              if [[ -n "$resolved" && -e "$resolved" && ! -f "$fwdir/$base" ]]; then
+                echo "Bundling leftover dylib $base from $resolved"
+                cp -a "$resolved" "$fwdir/$base"
+                chmod u+w "$fwdir/$base" 2>/dev/null || true
+                strip_macho_signature "$fwdir/$base"
+                collect_macos_deps "$fwdir/$base" "$fwdir"
+              fi
+              # Rewrite this specific reference immediately
+              if [[ -f "$fwdir/$base" ]]; then
+                strip_macho_signature "$f"
+                install_name_tool -change "$dep" "@rpath/$base" "$f" 2>/dev/null || true
               fi
             fi
             ;;
@@ -387,12 +434,11 @@ relink_macos_bundle() {
       done < <(otool -L "$f" 2>/dev/null | awk 'NR>1 {print $1}')
     done < <(find "$fwdir" -type f -print0 2>/dev/null)
 
-    # Rewrite all Mach-Os
+    # Full rewrite pass on every Mach-O
     while IFS= read -r -d '' f; do
       file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
-      chmod u+w "$f" 2>/dev/null || true
+      strip_macho_signature "$f"
       if [[ "$f" == *'.framework/'* ]]; then
-        local fwname inner
         fwname="$(echo "$f" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
         inner="$(echo "$f" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
         install_name_tool -id "@rpath/${inner}" "$f" 2>/dev/null || true
@@ -403,6 +449,7 @@ relink_macos_bundle() {
       fix_macho_deps "$f" "$fwdir"
     done < <(find "$fwdir" -type f -print0 2>/dev/null)
 
+    strip_macho_signature "$exe"
     install_name_tool -add_rpath @executable_path/../Frameworks "$exe" 2>/dev/null || true
     fix_macho_deps "$exe" "$fwdir"
   done
