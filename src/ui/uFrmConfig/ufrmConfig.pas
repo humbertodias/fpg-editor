@@ -26,7 +26,7 @@ interface
 uses
   LCLIntf, LCLType, SysUtils, Classes, Graphics, Controls, Forms,
   StdCtrls, Buttons, ComCtrls, {Tabnotbk,} uinifile, Dialogs, uFrmMessageBox,
-  ExtCtrls, Spin, ColorBox, uLanguage;
+  ExtCtrls, Spin, ColorBox, uLanguage, uUtils;
 
 type
 
@@ -149,7 +149,7 @@ procedure TfrmConfig.bbLanguajeClick(Sender: TObject);
 var
   langDir: string;
 begin
-  langDir := ExtractFileDir(Application.ExeName) + DirectorySeparator + 'languages';
+  langDir := GetAppResourceDir + DirectorySeparator + 'languages';
   OpenDialog.Title := 'Selecionar idioma / Select language';
   OpenDialog.Filter := 'Traduções (*.po)|*.po|Todos (*.*)|*.*';
   OpenDialog.DefaultExt := 'po';
@@ -157,7 +157,7 @@ begin
   if DirectoryExists(langDir) then
     OpenDialog.InitialDir := langDir
   else
-    OpenDialog.InitialDir := ExtractFileDir(Application.ExeName);
+    OpenDialog.InitialDir := GetAppResourceDir;
 
   if OpenDialog.Execute then
   begin
@@ -231,4 +231,4 @@ begin
  edLanguage.Color := clMedGray;
 end;
 
-end.
+end.

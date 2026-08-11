@@ -25,10 +25,10 @@ unit uinifile;
 
 interface
 
-uses inifiles, SysUtils, graphics, LCLIntf, LCLType, Forms, FileUtil;
+uses inifiles, SysUtils, graphics, LCLIntf, LCLType, FileUtil, uUtils;
 
 const
- sINIFILE         =  DirectorySeparator+'fpg-editor.ini';
+ sINIFILE_NAME    = 'fpg-editor.ini';
  sDEFAULT_LNG     = DirectorySeparator+'languages'+DirectorySeparator+'fpg-editor.en.po';
 
  sMAIN            = 'FPG';
@@ -87,7 +87,25 @@ var
 
 implementation
 
+function IniFilePath: string;
+var
+  cfgDir, legacy: string;
+begin
+  cfgDir := GetUserConfigDir;
+  Result := cfgDir + DirectorySeparator + sINIFILE_NAME;
+  { Older builds wrote next to the executable (fails under macOS App Translocation). }
+  legacy := ExtractFileDir(ParamStr(0)) + DirectorySeparator + sINIFILE_NAME;
+  if (not FileExists(Result)) and FileExists(legacy) then
+  begin
+    ForceDirectories(cfgDir);
+    CopyFile(legacy, Result);
+  end;
+end;
 
+function DefaultLanguagePath: string;
+begin
+  Result := GetAppResourceDir + sDEFAULT_LNG;
+end;
 
 procedure inifile_load_font( var nFnt : TFont );
 var
@@ -110,7 +128,7 @@ var
 
 begin
 
- strinifile := ExtractFileDir( ParamStr(0) ) + sINIFILE;
+ strinifile := IniFilePath;
 
  if not FileExists(strinifile) { *Converted from FileExists*  } then
  begin
@@ -120,7 +138,7 @@ begin
   inifile_color_points    := clBlack;
   inifile_repaint_number  := 20;
   inifile_animate_delay   := 100;
-  inifile_language        := ExtractFileDir(Application.ExeName) + sDEFAULT_LNG;
+  inifile_language        := DefaultLanguagePath;
   inifile_program_edit    := ExtractFileDir( ParamStr(0) ) + DirectorySeparator+'myprogram.exe';
   inifile_show_flat       := true;
   inifile_show_splash     := true;
@@ -161,7 +179,7 @@ begin
   inifile_color_points    := inifile.ReadInteger( sMAIN, sCOLOR_POINTS   , 0);
   inifile_repaint_number  := inifile.ReadInteger( sMAIN, sIMAGES_PAINT   , 20);
   inifile_animate_delay   := inifile.ReadInteger( sMAIN, sANIMATE_DELAY  , 100);
-  inifile_language        := inifile.ReadString ( sMAIN, sLANGUAGE       , ExtractFileDir(Application.ExeName) + sDEFAULT_LNG);
+  inifile_language        := inifile.ReadString ( sMAIN, sLANGUAGE       , DefaultLanguagePath);
   inifile_program_edit    := inifile.ReadString ( sMAIN, sEDIT_PROGRAM   , ExtractFileDir(ParamStr(0)) + DirectorySeparator+'myprogram.exe');
   inifile_bg_color        := inifile.ReadInteger( sMAIN, sBG_COLOR   , clWhite);
   inifile_bg_colorFPG        := inifile.ReadInteger( sMAIN, sBG_COLOR_FPG   , clWhite);
@@ -196,7 +214,8 @@ var
  inifile : TIniFile;
  strinifile : String;
 begin
- strinifile := ExtractFileDir( ParamStr(0) ) + sINIFILE;
+ strinifile := IniFilePath;
+ ForceDirectories(ExtractFilePath(strinifile));
 
  inifile := TIniFile.Create(strinifile);
 
