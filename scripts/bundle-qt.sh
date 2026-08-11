@@ -178,14 +178,123 @@ EOF
   echo "Created ${APP}-lin-${ARCH}.tar.gz"
 }
 
+# Rewrite absolute / Homebrew / Cellar dylib refs in a Mach-O binary to @rpath.
+# Args: <mach-o-file> <frameworks-dir>
+fix_macho_deps() {
+  local macho="$1" fwdir="$2"
+  local dep new fwname inner base
+  [[ -f "$macho" ]] || return 0
+  chmod u+w "$macho" 2>/dev/null || true
+
+  otool -L "$macho" 2>/dev/null | awk 'NR>1 {print $1}' | while IFS= read -r dep; do
+    [[ -z "$dep" ]] && continue
+    case "$dep" in
+      /System/*|/usr/lib/*|@rpath/*|@executable_path/*|@loader_path/*) continue ;;
+    esac
+    if [[ "$dep" == *'.framework/'* ]]; then
+      fwname="$(echo "$dep" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+      if [[ -d "$fwdir/${fwname}.framework" ]]; then
+        inner="$(echo "$dep" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
+        new="@rpath/${inner}"
+        install_name_tool -change "$dep" "$new" "$macho" 2>/dev/null || true
+      fi
+      continue
+    fi
+    base="$(basename "$dep")"
+    if [[ -f "$fwdir/$base" ]]; then
+      install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>/dev/null || true
+    fi
+  done
+}
+
+# Resolve a missing framework path via Homebrew prefixes.
+resolve_fw_dep() {
+  local dep="$1" fwname try
+  fwname="$(echo "$dep" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+  for try in \
+    "$(brew --prefix qtbase 2>/dev/null)/lib/${fwname}.framework" \
+    "$(brew --prefix qt 2>/dev/null)/lib/${fwname}.framework" \
+    "/usr/local/opt/qtbase/lib/${fwname}.framework" \
+    "/usr/local/opt/qt/lib/${fwname}.framework" \
+    "/opt/homebrew/opt/qtbase/lib/${fwname}.framework" \
+    "/opt/homebrew/opt/qt/lib/${fwname}.framework"
+  do
+    [[ -z "$try" || "$try" == "/lib/${fwname}.framework" ]] && continue
+    if [[ -d "$try" ]]; then
+      echo "$try/$(echo "$dep" | sed -E "s|.*/${fwname}\\.framework/||")"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Recursively collect and copy non-system Mach-O deps into Frameworks/.
+# Bash 3.2 compatible (no associative arrays).
+# Args: <start-binary> <frameworks-dir>
+collect_macos_deps() {
+  local start="$1" fwdir="$2"
+  local queue_file seen_file
+  queue_file="$(mktemp)"
+  seen_file="$(mktemp)"
+  echo "$start" > "$queue_file"
+
+  while [[ -s "$queue_file" ]]; do
+    local cur dep fwname fwsrc dest fwbin
+    cur="$(head -n1 "$queue_file")"
+    tail -n +2 "$queue_file" > "${queue_file}.rest" && mv "${queue_file}.rest" "$queue_file"
+    grep -Fxq -- "$cur" "$seen_file" 2>/dev/null && continue
+    echo "$cur" >> "$seen_file"
+    [[ -f "$cur" ]] || continue
+
+    while IFS= read -r dep; do
+      [[ -z "$dep" ]] && continue
+      case "$dep" in
+        /System/*|/usr/lib/*|@rpath/*|@executable_path/*|@loader_path/*|@*) continue ;;
+      esac
+      if [[ ! -e "$dep" && "$dep" == *'.framework/'* ]]; then
+        dep="$(resolve_fw_dep "$dep" || true)"
+        [[ -n "$dep" && -e "$dep" ]] || continue
+      fi
+      [[ -e "$dep" ]] || continue
+
+      if [[ "$dep" == *'.framework/'* ]]; then
+        fwname="$(echo "$dep" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+        fwsrc="$(echo "$dep" | sed -E 's|(.*/[^/]+\.framework)/.*|\1|')"
+        dest="$fwdir/${fwname}.framework"
+        if [[ ! -d "$dest" ]]; then
+          echo "Bundling framework $fwname from $fwsrc"
+          cp -a "$fwsrc" "$fwdir/"
+        fi
+        fwbin="$(find "$dest" -type f -path "*/Versions/*/${fwname}" 2>/dev/null | head -n1 || true)"
+        [[ -z "$fwbin" ]] && fwbin="$dest/$fwname"
+        if [[ -f "$fwbin" ]] && ! grep -Fxq -- "$fwbin" "$seen_file" 2>/dev/null; then
+          echo "$fwbin" >> "$queue_file"
+        fi
+      else
+        dest="$fwdir/$(basename "$dep")"
+        if [[ ! -f "$dest" ]]; then
+          echo "Bundling dylib $(basename "$dep") from $dep"
+          cp -a "$dep" "$dest"
+        fi
+        if ! grep -Fxq -- "$dest" "$seen_file" 2>/dev/null; then
+          echo "$dest" >> "$queue_file"
+        fi
+      fi
+    done < <(otool -L "$cur" 2>/dev/null | awk 'NR>1 {print $1}')
+  done
+
+  rm -f "$queue_file" "$seen_file" "${queue_file}.rest"
+}
+
 bundle_mac() {
   local bin="$ROOT/$APP"
   [[ -f "$bin" ]] || die "missing binary: $bin (build first)"
 
   local stage="$DIST/$APP-mac-$ARCH"
   local bundle="$stage/${APP}.app"
+  local fwdir="$bundle/Contents/Frameworks"
   rm -rf "$stage"
-  mkdir -p "$bundle/Contents/MacOS" "$bundle/Contents/Frameworks" "$bundle/Contents/Resources"
+  mkdir -p "$bundle/Contents/MacOS" "$fwdir" "$bundle/Contents/Resources"
 
   cp -a "$bin" "$bundle/Contents/MacOS/$APP"
   [[ -d "$LANG_DIR" ]] && cp -a "$LANG_DIR" "$bundle/Contents/Resources/"
@@ -217,56 +326,85 @@ EOF
     fw=""
   done
   if [[ -z "$fw" ]]; then
-    fw="$(find /Library/Frameworks "$HOME" /opt/homebrew /usr/local -type d -name 'Qt6Pas.framework' 2>/dev/null | head -n1 || true)"
+    fw="$(find /Library/Frameworks "$HOME/lazarus" -type d -name 'Qt6Pas.framework' 2>/dev/null | head -n1 || true)"
   fi
   [[ -n "$fw" && -d "$fw" ]] || die "Qt6Pas.framework not found"
-  cp -a "$fw" "$bundle/Contents/Frameworks/"
+  cp -a "$fw" "$fwdir/"
 
-  # Normalize Qt6Pas install name so the embedded copy is used
-  local pas_bin="$bundle/Contents/Frameworks/Qt6Pas.framework/Versions/6/Qt6Pas"
-  if [[ -f "$pas_bin" ]]; then
-    install_name_tool -id @rpath/Qt6Pas.framework/Versions/6/Qt6Pas "$pas_bin" 2>/dev/null || true
+  local pas_bin exe
+  pas_bin="$fwdir/Qt6Pas.framework/Versions/6/Qt6Pas"
+  [[ -f "$pas_bin" ]] || pas_bin="$(find "$fwdir/Qt6Pas.framework" -type f -name Qt6Pas | head -n1)"
+  [[ -f "$pas_bin" ]] || die "Qt6Pas binary not found inside framework"
+  exe="$bundle/Contents/MacOS/$APP"
+
+  # Pull Qt frameworks / dylibs referenced by Qt6Pas (and recursively)
+  collect_macos_deps "$pas_bin" "$fwdir"
+  collect_macos_deps "$exe" "$fwdir"
+
+  # Also try macdeployqt for plugins (platforms/cocoa etc.)
+  local macdeployqt
+  macdeployqt="$(find_qt_bin macdeployqt || true)"
+  if [[ -n "$macdeployqt" ]]; then
+    "$macdeployqt" "$bundle" -verbose=1 2>&1 | tail -n 50 || true
+    [[ -d "$fwdir/Qt6Pas.framework" ]] || cp -a "$fw" "$fwdir/"
   fi
 
-  # Make the binary look for frameworks next to itself
-  install_name_tool -add_rpath @executable_path/../Frameworks "$bundle/Contents/MacOS/$APP" 2>/dev/null || true
+  # Copy cocoa platform plugin if missing
+  local qt_plugins plug_src
+  qt_plugins="$(qt_query QT_INSTALL_PLUGINS 2>/dev/null || true)"
+  if [[ -n "$qt_plugins" && -f "$qt_plugins/platforms/libqcocoa.dylib" ]]; then
+    mkdir -p "$bundle/Contents/PlugIns/platforms"
+    cp -a "$qt_plugins/platforms/libqcocoa.dylib" "$bundle/Contents/PlugIns/platforms/"
+    collect_macos_deps "$bundle/Contents/PlugIns/platforms/libqcocoa.dylib" "$fwdir"
+  fi
+  cat > "$bundle/Contents/Resources/qt.conf" <<'EOF'
+[Paths]
+Plugins = PlugIns
+EOF
 
-  # Prefer @rpath for Qt6Pas if linked with absolute / empty path
+  # Rewrite IDs and dependency paths to @rpath for everything we bundled
+  local f fwname inner
+  while IFS= read -r -d '' f; do
+    file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+    chmod u+w "$f" 2>/dev/null || true
+    if [[ "$f" == *'.framework/'* ]]; then
+      fwname="$(echo "$f" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+      inner="$(echo "$f" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
+      install_name_tool -id "@rpath/${inner}" "$f" 2>/dev/null || true
+    else
+      install_name_tool -id "@rpath/$(basename "$f")" "$f" 2>/dev/null || true
+    fi
+    install_name_tool -add_rpath @executable_path/../Frameworks "$f" 2>/dev/null || true
+    fix_macho_deps "$f" "$fwdir"
+  done < <(find "$fwdir" "$bundle/Contents/PlugIns" -type f -print0 2>/dev/null)
+
+  install_name_tool -add_rpath @executable_path/../Frameworks "$exe" 2>/dev/null || true
+  fix_macho_deps "$exe" "$fwdir"
+  # Ensure main binary references Qt6Pas via @rpath
   local old
   while IFS= read -r old; do
     case "$old" in
       *Qt6Pas*)
         install_name_tool -change "$old" \
           @rpath/Qt6Pas.framework/Versions/6/Qt6Pas \
-          "$bundle/Contents/MacOS/$APP" 2>/dev/null || true
+          "$exe" 2>/dev/null || true
         ;;
     esac
-  done < <(otool -L "$bundle/Contents/MacOS/$APP" | awk 'NR>1 {print $1}')
+  done < <(otool -L "$exe" | awk 'NR>1 {print $1}')
 
-  local macdeployqt
-  macdeployqt="$(find_qt_bin macdeployqt || true)"
-  if [[ -n "$macdeployqt" ]]; then
-    # Pull Qt frameworks referenced by Qt6Pas into the bundle
-    "$macdeployqt" "$bundle" -verbose=1 || true
-    # Ensure Qt6Pas itself is still present (macdeployqt can be picky)
-    [[ -d "$bundle/Contents/Frameworks/Qt6Pas.framework" ]] || \
-      cp -a "$fw" "$bundle/Contents/Frameworks/"
-  else
-    echo "WARN: macdeployqt not found; copying Qt frameworks from Homebrew/Qt prefix"
-    local qt_prefix qt_lib
-    qt_prefix="$(qt_query QT_INSTALL_PREFIX)"
-    qt_lib="$(qt_query QT_INSTALL_LIBS)"
-    local dep
-    for dep in QtCore QtGui QtWidgets QtPrintSupport QtDBus QtOpenGL; do
-      if [[ -d "$qt_lib/${dep}.framework" ]]; then
-        cp -a "$qt_lib/${dep}.framework" "$bundle/Contents/Frameworks/"
-      elif [[ -d "$qt_prefix/lib/${dep}.framework" ]]; then
-        cp -a "$qt_prefix/lib/${dep}.framework" "$bundle/Contents/Frameworks/"
-      fi
-    done
+  # Ad-hoc sign after install_name_tool (required on modern macOS)
+  if command -v codesign >/dev/null 2>&1; then
+    codesign --force --deep --sign - "$bundle" 2>/dev/null || \
+      codesign --force --sign - "$exe" 2>/dev/null || true
   fi
 
-  # Launcher note at stage root
+  # Fail if Qt6Pas still points at Homebrew/Cellar Qt paths
+  if otool -L "$pas_bin" | grep -E '/usr/local/opt/|/opt/homebrew/|/Cellar/' | grep -qiE 'Qt|qtbase|qttools'; then
+    echo "ERROR: Qt6Pas still has absolute Homebrew Qt refs:" >&2
+    otool -L "$pas_bin" | grep -E '/usr/local/opt/|/opt/homebrew/|/Cellar/' >&2 || true
+    die "macOS bundle is not relocatable — fix_macho_deps failed"
+  fi
+
   cat > "$stage/README.txt" <<EOF
 FPG Editor (Qt6)
 Open ${APP}.app — Qt6Pas and Qt6 frameworks are embedded in Contents/Frameworks.
@@ -274,6 +412,8 @@ EOF
 
   tar -C "$DIST" -czf "${APP}-mac-${ARCH}.tar.gz" "$(basename "$stage")"
   echo "Created ${APP}-mac-${ARCH}.tar.gz"
+  echo "Frameworks bundled:"
+  ls -1 "$fwdir"
 }
 
 bundle_win() {
