@@ -52,7 +52,7 @@ Release tarballs from `make package/mac` ship an `.app` with `Qt6Pas.framework` 
 make run/win
 ```
 
-Release tarballs from `make package/win` include `Qt6Pas6.dll`, Qt6 DLLs and platform plugins next to the executable.
+Release tarballs from `make package/win` produce `fpg-editor-win-*.zip` with `Qt6Pas6.dll`, Qt6 DLLs and platform plugins next to the executable.
 
 ### Supported Files
 

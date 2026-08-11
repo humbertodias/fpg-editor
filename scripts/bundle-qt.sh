@@ -336,8 +336,16 @@ bundle_win() {
   cp -a "$pas" "$stage/Qt6Pas6.dll"
   cp -a "$pas" "$stage/Qt6Pas.dll"
 
-  tar -C "$DIST" -czf "${APP}-win-${ARCH}.tar.gz" "$(basename "$stage")"
-  echo "Created ${APP}-win-${ARCH}.tar.gz"
+  # Windows users expect .zip (not .tar.gz nested inside Actions artifact zips)
+  local out="$ROOT/${APP}-win-${ARCH}"
+  python - "$stage" "$out" <<'PY'
+import shutil, sys
+from pathlib import Path
+stage = Path(sys.argv[1])
+out = Path(sys.argv[2])
+shutil.make_archive(str(out), "zip", root_dir=stage.parent, base_dir=stage.name)
+print(f"Created {out}.zip")
+PY
 }
 
 case "$TARGET" in

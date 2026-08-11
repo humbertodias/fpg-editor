@@ -54,4 +54,4 @@ install/deps:
 # Clean
 clean:
 	rm -f *.res $(APP) $(APP).exe
-	rm -rf dist $(APP)-*-*.tar.gz
+	rm -rf dist $(APP)-*-*.tar.gz $(APP)-*-*.zip
