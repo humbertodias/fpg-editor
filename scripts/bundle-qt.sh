@@ -178,6 +178,16 @@ EOF
   echo "Created ${APP}-lin-${ARCH}.tar.gz"
 }
 
+# Copy a dylib by value (dereference Homebrew symlinks into Cellar).
+# Relative symlinks break when placed in Contents/Frameworks/.
+copy_real_file() {
+  local src="$1" dest="$2" real
+  real="$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$src")"
+  [[ -f "$real" ]] || die "cannot resolve real file for $src"
+  cp -p "$real" "$dest"
+  chmod u+w "$dest" 2>/dev/null || true
+}
+
 # Strip code signature so install_name_tool can rewrite load commands.
 strip_macho_signature() {
   local macho="$1"
@@ -215,13 +225,15 @@ fix_macho_deps() {
     fi
     base="$(basename "$dep")"
     # Ensure the dylib is present in Frameworks before rewriting
+    if [[ -L "$fwdir/$base" && ! -f "$fwdir/$base" ]]; then
+      rm -f "$fwdir/$base"
+    fi
     if [[ ! -f "$fwdir/$base" ]]; then
       resolved="$dep"
       [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
       if [[ -n "$resolved" && -e "$resolved" ]]; then
         echo "Bundling dylib $base from $resolved (during fix)"
-        cp -a "$resolved" "$fwdir/$base"
-        chmod u+w "$fwdir/$base" 2>/dev/null || true
+        copy_real_file "$resolved" "$fwdir/$base"
         strip_macho_signature "$fwdir/$base"
       fi
     fi
@@ -229,7 +241,13 @@ fix_macho_deps() {
       if ! install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>"$err"; then
         echo "WARN: install_name_tool -change $dep -> @rpath/$base failed on $macho:" >&2
         cat "$err" >&2 || true
+        # Retry after stripping again
+        strip_macho_signature "$macho"
+        install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>"$err" || \
+          echo "WARN: retry also failed: $(cat "$err")" >&2
       fi
+    else
+      echo "WARN: $base not in Frameworks; cannot rewrite $dep in $macho" >&2
     fi
   done < <(otool -L "$macho" 2>/dev/null | awk 'NR>1 {print $1}')
   rm -f "$err"
@@ -372,8 +390,7 @@ collect_macos_deps() {
         dest="$fwdir/$base"
         if [[ ! -f "$dest" ]]; then
           echo "Bundling dylib $base from $dep"
-          cp -a "$dep" "$dest"
-          chmod u+w "$dest" 2>/dev/null || true
+          copy_real_file "$dep" "$dest"
           strip_macho_signature "$dest"
         fi
         if ! grep -Fxq -- "$dest" "$seen_file" 2>/dev/null; then
@@ -414,19 +431,28 @@ relink_macos_bundle() {
               collect_macos_deps "$f" "$fwdir"
             else
               base="$(basename "$dep")"
+              # Replace broken Homebrew symlinks from earlier cp -a attempts
+              if [[ -L "$fwdir/$base" && ! -f "$fwdir/$base" ]]; then
+                rm -f "$fwdir/$base"
+              fi
               resolved="$dep"
               [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
               if [[ -n "$resolved" && -e "$resolved" && ! -f "$fwdir/$base" ]]; then
                 echo "Bundling leftover dylib $base from $resolved"
-                cp -a "$resolved" "$fwdir/$base"
-                chmod u+w "$fwdir/$base" 2>/dev/null || true
+                copy_real_file "$resolved" "$fwdir/$base"
                 strip_macho_signature "$fwdir/$base"
                 collect_macos_deps "$fwdir/$base" "$fwdir"
               fi
               # Rewrite this specific reference immediately
               if [[ -f "$fwdir/$base" ]]; then
                 strip_macho_signature "$f"
-                install_name_tool -change "$dep" "@rpath/$base" "$f" 2>/dev/null || true
+                if ! install_name_tool -change "$dep" "@rpath/$base" "$f" 2>/tmp/fpg-int2.err; then
+                  echo "WARN: immediate -change failed for $dep in $f:" >&2
+                  cat /tmp/fpg-int2.err >&2 || true
+                fi
+                rm -f /tmp/fpg-int2.err
+              else
+                echo "WARN: failed to materialize $base into Frameworks" >&2
               fi
             fi
             ;;
