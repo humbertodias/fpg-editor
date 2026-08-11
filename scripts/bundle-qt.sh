@@ -184,9 +184,10 @@ fix_macho_deps() {
   local macho="$1" fwdir="$2"
   local dep new fwname inner base
   [[ -f "$macho" ]] || return 0
-  chmod u+w "$macho" 2>/dev/null || true
+  chmod -R u+w "$(dirname "$macho")" 2>/dev/null || chmod u+w "$macho" 2>/dev/null || true
 
-  otool -L "$macho" 2>/dev/null | awk 'NR>1 {print $1}' | while IFS= read -r dep; do
+  # Avoid pipe-subshell issues: use process substitution
+  while IFS= read -r dep; do
     [[ -z "$dep" ]] && continue
     case "$dep" in
       /System/*|/usr/lib/*|@rpath/*|@executable_path/*|@loader_path/*) continue ;;
@@ -204,7 +205,53 @@ fix_macho_deps() {
     if [[ -f "$fwdir/$base" ]]; then
       install_name_tool -change "$dep" "@rpath/$base" "$macho" 2>/dev/null || true
     fi
+  done < <(otool -L "$macho" 2>/dev/null | awk 'NR>1 {print $1}')
+}
+
+# Resolve @loader_path / relative refs against a Mach-O's directory.
+resolve_loader_path() {
+  local dep="$1" macho="$2" base
+  base="$(cd "$(dirname "$macho")" && pwd)"
+  case "$dep" in
+    @loader_path/*)
+      echo "$base/${dep#@loader_path/}"
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+# Find a Homebrew dylib by basename (icu4c, etc.).
+resolve_brew_dylib() {
+  local base="$1" try prefix
+  for prefix in \
+    "$(brew --prefix icu4c@78 2>/dev/null)" \
+    "$(brew --prefix icu4c 2>/dev/null)" \
+    "$(brew --prefix pcre2 2>/dev/null)" \
+    "$(brew --prefix zstd 2>/dev/null)" \
+    "$(brew --prefix libpng 2>/dev/null)" \
+    "$(brew --prefix jpeg-turbo 2>/dev/null)" \
+    "$(brew --prefix jpeg 2>/dev/null)" \
+    "$(brew --prefix libb2 2>/dev/null)" \
+    "$(brew --prefix double-conversion 2>/dev/null)" \
+    "$(brew --prefix md4c 2>/dev/null)" \
+    "$(brew --prefix harfbuzz 2>/dev/null)" \
+    "$(brew --prefix freetype 2>/dev/null)" \
+    "$(brew --prefix glib 2>/dev/null)" \
+    "/usr/local/opt/icu4c@78" \
+    "/usr/local/opt/icu4c" \
+    "/opt/homebrew/opt/icu4c@78" \
+    "/opt/homebrew/opt/icu4c"
+  do
+    [[ -z "$prefix" || "$prefix" == "null" ]] && continue
+    try="$prefix/lib/$base"
+    [[ -f "$try" ]] && { echo "$try"; return 0; }
   done
+  # Last resort: locate under Homebrew Cellar / opt
+  try="$(find /usr/local/opt /opt/homebrew/opt /usr/local/Cellar /opt/homebrew/Cellar \
+    -name "$base" 2>/dev/null | head -n1 || true)"
+  [[ -n "$try" && -f "$try" ]] && { echo "$try"; return 0; }
+  return 1
 }
 
 # Resolve a missing framework path via Homebrew prefixes.
@@ -239,7 +286,7 @@ collect_macos_deps() {
   echo "$start" > "$queue_file"
 
   while [[ -s "$queue_file" ]]; do
-    local cur dep fwname fwsrc dest fwbin
+    local cur dep fwname fwsrc dest fwbin resolved base
     cur="$(head -n1 "$queue_file")"
     tail -n +2 "$queue_file" > "${queue_file}.rest" && mv "${queue_file}.rest" "$queue_file"
     grep -Fxq -- "$cur" "$seen_file" 2>/dev/null && continue
@@ -249,21 +296,39 @@ collect_macos_deps() {
     while IFS= read -r dep; do
       [[ -z "$dep" ]] && continue
       case "$dep" in
-        /System/*|/usr/lib/*|@rpath/*|@executable_path/*|@loader_path/*|@*) continue ;;
+        /System/*|/usr/lib/*) continue ;;
+        @rpath/*|@executable_path/*) continue ;;
+        @loader_path/*)
+          resolved="$(resolve_loader_path "$dep" "$cur" || true)"
+          if [[ -n "$resolved" && -e "$resolved" ]]; then
+            dep="$resolved"
+          else
+            continue
+          fi
+          ;;
+        @*) continue ;;
       esac
-      if [[ ! -e "$dep" && "$dep" == *'.framework/'* ]]; then
-        dep="$(resolve_fw_dep "$dep" || true)"
+
+      if [[ ! -e "$dep" ]]; then
+        if [[ "$dep" == *'.framework/'* ]]; then
+          dep="$(resolve_fw_dep "$dep" || true)"
+        else
+          base="$(basename "$dep")"
+          dep="$(resolve_brew_dylib "$base" || true)"
+        fi
         [[ -n "$dep" && -e "$dep" ]] || continue
       fi
-      [[ -e "$dep" ]] || continue
 
       if [[ "$dep" == *'.framework/'* ]]; then
         fwname="$(echo "$dep" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
         fwsrc="$(echo "$dep" | sed -E 's|(.*/[^/]+\.framework)/.*|\1|')"
+        # Prefer real path (Homebrew frameworks are often symlinks into Cellar)
+        fwsrc="$(cd "$fwsrc" && pwd)"
         dest="$fwdir/${fwname}.framework"
         if [[ ! -d "$dest" ]]; then
           echo "Bundling framework $fwname from $fwsrc"
           cp -a "$fwsrc" "$fwdir/"
+          chmod -R u+w "$dest" 2>/dev/null || true
         fi
         fwbin="$(find "$dest" -type f -path "*/Versions/*/${fwname}" 2>/dev/null | head -n1 || true)"
         [[ -z "$fwbin" ]] && fwbin="$dest/$fwname"
@@ -271,10 +336,12 @@ collect_macos_deps() {
           echo "$fwbin" >> "$queue_file"
         fi
       else
-        dest="$fwdir/$(basename "$dep")"
+        base="$(basename "$dep")"
+        dest="$fwdir/$base"
         if [[ ! -f "$dest" ]]; then
-          echo "Bundling dylib $(basename "$dep") from $dep"
+          echo "Bundling dylib $base from $dep"
           cp -a "$dep" "$dest"
+          chmod u+w "$dest" 2>/dev/null || true
         fi
         if ! grep -Fxq -- "$dest" "$seen_file" 2>/dev/null; then
           echo "$dest" >> "$queue_file"
@@ -284,6 +351,80 @@ collect_macos_deps() {
   done
 
   rm -f "$queue_file" "$seen_file" "${queue_file}.rest"
+}
+
+# Scan Frameworks for leftover absolute Homebrew refs, copy missing dylibs, rewrite again.
+# Args: <frameworks-dir> <app-exe>
+relink_macos_bundle() {
+  local fwdir="$1" exe="$2"
+  local f dep base resolved pass
+  for pass in 1 2 3; do
+    # Collect any remaining absolute third-party deps
+    while IFS= read -r -d '' f; do
+      file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+      while IFS= read -r dep; do
+        [[ -z "$dep" ]] && continue
+        case "$dep" in
+          /System/*|/usr/lib/*|@*) continue ;;
+          /usr/local/*|/opt/homebrew/*)
+            if [[ "$dep" == *'.framework/'* ]]; then
+              collect_macos_deps "$f" "$fwdir"
+            else
+              base="$(basename "$dep")"
+              if [[ ! -f "$fwdir/$base" ]]; then
+                resolved="$dep"
+                [[ -e "$resolved" ]] || resolved="$(resolve_brew_dylib "$base" || true)"
+                if [[ -n "$resolved" && -e "$resolved" ]]; then
+                  echo "Bundling leftover dylib $base from $resolved"
+                  cp -a "$resolved" "$fwdir/$base"
+                  chmod u+w "$fwdir/$base" 2>/dev/null || true
+                  collect_macos_deps "$fwdir/$base" "$fwdir"
+                fi
+              fi
+            fi
+            ;;
+        esac
+      done < <(otool -L "$f" 2>/dev/null | awk 'NR>1 {print $1}')
+    done < <(find "$fwdir" -type f -print0 2>/dev/null)
+
+    # Rewrite all Mach-Os
+    while IFS= read -r -d '' f; do
+      file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+      chmod u+w "$f" 2>/dev/null || true
+      if [[ "$f" == *'.framework/'* ]]; then
+        local fwname inner
+        fwname="$(echo "$f" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+        inner="$(echo "$f" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
+        install_name_tool -id "@rpath/${inner}" "$f" 2>/dev/null || true
+      else
+        install_name_tool -id "@rpath/$(basename "$f")" "$f" 2>/dev/null || true
+      fi
+      install_name_tool -add_rpath @executable_path/../Frameworks "$f" 2>/dev/null || true
+      fix_macho_deps "$f" "$fwdir"
+    done < <(find "$fwdir" -type f -print0 2>/dev/null)
+
+    install_name_tool -add_rpath @executable_path/../Frameworks "$exe" 2>/dev/null || true
+    fix_macho_deps "$exe" "$fwdir"
+  done
+}
+
+# Fail if any bundled Mach-O still references Homebrew/Cellar paths.
+assert_macos_relocatable() {
+  local fwdir="$1"
+  local f bad=0 tmp
+  tmp="$(mktemp)"
+  while IFS= read -r -d '' f; do
+    file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+    if otool -L "$f" 2>/dev/null | grep -E '/usr/local/opt/|/opt/homebrew/|/Cellar/' >"$tmp" 2>/dev/null; then
+      if [[ -s "$tmp" ]]; then
+        echo "ERROR: absolute Homebrew refs remain in $f:" >&2
+        cat "$tmp" >&2
+        bad=1
+      fi
+    fi
+  done < <(find "$fwdir" -type f -print0 2>/dev/null)
+  rm -f "$tmp"
+  [[ "$bad" -eq 0 ]] || die "macOS bundle is not relocatable — Homebrew library refs remain"
 }
 
 bundle_mac() {
@@ -347,10 +488,12 @@ EOF
   if [[ -n "$macdeployqt" ]]; then
     "$macdeployqt" "$bundle" -verbose=1 2>&1 | tail -n 50 || true
     [[ -d "$fwdir/Qt6Pas.framework" ]] || cp -a "$fw" "$fwdir/"
+    # macdeployqt may refresh frameworks with absolute Homebrew paths — re-collect
+    collect_macos_deps "$pas_bin" "$fwdir"
   fi
 
   # Copy cocoa platform plugin if missing
-  local qt_plugins plug_src
+  local qt_plugins
   qt_plugins="$(qt_query QT_INSTALL_PLUGINS 2>/dev/null || true)"
   if [[ -n "$qt_plugins" && -f "$qt_plugins/platforms/libqcocoa.dylib" ]]; then
     mkdir -p "$bundle/Contents/PlugIns/platforms"
@@ -362,24 +505,9 @@ EOF
 Plugins = PlugIns
 EOF
 
-  # Rewrite IDs and dependency paths to @rpath for everything we bundled
-  local f fwname inner
-  while IFS= read -r -d '' f; do
-    file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
-    chmod u+w "$f" 2>/dev/null || true
-    if [[ "$f" == *'.framework/'* ]]; then
-      fwname="$(echo "$f" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
-      inner="$(echo "$f" | sed -E "s|.*/${fwname}\\.framework/|${fwname}.framework/|")"
-      install_name_tool -id "@rpath/${inner}" "$f" 2>/dev/null || true
-    else
-      install_name_tool -id "@rpath/$(basename "$f")" "$f" 2>/dev/null || true
-    fi
-    install_name_tool -add_rpath @executable_path/../Frameworks "$f" 2>/dev/null || true
-    fix_macho_deps "$f" "$fwdir"
-  done < <(find "$fwdir" "$bundle/Contents/PlugIns" -type f -print0 2>/dev/null)
+  # Bundle leftover ICU/Homebrew dylibs and rewrite all absolute refs to @rpath
+  relink_macos_bundle "$fwdir" "$exe"
 
-  install_name_tool -add_rpath @executable_path/../Frameworks "$exe" 2>/dev/null || true
-  fix_macho_deps "$exe" "$fwdir"
   # Ensure main binary references Qt6Pas via @rpath
   local old
   while IFS= read -r old; do
@@ -392,18 +520,23 @@ EOF
     esac
   done < <(otool -L "$exe" | awk 'NR>1 {print $1}')
 
+  # Also rewrite plugins
+  if [[ -d "$bundle/Contents/PlugIns" ]]; then
+    local plug
+    while IFS= read -r -d '' plug; do
+      file "$plug" 2>/dev/null | grep -q 'Mach-O' || continue
+      install_name_tool -add_rpath @executable_path/../Frameworks "$plug" 2>/dev/null || true
+      fix_macho_deps "$plug" "$fwdir"
+    done < <(find "$bundle/Contents/PlugIns" -type f -print0 2>/dev/null)
+  fi
+
   # Ad-hoc sign after install_name_tool (required on modern macOS)
   if command -v codesign >/dev/null 2>&1; then
     codesign --force --deep --sign - "$bundle" 2>/dev/null || \
       codesign --force --sign - "$exe" 2>/dev/null || true
   fi
 
-  # Fail if Qt6Pas still points at Homebrew/Cellar Qt paths
-  if otool -L "$pas_bin" | grep -E '/usr/local/opt/|/opt/homebrew/|/Cellar/' | grep -qiE 'Qt|qtbase|qttools'; then
-    echo "ERROR: Qt6Pas still has absolute Homebrew Qt refs:" >&2
-    otool -L "$pas_bin" | grep -E '/usr/local/opt/|/opt/homebrew/|/Cellar/' >&2 || true
-    die "macOS bundle is not relocatable — fix_macho_deps failed"
-  fi
+  assert_macos_relocatable "$fwdir"
 
   cat > "$stage/README.txt" <<EOF
 FPG Editor (Qt6)
@@ -412,7 +545,7 @@ EOF
 
   tar -C "$DIST" -czf "${APP}-mac-${ARCH}.tar.gz" "$(basename "$stage")"
   echo "Created ${APP}-mac-${ARCH}.tar.gz"
-  echo "Frameworks bundled:"
+  echo "Frameworks / dylibs bundled:"
   ls -1 "$fwdir"
 }
 
