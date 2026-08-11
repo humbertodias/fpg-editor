@@ -266,6 +266,92 @@ resolve_loader_path() {
   return 1
 }
 
+# List LC_RPATH entries for a Mach-O (resolved @loader_path where possible).
+macho_rpaths() {
+  local macho="$1" base rpath
+  base="$(cd "$(dirname "$macho")" && pwd)"
+  otool -l "$macho" 2>/dev/null | awk '/cmd LC_RPATH/{getline; getline; if ($1=="path") print $2}' | while IFS= read -r rpath; do
+    case "$rpath" in
+      @loader_path/*) echo "${base}/${rpath#@loader_path/}" ;;
+      @executable_path/*) continue ;; # need exe path; skip here
+      *) echo "$rpath" ;;
+    esac
+  done
+}
+
+# Resolve @rpath/... using the binary's rpaths + known Qt/Homebrew lib dirs.
+# Args: <dep> <macho> [frameworks-dir]
+resolve_rpath_dep() {
+  local dep="$1" macho="$2" fwdir="${3:-}"
+  local suffix try rpath fwname
+  case "$dep" in
+    @rpath/*) suffix="${dep#@rpath/}" ;;
+    *) return 1 ;;
+  esac
+
+  # Already bundled?
+  if [[ -n "$fwdir" && -e "$fwdir/$suffix" ]]; then
+    echo "$fwdir/$suffix"
+    return 0
+  fi
+
+  while IFS= read -r rpath; do
+    [[ -z "$rpath" ]] && continue
+    try="$rpath/$suffix"
+    if [[ -e "$try" ]]; then
+      echo "$try"
+      return 0
+    fi
+  done < <(macho_rpaths "$macho")
+
+  # Known Qt framework locations
+  if [[ "$suffix" == *.framework/* ]]; then
+    fwname="$(echo "$suffix" | sed -E 's|^([^/]+)\.framework/.*|\1|')"
+    for try in \
+      "$(brew --prefix qtbase 2>/dev/null)/lib/${fwname}.framework" \
+      "$(brew --prefix qt 2>/dev/null)/lib/${fwname}.framework" \
+      "$(brew --prefix qtdeclarative 2>/dev/null)/lib/${fwname}.framework" \
+      "/usr/local/opt/qtbase/lib/${fwname}.framework" \
+      "/usr/local/opt/qt/lib/${fwname}.framework" \
+      "/opt/homebrew/opt/qtbase/lib/${fwname}.framework" \
+      "/opt/homebrew/opt/qt/lib/${fwname}.framework" \
+      "/usr/local/lib/${fwname}.framework" \
+      "/opt/homebrew/lib/${fwname}.framework"
+    do
+      [[ -z "$try" || "$try" == "/lib/${fwname}.framework" ]] && continue
+      if [[ -d "$try" ]]; then
+        echo "$try/$(echo "$suffix" | sed -E "s|^${fwname}\\.framework/||")"
+        return 0
+      fi
+    done
+  else
+    # Plain dylib via @rpath
+    try="$(resolve_brew_dylib "$(basename "$suffix")" || true)"
+    [[ -n "$try" && -e "$try" ]] && { echo "$try"; return 0; }
+  fi
+  return 1
+}
+
+# Ensure common Qt frameworks referenced via @rpath are present.
+# Args: <frameworks-dir>
+ensure_qt_frameworks() {
+  local fwdir="$1"
+  local name src
+  for name in QtCore QtGui QtWidgets QtPrintSupport QtDBus QtOpenGL QtNetwork QtSvg; do
+    [[ -d "$fwdir/${name}.framework" ]] && continue
+    src="$(resolve_fw_dep "${name}.framework/Versions/A/${name}" || true)"
+    if [[ -z "$src" || ! -e "$src" ]]; then
+      continue
+    fi
+    local fwsrc
+    fwsrc="$(echo "$src" | sed -E 's|(.*/[^/]+\.framework)/.*|\1|')"
+    fwsrc="$(cd "$fwsrc" && pwd)"
+    echo "Ensuring framework $name from $fwsrc"
+    cp -a "$fwsrc" "$fwdir/"
+    chmod -R u+w "$fwdir/${name}.framework" 2>/dev/null || true
+  done
+}
+
 # Find a Homebrew dylib by basename (icu4c, etc.).
 resolve_brew_dylib() {
   local base="$1" try prefix
@@ -304,20 +390,35 @@ resolve_brew_dylib() {
 }
 
 # Resolve a missing framework path via Homebrew prefixes.
+# Accepts absolute, @rpath/, or bare "Name.framework/..." forms.
 resolve_fw_dep() {
-  local dep="$1" fwname try
-  fwname="$(echo "$dep" | sed -E 's|.*/([^/]+)\.framework/.*|\1|')"
+  local dep="$1" fwname rest try
+  # Strip optional @rpath/ prefix
+  rest="${dep#@rpath/}"
+  # Extract framework name
+  case "$rest" in
+    *.framework/*)
+      fwname="${rest%%.framework/*}"
+      fwname="${fwname##*/}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+  [[ -n "$fwname" ]] || return 1
   for try in \
     "$(brew --prefix qtbase 2>/dev/null)/lib/${fwname}.framework" \
     "$(brew --prefix qt 2>/dev/null)/lib/${fwname}.framework" \
     "/usr/local/opt/qtbase/lib/${fwname}.framework" \
     "/usr/local/opt/qt/lib/${fwname}.framework" \
     "/opt/homebrew/opt/qtbase/lib/${fwname}.framework" \
-    "/opt/homebrew/opt/qt/lib/${fwname}.framework"
+    "/opt/homebrew/opt/qt/lib/${fwname}.framework" \
+    "/usr/local/lib/${fwname}.framework" \
+    "/opt/homebrew/lib/${fwname}.framework"
   do
     [[ -z "$try" || "$try" == "/lib/${fwname}.framework" ]] && continue
     if [[ -d "$try" ]]; then
-      echo "$try/$(echo "$dep" | sed -E "s|.*/${fwname}\\.framework/||")"
+      echo "$try/Versions/A/${fwname}"
       return 0
     fi
   done
@@ -346,7 +447,27 @@ collect_macos_deps() {
       [[ -z "$dep" ]] && continue
       case "$dep" in
         /System/*|/usr/lib/*) continue ;;
-        @rpath/*|@executable_path/*) continue ;;
+        @executable_path/*) continue ;;
+        @rpath/*)
+          resolved="$(resolve_rpath_dep "$dep" "$cur" "$fwdir" || true)"
+          if [[ -n "$resolved" && -e "$resolved" ]]; then
+            dep="$resolved"
+          else
+            # Fall back to framework name lookup (e.g. QtDBus)
+            if [[ "$dep" == *'.framework/'* ]]; then
+              resolved="$(resolve_fw_dep "$dep" || true)"
+              if [[ -n "$resolved" && -e "$resolved" ]]; then
+                dep="$resolved"
+              else
+                echo "WARN: unresolved @rpath dep $dep from $cur" >&2
+                continue
+              fi
+            else
+              echo "WARN: unresolved @rpath dep $dep from $cur" >&2
+              continue
+            fi
+          fi
+          ;;
         @loader_path/*)
           resolved="$(resolve_loader_path "$dep" "$cur" || true)"
           if [[ -n "$resolved" && -e "$resolved" ]]; then
@@ -388,6 +509,9 @@ collect_macos_deps() {
       else
         base="$(basename "$dep")"
         dest="$fwdir/$base"
+        if [[ -L "$dest" && ! -f "$dest" ]]; then
+          rm -f "$dest"
+        fi
         if [[ ! -f "$dest" ]]; then
           echo "Bundling dylib $base from $dep"
           copy_real_file "$dep" "$dest"
@@ -407,7 +531,7 @@ collect_macos_deps() {
 # Args: <frameworks-dir> <app-exe>
 relink_macos_bundle() {
   local fwdir="$1" exe="$2"
-  local f dep base resolved pass fwname inner
+  local f dep base resolved pass fwname inner fwsrc
 
   # Make everything writable and drop signatures first (install_name_tool needs this)
   chmod -R u+w "$fwdir" 2>/dev/null || true
@@ -419,13 +543,34 @@ relink_macos_bundle() {
 
   for pass in 1 2 3 4; do
     echo "macOS relink pass $pass..."
-    # Copy any remaining absolute third-party deps into Frameworks/
+    ensure_qt_frameworks "$fwdir"
+    # Copy any remaining absolute / unresolved @rpath third-party deps
     while IFS= read -r -d '' f; do
       file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
       while IFS= read -r dep; do
         [[ -z "$dep" ]] && continue
         case "$dep" in
-          /System/*|/usr/lib/*|@*) continue ;;
+          /System/*|/usr/lib/*) continue ;;
+          @rpath/*)
+            # Missing bundled framework referenced via @rpath (e.g. QtDBus)
+            if [[ "$dep" == *'.framework/'* ]]; then
+              fwname="$(echo "$dep" | sed -E 's|@rpath/([^/]+)\.framework/.*|\1|')"
+              if [[ ! -d "$fwdir/${fwname}.framework" ]]; then
+                resolved="$(resolve_rpath_dep "$dep" "$f" "$fwdir" || resolve_fw_dep "$dep" || true)"
+                if [[ -n "$resolved" && -e "$resolved" ]]; then
+                  fwsrc="$(echo "$resolved" | sed -E 's|(.*/[^/]+\.framework)/.*|\1|')"
+                  fwsrc="$(cd "$fwsrc" && pwd)"
+                  if [[ ! -d "$fwdir/${fwname}.framework" ]]; then
+                    echo "Bundling @rpath framework $fwname from $fwsrc"
+                    cp -a "$fwsrc" "$fwdir/"
+                    chmod -R u+w "$fwdir/${fwname}.framework" 2>/dev/null || true
+                  fi
+                  collect_macos_deps "$f" "$fwdir"
+                fi
+              fi
+            fi
+            ;;
+          @*) continue ;;
           /usr/local/*|/opt/homebrew/*)
             if [[ "$dep" == *'.framework/'* ]]; then
               collect_macos_deps "$f" "$fwdir"
@@ -481,10 +626,11 @@ relink_macos_bundle() {
   done
 }
 
-# Fail if any bundled Mach-O still references Homebrew/Cellar paths.
+# Fail if any bundled Mach-O still references Homebrew/Cellar paths,
+# or @rpath frameworks that were not copied into the bundle.
 assert_macos_relocatable() {
   local fwdir="$1"
-  local f bad=0 tmp
+  local f bad=0 tmp dep fwname
   tmp="$(mktemp)"
   while IFS= read -r -d '' f; do
     file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
@@ -495,6 +641,17 @@ assert_macos_relocatable() {
         bad=1
       fi
     fi
+    while IFS= read -r dep; do
+      case "$dep" in
+        @rpath/*.framework/*)
+          fwname="$(echo "$dep" | sed -E 's|@rpath/([^/]+)\.framework/.*|\1|')"
+          if [[ ! -d "$fwdir/${fwname}.framework" ]]; then
+            echo "ERROR: missing bundled framework $fwname (needed by $f via $dep)" >&2
+            bad=1
+          fi
+          ;;
+      esac
+    done < <(otool -L "$f" 2>/dev/null | awk 'NR>1 {print $1}')
   done < <(find "$fwdir" -type f -print0 2>/dev/null)
   rm -f "$tmp"
   [[ "$bad" -eq 0 ]] || die "macOS bundle is not relocatable — Homebrew library refs remain"
@@ -554,6 +711,13 @@ EOF
   # Pull Qt frameworks / dylibs referenced by Qt6Pas (and recursively)
   collect_macos_deps "$pas_bin" "$fwdir"
   collect_macos_deps "$exe" "$fwdir"
+  ensure_qt_frameworks "$fwdir"
+  # Re-walk after ensuring core Qt frameworks (picks up QtDBus etc.)
+  for f in "$fwdir"/Qt*.framework/Versions/*/Qt*; do
+    [[ -f "$f" ]] || continue
+    file "$f" 2>/dev/null | grep -q 'Mach-O' || continue
+    collect_macos_deps "$f" "$fwdir"
+  done
 
   # Also try macdeployqt for plugins (platforms/cocoa etc.)
   local macdeployqt
