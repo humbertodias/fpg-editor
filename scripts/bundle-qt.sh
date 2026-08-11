@@ -743,6 +743,8 @@ bundle_mac() {
 
   cp -a "$bin" "$bundle/Contents/MacOS/$APP"
   [[ -d "$LANG_DIR" ]] && cp -a "$LANG_DIR" "$bundle/Contents/Resources/"
+  # Also beside the binary for LCL DefaultTranslator path discovery
+  [[ -d "$LANG_DIR" ]] && cp -a "$LANG_DIR" "$bundle/Contents/MacOS/"
 
   cat > "$bundle/Contents/Info.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>

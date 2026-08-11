@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, Menus, ActnList;
+  StdCtrls, Menus, ActnList, uUtils;
 
 type
 
@@ -89,8 +89,13 @@ begin
 end;
 
 procedure TfrmLangTranslator.FormCreate(Sender: TObject);
+var
+  poFile: string;
 begin
-  memo1.Lines.LoadFromFile('languages'+DirectorySeparator+'fpg-editor.po');
+  poFile := GetAppResourceDir + DirectorySeparator + 'languages' +
+            DirectorySeparator + 'fpg-editor.po';
+  if FileExists(poFile) then
+    Memo1.Lines.LoadFromFile(poFile);
 end;
 
 procedure TfrmLangTranslator.Memo1Change(Sender: TObject);

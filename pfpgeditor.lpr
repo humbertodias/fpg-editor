@@ -10,7 +10,7 @@ uses
   Forms, Dialogs, ufrmfpgeditor, ufrmView, ufrmFPGImages, ufrmNewFPG,
   ufrmAnimate, ufrmConfig, uFrmExport, ufrmPalette, uinifile, uFrmBpp, uFrmCFG,
   uFrmMainFNT, uFrmAbout, uFrmInputBox, uFrmMessageBox, uFrmFNTView,
-  uMAPGraphic, ufrmZipFenix, uLanguage, DefaultTranslator, ulngConverter,
+  uMAPGraphic, ufrmZipFenix, uLanguage, ulngConverter,
   ulngTranslator, umainmap, uselectcolor, uFPGcompare, usynprghl, ufrmprgeditor,
   ufrmprgoptions, uFrmMain;
 
