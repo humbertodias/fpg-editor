@@ -657,6 +657,80 @@ assert_macos_relocatable() {
   [[ "$bad" -eq 0 ]] || die "macOS bundle is not relocatable — Homebrew library refs remain"
 }
 
+# Locate Qt's plugins directory (Homebrew layout varies by formula/version).
+find_macos_qt_plugins() {
+  local try
+  if command -v qmake6 >/dev/null 2>&1 || command -v qmake >/dev/null 2>&1; then
+    try="$(qt_query QT_INSTALL_PLUGINS 2>/dev/null || true)"
+    if [[ -n "$try" && -f "$try/platforms/libqcocoa.dylib" ]]; then
+      echo "$try"
+      return 0
+    fi
+  fi
+  for try in \
+    "$(brew --prefix qtbase 2>/dev/null)/share/qt/plugins" \
+    "$(brew --prefix qt 2>/dev/null)/share/qt/plugins" \
+    "$(brew --prefix qtbase 2>/dev/null)/plugins" \
+    "$(brew --prefix qt 2>/dev/null)/plugins" \
+    "/usr/local/opt/qtbase/share/qt/plugins" \
+    "/usr/local/opt/qt/share/qt/plugins" \
+    "/opt/homebrew/opt/qtbase/share/qt/plugins" \
+    "/opt/homebrew/opt/qt/share/qt/plugins" \
+    "/usr/local/share/qt/plugins" \
+    "/opt/homebrew/share/qt/plugins"
+  do
+    [[ -z "$try" || "$try" == "/share/qt/plugins" || "$try" == "/plugins" ]] && continue
+    if [[ -f "$try/platforms/libqcocoa.dylib" ]]; then
+      echo "$try"
+      return 0
+    fi
+  done
+  try="$(find /usr/local/opt /opt/homebrew/opt /usr/local/Cellar /opt/homebrew/Cellar \
+    -path '*/plugins/platforms/libqcocoa.dylib' 2>/dev/null | head -n1 || true)"
+  if [[ -n "$try" && -f "$try" ]]; then
+    echo "$(cd "$(dirname "$try")/.." && pwd)"
+    return 0
+  fi
+  return 1
+}
+
+# Copy essential Qt plugins into Contents/PlugIns (cocoa is mandatory).
+# Args: <app-bundle> <frameworks-dir>
+bundle_macos_qt_plugins() {
+  local bundle="$1" fwdir="$2"
+  local qt_plugins plugdir name src dest
+  qt_plugins="$(find_macos_qt_plugins)" \
+    || die "Qt plugins dir with platforms/libqcocoa.dylib not found"
+
+  echo "Bundling Qt plugins from $qt_plugins"
+  mkdir -p "$bundle/Contents/PlugIns"
+
+  # platforms/ is required; others improve UX and are small
+  for plugdir in platforms styles imageformats iconengines; do
+    [[ -d "$qt_plugins/$plugdir" ]] || continue
+    mkdir -p "$bundle/Contents/PlugIns/$plugdir"
+    for src in "$qt_plugins/$plugdir"/*.dylib; do
+      [[ -e "$src" ]] || continue
+      name="$(basename "$src")"
+      dest="$bundle/Contents/PlugIns/$plugdir/$name"
+      # Replace any dangling Homebrew symlink left by macdeployqt
+      rm -f "$dest"
+      copy_real_file "$src" "$dest"
+      strip_macho_signature "$dest"
+    done
+  done
+
+  [[ -f "$bundle/Contents/PlugIns/platforms/libqcocoa.dylib" ]] \
+    || die "failed to bundle platforms/libqcocoa.dylib from $qt_plugins"
+
+  # Pull transitive deps of every bundled plugin into Frameworks/
+  local plug
+  while IFS= read -r -d '' plug; do
+    file "$plug" 2>/dev/null | grep -q 'Mach-O' || continue
+    collect_macos_deps "$plug" "$fwdir"
+  done < <(find "$bundle/Contents/PlugIns" -type f -name '*.dylib' -print0 2>/dev/null)
+}
+
 bundle_mac() {
   local bin="$ROOT/$APP"
   [[ -f "$bin" ]] || die "missing binary: $bin (build first)"
@@ -719,27 +793,35 @@ EOF
     collect_macos_deps "$f" "$fwdir"
   done
 
-  # Also try macdeployqt for plugins (platforms/cocoa etc.)
+  # Also try macdeployqt for plugins. The main binary only links Qt6Pas (not
+  # QtGui), so point -executable at Qt6Pas or macdeployqt skips platforms/.
   local macdeployqt
   macdeployqt="$(find_qt_bin macdeployqt || true)"
   if [[ -n "$macdeployqt" ]]; then
-    "$macdeployqt" "$bundle" -verbose=1 2>&1 | tail -n 50 || true
+    "$macdeployqt" "$bundle" -verbose=1 \
+      "-executable=$pas_bin" \
+      2>&1 | tail -n 80 || true
     [[ -d "$fwdir/Qt6Pas.framework" ]] || cp -a "$fw" "$fwdir/"
     # macdeployqt may refresh frameworks with absolute Homebrew paths — re-collect
     collect_macos_deps "$pas_bin" "$fwdir"
   fi
 
-  # Copy cocoa platform plugin if missing
-  local qt_plugins
-  qt_plugins="$(qt_query QT_INSTALL_PLUGINS 2>/dev/null || true)"
-  if [[ -n "$qt_plugins" && -f "$qt_plugins/platforms/libqcocoa.dylib" ]]; then
-    mkdir -p "$bundle/Contents/PlugIns/platforms"
-    cp -a "$qt_plugins/platforms/libqcocoa.dylib" "$bundle/Contents/PlugIns/platforms/"
-    collect_macos_deps "$bundle/Contents/PlugIns/platforms/libqcocoa.dylib" "$fwdir"
-  fi
+  # Always install platform (and related) plugins ourselves — required for GUI.
+  bundle_macos_qt_plugins "$bundle" "$fwdir"
+
+  # qt.conf in Resources (macOS app-bundle convention) + beside the exe.
+  # Prefix is relative to Contents/ for Resources/qt.conf.
   cat > "$bundle/Contents/Resources/qt.conf" <<'EOF'
 [Paths]
+Prefix = .
 Plugins = PlugIns
+Libraries = Frameworks
+EOF
+  cat > "$bundle/Contents/MacOS/qt.conf" <<'EOF'
+[Paths]
+Prefix = ..
+Plugins = PlugIns
+Libraries = Frameworks
 EOF
 
   # Bundle leftover ICU/Homebrew dylibs and rewrite all absolute refs to @rpath
@@ -774,6 +856,8 @@ EOF
   fi
 
   assert_macos_relocatable "$fwdir"
+  [[ -f "$bundle/Contents/PlugIns/platforms/libqcocoa.dylib" ]] \
+    || die "libqcocoa.dylib missing after relink — cannot ship macOS bundle"
 
   cat > "$stage/README.txt" <<EOF
 FPG Editor (Qt6)
