@@ -6,9 +6,10 @@ interface
 
 uses
   Classes, SysUtils, Types, FileUtil, SynEdit, SynMemo, SynHighlighterCpp,
-  SynCompletion, Forms, Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls,
-  StdActns, StdCtrls, ExtCtrls, LCLType, usynprghl, ubennugdwords, uTools,
-  ufrmprgoptions, LConvEncoding, strutils, uUtils
+  SynCompletion, SynEditKeyCmds, SynEditTypes, Forms, Controls, Graphics,
+  Dialogs, Menus, ActnList, ComCtrls, StdActns, StdCtrls, ExtCtrls, LCLType,
+  usynprghl, ubennugdwords, uTools, ufrmprgoptions, LConvEncoding, strutils,
+  uUtils
   ;
 
 
@@ -90,6 +91,10 @@ type
     procedure SynCompletion1CodeCompletion(var Value: string;
       SourceValue: string; var SourceStart, SourceEnd: TPoint;
       KeyChar: TUTF8Char; Shift: TShiftState);
+    procedure SynMemoKeyTranslation(Sender: TObject; Code: word;
+      SState: TShiftState; var Data: pointer; var IsStartOfCombo: boolean;
+      var Handled: boolean; var Command: TSynEditorCommand;
+      FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
   public
     { public declarations }
     found : boolean;
@@ -142,10 +147,15 @@ begin
   SynCompletion1.ShortCut := Menus.ShortCut(VK_SPACE, [ssCtrl]);
   SynCompletion1.OnExecute := @SynCompletion1Execute;
   SynCompletion1.OnCodeCompletion := @SynCompletion1CodeCompletion;
+
+  { Qt reports '"' as Key=34 (same as VK_NEXT/PageDown). SynEdit then treats
+    Shift+'"' as ecSelPageDown and swallows the character. Prefer typing. }
+  SynMemo1.RegisterKeyTranslationHandler(@SynMemoKeyTranslation);
 end;
 
 procedure TfrmPRGEditor.FormDestroy(Sender: TObject);
 begin
+  SynMemo1.UnRegisterKeyTranslationHandler(@SynMemoKeyTranslation);
 end;
 
 procedure TfrmPRGEditor.SynCompletion1Execute(Sender: TObject);
@@ -158,6 +168,23 @@ procedure TfrmPRGEditor.SynCompletion1CodeCompletion(var Value: string;
   KeyChar: TUTF8Char; Shift: TShiftState);
 begin
   Value := BennuCompletionInsertValue(Value);
+end;
+
+procedure TfrmPRGEditor.SynMemoKeyTranslation(Sender: TObject; Code: word;
+  SState: TShiftState; var Data: pointer; var IsStartOfCombo: boolean;
+  var Handled: boolean; var Command: TSynEditorCommand;
+  FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
+begin
+  if Handled or FinishComboOnly then
+    Exit;
+  { Punctuation that collides with navigation VK codes (33..36):
+    '!'=VK_PRIOR, '"'=VK_NEXT, '#'=VK_END, '$'=VK_HOME.
+    When only Shift is held, let UTF-8 key press insert the character. }
+  if (SState = [ssShift]) and (Code >= Ord('!')) and (Code <= Ord('$')) then
+  begin
+    Command := ecNone;
+    Handled := True;
+  end;
 end;
 
 
