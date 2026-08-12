@@ -8,8 +8,8 @@ uses
   Classes, SysUtils, Types, FileUtil, SynEdit, SynMemo, SynHighlighterCpp,
   SynCompletion, SynEditKeyCmds, SynEditTypes, Forms, Controls, Graphics,
   Dialogs, Menus, ActnList, ComCtrls, StdActns, StdCtrls, ExtCtrls, LCLType,
-  usynprghl, ubennugdwords, uTools, ufrmprgoptions, LConvEncoding, strutils,
-  uUtils
+  LCLProc, usynprghl, ubennugdwords, uTools, ufrmprgoptions, LConvEncoding,
+  strutils, uUtils
   ;
 
 
@@ -24,6 +24,7 @@ type
     aExit: TAction;
     aExecute: TAction;
     aSave: TAction;
+    aComment: TAction;
     ActionList: TActionList;
     cbCharset: TComboBox;
     cbConvert: TComboBox;
@@ -54,6 +55,7 @@ type
     MenuItem2: TMenuItem;
     MenuItem20: TMenuItem;
     MenuItem21: TMenuItem;
+    MenuItem22: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
@@ -70,6 +72,7 @@ type
     SynMemo1: TSynMemo;
     SynPrgHl1 :TSynPrgHl;
     procedure aCompileExecute(Sender: TObject);
+    procedure aCommentExecute(Sender: TObject);
     procedure aExecuteExecute(Sender: TObject);
     procedure aExitExecute(Sender: TObject);
     procedure aOptionsExecute(Sender: TObject);
@@ -96,6 +99,11 @@ type
       var Handled: boolean; var Command: TSynEditorCommand;
       FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
     procedure UpdateConsoleOutput;
+    procedure ToggleLineComment(StartLine, EndLine: Integer);
+    procedure SynMemoCommand(Sender: TObject; AfterProcessing: boolean;
+      var Handled: boolean; var Command: TSynEditorCommand;
+      var AChar: TUTF8Char; Data: pointer; HandlerData: pointer);
+    procedure SetupCommentShortcut;
   public
     { public declarations }
     found : boolean;
@@ -103,6 +111,9 @@ type
 
 var
   frmPRGEditor: TfrmPRGEditor;
+
+const
+  ecToggleComment = ecUserDefinedFirst;
 
 resourcestring
   LNG_PRG_EDITOR ='Editor de Archivos de Programa';
@@ -152,11 +163,55 @@ begin
   { Qt reports '"' as Key=34 (same as VK_NEXT/PageDown). SynEdit then treats
     Shift+'"' as ecSelPageDown and swallows the character. Prefer typing. }
   SynMemo1.RegisterKeyTranslationHandler(@SynMemoKeyTranslation);
+  SetupCommentShortcut;
 end;
 
 procedure TfrmPRGEditor.FormDestroy(Sender: TObject);
 begin
+  SynMemo1.UnregisterCommandHandler(@SynMemoCommand);
   SynMemo1.UnRegisterKeyTranslationHandler(@SynMemoKeyTranslation);
+end;
+
+procedure TfrmPRGEditor.SetupCommentShortcut;
+begin
+  { Physical '/' key is VK_OEM_2 on most layouts; Ord('/') alone does not match KeyDown. }
+  aComment.ShortCut := Menus.ShortCut(VK_OEM_2, [ssCtrl]);
+  aComment.SecondaryShortCuts.Clear;
+  aComment.SecondaryShortCuts.Add(ShortCutToText(Menus.ShortCut(Ord('/'), [ssCtrl])));
+  aComment.SecondaryShortCuts.Add(ShortCutToText(Menus.ShortCut(VK_DIVIDE, [ssCtrl])));
+
+  with SynMemo1.Keystrokes.Add do
+  begin
+    Key := VK_OEM_2;
+    Shift := [ssCtrl];
+    Command := ecToggleComment;
+  end;
+  with SynMemo1.Keystrokes.Add do
+  begin
+    Key := Ord('/');
+    Shift := [ssCtrl];
+    Command := ecToggleComment;
+  end;
+  with SynMemo1.Keystrokes.Add do
+  begin
+    Key := VK_DIVIDE;
+    Shift := [ssCtrl];
+    Command := ecToggleComment;
+  end;
+  SynMemo1.RegisterCommandHandler(@SynMemoCommand, nil);
+end;
+
+procedure TfrmPRGEditor.SynMemoCommand(Sender: TObject; AfterProcessing: boolean;
+  var Handled: boolean; var Command: TSynEditorCommand;
+  var AChar: TUTF8Char; Data: pointer; HandlerData: pointer);
+begin
+  if AfterProcessing or Handled then
+    Exit;
+  if Command = ecToggleComment then
+  begin
+    aCommentExecute(Sender);
+    Handled := True;
+  end;
 end;
 
 procedure TfrmPRGEditor.SynCompletion1Execute(Sender: TObject);
@@ -385,6 +440,85 @@ end;
 procedure TfrmPRGEditor.aOptionsExecute(Sender: TObject);
 begin
   frmprgoptions.show;
+end;
+
+procedure TfrmPRGEditor.ToggleLineComment(StartLine, EndLine: Integer);
+var
+  i, indentPos: Integer;
+  line, trimmed, newLine: string;
+  allCommented: Boolean;
+begin
+  if StartLine < 1 then
+    StartLine := 1;
+  if EndLine > SynMemo1.Lines.Count then
+    EndLine := SynMemo1.Lines.Count;
+  if EndLine < StartLine then
+    Exit;
+
+  allCommented := True;
+  for i := StartLine to EndLine do
+  begin
+    trimmed := TrimLeft(SynMemo1.Lines[i - 1]);
+    if trimmed = '' then
+      Continue;
+    if not AnsiStartsStr('//', trimmed) then
+    begin
+      allCommented := False;
+      Break;
+    end;
+  end;
+
+  SynMemo1.BeginUndoBlock;
+  try
+    for i := StartLine to EndLine do
+    begin
+      line := SynMemo1.Lines[i - 1];
+      trimmed := TrimLeft(line);
+      if trimmed = '' then
+        Continue;
+
+      indentPos := Length(line) - Length(trimmed) + 1;
+      if allCommented then
+      begin
+        if AnsiStartsStr('// ', trimmed) then
+          newLine := Copy(line, 1, indentPos - 1) + Copy(trimmed, 4, MaxInt)
+        else if AnsiStartsStr('//', trimmed) then
+          newLine := Copy(line, 1, indentPos - 1) + Copy(trimmed, 3, MaxInt)
+        else
+          Continue;
+      end
+      else
+        newLine := Copy(line, 1, indentPos - 1) + '// ' + trimmed;
+
+      SynMemo1.TextBetweenPoints[Point(1, i), Point(Length(line) + 1, i)] := newLine;
+    end;
+  finally
+    SynMemo1.EndUndoBlock;
+  end;
+end;
+
+procedure TfrmPRGEditor.aCommentExecute(Sender: TObject);
+var
+  startLine, endLine: Integer;
+  blockBegin, blockEnd: TPoint;
+begin
+  blockBegin := SynMemo1.BlockBegin;
+  blockEnd := SynMemo1.BlockEnd;
+  startLine := blockBegin.Y;
+  endLine := blockEnd.Y;
+  if (blockEnd.X = 1) and (blockEnd.Y > blockBegin.Y) then
+    Dec(endLine);
+  if endLine < startLine then
+    endLine := startLine;
+
+  ToggleLineComment(startLine, endLine);
+
+  if (startLine >= 1) and (endLine <= SynMemo1.Lines.Count) and
+     (SynMemo1.Lines.Count > 0) then
+  begin
+    SynMemo1.BlockBegin := Point(1, startLine);
+    SynMemo1.BlockEnd := Point(Length(SynMemo1.Lines[endLine - 1]) + 1, endLine);
+  end;
 end;
 
 procedure TfrmPRGEditor.UpdateConsoleOutput;

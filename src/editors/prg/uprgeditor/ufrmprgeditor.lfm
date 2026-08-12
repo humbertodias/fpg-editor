@@ -639,6 +639,9 @@ object frmPRGEditor: TfrmPRGEditor
       object MenuItem11: TMenuItem
         Action = EditUndo1
       end
+      object MenuItem22: TMenuItem
+        Action = aComment
+      end
     end
     object MenuItem12: TMenuItem
       Caption = 'Buscar'
@@ -772,6 +775,13 @@ object frmPRGEditor: TfrmPRGEditor
       Category = 'Tools'
       Caption = 'Opciones...'
       OnExecute = aOptionsExecute
+    end
+    object aComment: TAction
+      Category = 'Edit'
+      Caption = 'Comentar / Descomentar'
+      Hint = 'Comentar o descomentar la selección (Ctrl+/)'
+      OnExecute = aCommentExecute
+      ShortCut = 16575
     end
   end
 end
