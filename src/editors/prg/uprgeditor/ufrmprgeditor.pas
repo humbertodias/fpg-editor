@@ -8,8 +8,8 @@ uses
   Classes, SysUtils, Types, FileUtil, SynEdit, SynMemo, SynHighlighterCpp,
   SynCompletion, SynEditKeyCmds, SynEditTypes, Forms, Controls, Graphics,
   Dialogs, Menus, ActnList, ComCtrls, StdActns, StdCtrls, ExtCtrls, LCLType,
-  LCLProc, usynprghl, ubennugdwords, uTools, ufrmprgoptions, LConvEncoding,
-  strutils, uUtils
+  LCLProc, usynprghl, ubennugdwords, uTools, ufrmprgoptions, uinifile,
+  LConvEncoding, strutils, uUtils
   ;
 
 
@@ -558,14 +558,14 @@ end;
 
 procedure TfrmPRGEditor.aCompileExecute(Sender: TObject);
 begin
-  RunExe(frmprgoptions.fneCompilador.FileName+' '+FileOpen1.Dialog.FileName, ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
+  RunExe(inifile_prg_compiler+' '+FileOpen1.Dialog.FileName, ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;
 
 procedure TfrmPRGEditor.aExecuteExecute(Sender: TObject);
 begin
-  RunExe(frmprgoptions.fneInterprete.FileName+' '+ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
+  RunExe(inifile_prg_interpreter+' '+ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;

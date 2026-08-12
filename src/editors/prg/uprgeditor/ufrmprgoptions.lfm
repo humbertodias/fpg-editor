@@ -6,6 +6,7 @@ object frmprgoptions: Tfrmprgoptions
   Caption = 'Opciones del editor de Archivos de programa'
   ClientHeight = 186
   ClientWidth = 386
+  OnShow = FormShow
   LCLVersion = '1.1'
   object fneCompilador: TFileNameEdit
     Left = 24

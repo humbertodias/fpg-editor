@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, EditBtn,
-  StdCtrls, ExtCtrls, Buttons;
+  StdCtrls, ExtCtrls, Buttons, uinifile;
 
 type
 
@@ -22,8 +22,10 @@ type
     Panel1: TPanel;
     procedure BtnAceptarClick(Sender: TObject);
     procedure BtnCancelarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { private declarations }
+    procedure LoadFromIni;
   public
     { public declarations }
   end;
@@ -37,15 +39,33 @@ implementation
 
 { Tfrmprgoptions }
 
+procedure Tfrmprgoptions.LoadFromIni;
+begin
+  fneCompilador.FileName := inifile_prg_compiler;
+  fneInterprete.FileName := inifile_prg_interpreter;
+end;
+
+procedure Tfrmprgoptions.FormShow(Sender: TObject);
+begin
+  LoadFromIni;
+end;
+
 procedure Tfrmprgoptions.BtnAceptarClick(Sender: TObject);
 begin
-  close();
+  inifile_prg_compiler := Trim(fneCompilador.FileName);
+  inifile_prg_interpreter := Trim(fneInterprete.FileName);
+  if inifile_prg_compiler = '' then
+    inifile_prg_compiler := 'bgdc';
+  if inifile_prg_interpreter = '' then
+    inifile_prg_interpreter := 'bgdi';
+  write_inifile;
+  Close;
 end;
 
 procedure Tfrmprgoptions.BtnCancelarClick(Sender: TObject);
 begin
-  close();
+  LoadFromIni;
+  Close;
 end;
 
 end.
-

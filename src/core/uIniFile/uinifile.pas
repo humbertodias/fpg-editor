@@ -46,6 +46,10 @@ const
  sBG_COLOR        = 'Background Color';
  sBG_COLOR_FPG        = 'FPG Background Color';
 
+ sPRG             = 'PRG';
+ sPRG_COMPILER    = 'Compiler';
+ sPRG_INTERPRETER = 'Interpreter';
+
 var
  inifile_program_edit    : string;
  inifile_language        : string;
@@ -59,6 +63,8 @@ var
  inifile_animate_delay : longint;
  inifile_bg_color : TColor;
  inifile_bg_colorFPG : TColor;
+ inifile_prg_compiler,
+ inifile_prg_interpreter : string;
 
  inifile_charset_to_gen,
  inifile_fnt_charset,
@@ -144,6 +150,8 @@ begin
   inifile_show_splash     := true;
   inifile_bg_color        := clWhite;
   inifile_bg_colorFPG        := clWhite;
+  inifile_prg_compiler    := 'bgdc';
+  inifile_prg_interpreter := 'bgdi';
 
   inifile_fnt_charset := DEFAULT_CHARSET;
   inifile_charset_to_gen := 0;
@@ -184,6 +192,9 @@ begin
   inifile_bg_color        := inifile.ReadInteger( sMAIN, sBG_COLOR   , clWhite);
   inifile_bg_colorFPG        := inifile.ReadInteger( sMAIN, sBG_COLOR_FPG   , clWhite);
   inifile_admin_tools  := inifile.ReadInteger(sMAIN, 'ADMIN TOOLS', 0);
+
+  inifile_prg_compiler    := inifile.ReadString(sPRG, sPRG_COMPILER, 'bgdc');
+  inifile_prg_interpreter := inifile.ReadString(sPRG, sPRG_INTERPRETER, 'bgdi');
 
 
   inifile_fnt_charset   := inifile.ReadInteger(sFONT, 'CHARSET', DEFAULT_CHARSET);
@@ -232,6 +243,9 @@ begin
  inifile.WriteInteger( sMAIN, sBG_COLOR   , inifile_bg_color);
  inifile.WriteInteger( sMAIN, sBG_COLOR_FPG   , inifile_bg_colorFPG);
  inifile.WriteInteger (sMAIN, 'ADMIN TOOLS', inifile_admin_tools);
+
+ inifile.WriteString(sPRG, sPRG_COMPILER, inifile_prg_compiler);
+ inifile.WriteString(sPRG, sPRG_INTERPRETER, inifile_prg_interpreter);
 
   inifile.WriteInteger(sFONT, 'CHARSET', inifile_fnt_charset);
   inifile.WriteInteger(sFONT, 'CHARSET TO GEN', inifile_charset_to_gen);
