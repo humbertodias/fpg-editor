@@ -98,6 +98,9 @@ type
       SState: TShiftState; var Data: pointer; var IsStartOfCombo: boolean;
       var Handled: boolean; var Command: TSynEditorCommand;
       FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
+    procedure SynMemoBeforeKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    function IsShiftPunctuationKey(Code: word; SState: TShiftState): Boolean;
     procedure UpdateConsoleOutput;
     procedure ToggleLineComment(StartLine, EndLine: Integer);
     procedure SynMemoCommand(Sender: TObject; AfterProcessing: boolean;
@@ -163,12 +166,14 @@ begin
   { Qt reports '"' as Key=34 (same as VK_NEXT/PageDown). SynEdit then treats
     Shift+'"' as ecSelPageDown and swallows the character. Prefer typing. }
   SynMemo1.RegisterKeyTranslationHandler(@SynMemoKeyTranslation);
+  SynMemo1.RegisterBeforeKeyDownHandler(@SynMemoBeforeKeyDown);
   SetupCommentShortcut;
 end;
 
 procedure TfrmPRGEditor.FormDestroy(Sender: TObject);
 begin
   SynMemo1.UnregisterCommandHandler(@SynMemoCommand);
+  SynMemo1.UnregisterBeforeKeyDownHandler(@SynMemoBeforeKeyDown);
   SynMemo1.UnRegisterKeyTranslationHandler(@SynMemoKeyTranslation);
 end;
 
@@ -226,6 +231,30 @@ begin
   Value := BennuCompletionInsertValue(Value);
 end;
 
+function TfrmPRGEditor.IsShiftPunctuationKey(Code: word; SState: TShiftState): Boolean;
+begin
+  { Ignore ssLeft/ssRight (which Shift key); block Ctrl/Alt/Meta combos. }
+  Result := (ssShift in SState) and
+            not (ssCtrl in SState) and
+            not (ssAlt in SState) and
+            not (ssMeta in SState) and
+            (Code >= Ord('!')) and (Code <= Ord('$'));
+end;
+
+procedure TfrmPRGEditor.SynMemoBeforeKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  ch: TUTF8Char;
+begin
+  if not IsShiftPunctuationKey(Key, Shift) then
+    Exit;
+  { Insert the punctuation ourselves and swallow the key so SynEdit does not
+    treat 34 as Shift+PageDown (ecSelPageDown). }
+  ch := CHR(Key);
+  Key := 0;
+  SynMemo1.CommandProcessor(ecChar, ch, nil);
+end;
+
 procedure TfrmPRGEditor.SynMemoKeyTranslation(Sender: TObject; Code: word;
   SState: TShiftState; var Data: pointer; var IsStartOfCombo: boolean;
   var Handled: boolean; var Command: TSynEditorCommand;
@@ -233,10 +262,7 @@ procedure TfrmPRGEditor.SynMemoKeyTranslation(Sender: TObject; Code: word;
 begin
   if Handled or FinishComboOnly then
     Exit;
-  { Punctuation that collides with navigation VK codes (33..36):
-    '!'=VK_PRIOR, '"'=VK_NEXT, '#'=VK_END, '$'=VK_HOME.
-    When only Shift is held, let UTF-8 key press insert the character. }
-  if (SState = [ssShift]) and (Code >= Ord('!')) and (Code <= Ord('$')) then
+  if IsShiftPunctuationKey(Code, SState) then
   begin
     Command := ecNone;
     Handled := True;
