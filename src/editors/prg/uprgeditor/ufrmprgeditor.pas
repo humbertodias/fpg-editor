@@ -95,6 +95,7 @@ type
       SState: TShiftState; var Data: pointer; var IsStartOfCombo: boolean;
       var Handled: boolean; var Command: TSynEditorCommand;
       FinishComboOnly: Boolean; var ComboKeyStrokes: TSynEditKeyStrokes);
+    procedure UpdateConsoleOutput;
   public
     { public declarations }
     found : boolean;
@@ -386,18 +387,27 @@ begin
   frmprgoptions.show;
 end;
 
+procedure TfrmPRGEditor.UpdateConsoleOutput;
+var
+  hasOutput: Boolean;
+begin
+  hasOutput := ListBox1.Items.Count > 0;
+  ListBox1.Visible := hasOutput;
+  Splitter1.Visible := hasOutput;
+end;
+
 procedure TfrmPRGEditor.aCompileExecute(Sender: TObject);
 begin
   RunExe(frmprgoptions.fneCompilador.FileName+' '+FileOpen1.Dialog.FileName, ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
-  ListBox1.visible:=(ListBox1.Items.Count>0);
+  UpdateConsoleOutput;
 end;
 
 procedure TfrmPRGEditor.aExecuteExecute(Sender: TObject);
 begin
-    RunExe(frmprgoptions.fneInterprete.FileName+' '+ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
-    ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
-    ListBox1.visible:=(ListBox1.Items.Count>0);
+  RunExe(frmprgoptions.fneInterprete.FileName+' '+ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
+  ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
+  UpdateConsoleOutput;
 end;
 
 end.

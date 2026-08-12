@@ -502,10 +502,21 @@ object frmPRGEditor: TfrmPRGEditor
       end
     end
   end
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 6
+    Top = 474
+    Width = 829
+    Align = alBottom
+    MinSize = 40
+    ResizeAnchor = akBottom
+    Visible = False
+  end
   object ListBox1: TListBox
     Left = 0
-    Height = 80
-    Top = 520
+    Height = 120
+    Top = 480
     Width = 829
     Align = alBottom
     ItemHeight = 0
@@ -513,15 +524,6 @@ object frmPRGEditor: TfrmPRGEditor
     TabOrder = 1
     TopIndex = -1
     Visible = False
-  end
-  object Splitter1: TSplitter
-    Cursor = crVSplit
-    Left = 0
-    Height = 5
-    Top = 515
-    Width = 829
-    Align = alBottom
-    ResizeAnchor = akBottom
   end
   object Panel1: TPanel
     Left = 0
