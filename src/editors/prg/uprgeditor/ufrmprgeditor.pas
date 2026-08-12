@@ -558,20 +558,29 @@ end;
 
 procedure TfrmPRGEditor.aCompileExecute(Sender: TObject);
 var
-  compilerPath: string;
+  compilerPath, workDir, prgFile: string;
 begin
+  prgFile := FileOpen1.Dialog.FileName;
+  if prgFile = '' then
+    Exit;
   compilerPath := ResolveBennuTool(inifile_prg_compiler);
-  RunExe(ShellQuoteIfNeeded(compilerPath)+' '+ShellQuoteIfNeeded(FileOpen1.Dialog.FileName), ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
+  workDir := FindBennuProjectDir(prgFile);
+  RunExe(ShellQuoteIfNeeded(compilerPath)+' '+ShellQuoteIfNeeded(prgFile), workDir, GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;
 
 procedure TfrmPRGEditor.aExecuteExecute(Sender: TObject);
 var
-  interpreterPath: string;
+  interpreterPath, workDir, prgFile, dcbFile: string;
 begin
+  prgFile := FileOpen1.Dialog.FileName;
+  if prgFile = '' then
+    Exit;
   interpreterPath := ResolveBennuTool(inifile_prg_interpreter);
-  RunExe(ShellQuoteIfNeeded(interpreterPath)+' '+ShellQuoteIfNeeded(ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName)) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
+  workDir := FindBennuProjectDir(prgFile);
+  dcbFile := ChangeFileExt(prgFile, '');
+  RunExe(ShellQuoteIfNeeded(interpreterPath)+' '+ShellQuoteIfNeeded(dcbFile), workDir, GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;

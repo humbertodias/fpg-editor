@@ -26,7 +26,7 @@ interface
 
 uses
   LCLIntf, LCLType, Graphics, Classes, SysUtils, Forms, Dialogs, FileUtil,
-  Process, IntfGraphics, FPimage, lazcanvas, GraphType;
+  LazFileUtils, Process, IntfGraphics, FPimage, lazcanvas, GraphType;
 
  function RunExe(Cmd, WorkDir: String): string;overload;
  function RunExe(Cmd, WorkDir,outputfilename: String): string;overload;
@@ -34,6 +34,8 @@ uses
  function FileDeleteRB( AFileName:string ): boolean;
  function ResolveBennuTool(const ConfiguredName: string): string;
  function ShellQuoteIfNeeded(const S: string): string;
+ { Directory from which bgdc/bgdi should run so relative include "src/..." paths resolve. }
+ function FindBennuProjectDir(const PrgFile: string): string;
 
  function prepare_file_source(dir : string; name : string) : string;
  function NumberTo3Char( number: LongInt ): string;
@@ -112,6 +114,76 @@ begin
   {$ENDIF}
 
   { Keep configured name so TProcess can still try PATH from the process env. }
+end;
+
+function ExtractQuotedPath(const Line: string): string;
+var
+  startPos, endPos: Integer;
+begin
+  Result := '';
+  startPos := Pos('"', Line);
+  if startPos = 0 then
+    startPos := Pos('''', Line);
+  if startPos = 0 then
+    Exit;
+  endPos := startPos + 1;
+  while (endPos <= Length(Line)) and (Line[endPos] <> Line[startPos]) do
+    Inc(endPos);
+  if endPos > Length(Line) then
+    Exit;
+  Result := Copy(Line, startPos + 1, endPos - startPos - 1);
+end;
+
+function FindBennuProjectDir(const PrgFile: string): string;
+var
+  prgDir, dir, parentDir, includePath, line, lowLine: string;
+  sl: TStringList;
+  i: Integer;
+begin
+  prgDir := ExcludeTrailingPathDelimiter(ExtractFileDir(ExpandFileName(PrgFile)));
+  Result := prgDir;
+
+  if not FileExists(PrgFile) then
+    Exit;
+
+  sl := TStringList.Create;
+  try
+    sl.LoadFromFile(PrgFile);
+    includePath := '';
+    for i := 0 to sl.Count - 1 do
+    begin
+      line := Trim(sl[i]);
+      if line = '' then
+        Continue;
+      lowLine := LowerCase(line);
+      if (Pos('include', lowLine) <> 1) and (Pos('import', lowLine) <> 1) then
+        Continue;
+      includePath := ExtractQuotedPath(line);
+      if (includePath <> '') and (Pos('://', includePath) = 0) and
+         not FilenameIsAbsolute(includePath) then
+        Break;
+      includePath := '';
+    end;
+
+    if includePath = '' then
+      Exit;
+
+    if FileExists(prgDir + DirectorySeparator + includePath) then
+      Exit(prgDir);
+
+    dir := prgDir;
+    while True do
+    begin
+      parentDir := ExcludeTrailingPathDelimiter(ExpandFileName(dir + DirectorySeparator + '..'));
+      if (parentDir = '') or (parentDir = dir) then
+        Break;
+      if FileExists(parentDir + DirectorySeparator + includePath) then
+        Exit(parentDir);
+      dir := parentDir;
+    end;
+  finally
+    sl.Free;
+  end;
 end;
 
 function RunExe(Cmd, WorkDir, outputfilename: String): string;
