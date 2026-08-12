@@ -5,9 +5,10 @@ unit ufrmprgeditor;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynMemo, SynHighlighterCpp, Forms,
-  Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls, StdActns, StdCtrls,
-  ExtCtrls, usynprghl, uTools, ufrmprgoptions, LConvEncoding,strutils, uUtils
+  Classes, SysUtils, FileUtil, SynEdit, SynMemo, SynHighlighterCpp, SynCompletion,
+  Forms, Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls, StdActns,
+  StdCtrls, ExtCtrls, LCLType, usynprghl, ubennugdwords, uTools, ufrmprgoptions,
+  LConvEncoding, strutils, uUtils
   ;
 
 
@@ -84,6 +85,8 @@ type
   private
     { private declarations }
     lastEncoding : String;
+    SynCompletion1: TSynCompletion;
+    procedure SynCompletion1Execute(Sender: TObject);
   public
     { public declarations }
     found : boolean;
@@ -126,11 +129,21 @@ begin
   SynPrgHl1:= TSynPrgHl.Create(Owner);
   SynMemo1.Highlighter:=SynPrgHl1;
   lastEncoding:=cbCharset.Text;
+
+  SynCompletion1 := TSynCompletion.Create(Self);
+  SynCompletion1.Editor := SynMemo1;
+  SynCompletion1.CaseSensitive := False;
+  SynCompletion1.ShortCut := Menus.ShortCut(VK_SPACE, [ssCtrl]);
+  SynCompletion1.OnExecute := @SynCompletion1Execute;
 end;
 
 procedure TfrmPRGEditor.FormDestroy(Sender: TObject);
 begin
+end;
 
+procedure TfrmPRGEditor.SynCompletion1Execute(Sender: TObject);
+begin
+  FillBennuCompletionList(SynCompletion1.ItemList, SynCompletion1.CurrentString);
 end;
 
 
