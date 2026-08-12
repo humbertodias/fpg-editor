@@ -8,10 +8,19 @@ uses
   Classes, SysUtils, StrUtils, usynprghl;
 
 procedure FillBennuCompletionList(OutList: TStrings; const Prefix: string);
+function BennuCompletionInsertValue(const DisplayValue: string): string;
 
 implementation
 
+type
+  TBennuDocEntry = record
+    Name: string;
+    Doc: string;
+  end;
+
 const
+  BENNU_DOC_SEPARATOR = ' | ';
+
   BENNU_LOCALS: array[0..23] of string =
   (
     'x',
@@ -148,418 +157,68 @@ const
     'joy_state'
   );
 
-  BENNU_FUNCTIONS: array[0..382] of string =
-  (
-    'abs',
-    'acos',
-    'advance',
-    'alloc',
-    'asc',
-    'asin',
-    'atan',
-    'atan2',
-    'atof',
-    'atoi',
-    'bdf_load',
-    'blendop_apply',
-    'blendop_assign',
-    'blendop_free',
-    'blendop_grayscale',
-    'blendop_identity',
-    'blendop_intensity',
-    'blendop_new',
-    'blendop_swap',
-    'blendop_tint',
-    'blendop_translucency',
-    'blur',
-    'calloc',
-    'cd',
-    'cd_drives',
-    'cd_eject',
-    'cd_getinfo',
-    'cd_name',
-    'cd_pause',
-    'cd_play',
-    'cd_resume',
-    'cd_status',
-    'cd_stop',
-    'center_set',
-    'chdir',
-    'chr',
-    'clear_screen',
-    'collision',
-    'collision_box',
-    'collision_circle',
-    'color_find',
-    'colors_get',
-    'colors_set',
-    'cos',
-    'crypt_decrypt',
-    'crypt_del',
-    'crypt_encrypt',
-    'crypt_new',
-    'delete_draw',
-    'delete_text',
-    'dirclose',
-    'diropen',
-    'dirread',
-    'draw_box',
-    'draw_circle',
-    'draw_curve',
-    'draw_fcircle',
-    'draw_line',
-    'draw_rect',
-    'drawing_alpha',
-    'drawing_color',
-    'drawing_map',
-    'drawing_stipple',
-    'drawing_z',
-    'end_fli',
-    'exec',
-    'exists',
-    'exit',
-    'fade',
-    'fade_music_in',
-    'fade_music_off',
-    'fade_off',
-    'fade_on',
-    'fclose',
-    'feof',
-    'fexists',
-    'fflush',
-    'fget_angle',
-    'fget_dist',
-    'fgets',
-    'file',
-    'filter',
-    'find',
-    'finite',
-    'flength',
-    'fli_angle',
-    'fli_end',
-    'fli_flags',
-    'fli_frame',
-    'fli_getinfo',
-    'fli_move',
-    'fli_params',
-    'fli_reset',
-    'fli_size',
-    'fli_start',
-    'fli_z',
-    'fmove',
-    'fnt_load',
-    'fnt_new',
-    'fnt_save',
-    'fnt_unload',
-    'fopen',
-    'format',
-    'fpg_add',
-    'fpg_del',
-    'fpg_exists',
-    'fpg_load',
-    'fpg_new',
-    'fpg_save',
-    'fpg_unload',
-    'fputs',
-    'frame_fli',
-    'fread',
-    'free',
-    'fremove',
-    'frewind',
-    'fseek',
-    'ftell',
-    'ftime',
-    'ftoa',
-    'fwrite',
-    'get_angle',
-    'get_desktop_size',
-    'get_dist',
-    'get_distx',
-    'get_disty',
-    'get_id',
-    'get_joy_position',
-    'get_modes',
-    'get_pixel',
-    'get_real_point',
-    'get_screen',
-    'get_status',
-    'get_text_color',
-    'get_timer',
-    'get_window_pos',
-    'get_window_size',
-    'getenv',
-    'glob',
-    'glyph_get',
-    'glyph_set',
-    'graphic_info',
-    'graphic_set',
-    'grayscale',
-    'is_playing_song',
-    'is_playing_wav',
-    'isinf',
-    'isnan',
-    'itoa',
-    'join',
-    'joy_axes',
-    'joy_buttons',
-    'joy_getaxis',
-    'joy_getball',
-    'joy_getbutton',
-    'joy_gethat',
-    'joy_name',
-    'joy_numaxes',
-    'joy_numballs',
-    'joy_number',
-    'joy_numbuttons',
-    'joy_numhats',
-    'joy_numjoysticks',
-    'joy_select',
-    'key',
-    'ksort',
-    'lcase',
-    'lcd_about',
-    'lcd_close',
-    'lcd_devices',
-    'lcd_getdepth',
-    'lcd_getheight',
-    'lcd_getnumbuttons',
-    'lcd_getwidth',
-    'lcd_init',
-    'lcd_intversion',
-    'lcd_open',
-    'lcd_quit',
-    'lcd_readbutton',
-    'lcd_readbuttons',
-    'lcd_setbitmap',
-    'lcd_version',
-    'len',
-    'let_me_alone',
-    'ln',
-    'load',
-    'load_fnt',
-    'load_fpg',
-    'load_map',
-    'load_pcx',
-    'load_png',
-    'load_song',
-    'load_wav',
-    'log',
-    'log2',
-    'lpad',
-    'map_block_copy',
-    'map_buffer',
-    'map_clear',
-    'map_clone',
-    'map_del',
-    'map_exists',
-    'map_get_pixel',
-    'map_info',
-    'map_info_get',
-    'map_info_set',
-    'map_load',
-    'map_name',
-    'map_new',
-    'map_put',
-    'map_put_pixel',
-    'map_save',
-    'map_set_name',
-    'map_unload',
-    'map_xput',
-    'map_xputnp',
-    'memcmp',
-    'memcopy',
-    'memmove',
-    'memory_free',
-    'memory_total',
-    'memset',
-    'memseti',
-    'memsetw',
-    'minimize',
-    'mkdir',
-    'mode7_start',
-    'mode7_stop',
-    'mode_is_ok',
-    'move_draw',
-    'move_scroll',
-    'move_text',
-    'move_window',
-    'near_angle',
-    'net_about',
-    'net_accept',
-    'net_connect',
-    'net_disconnect',
-    'net_disconnectall',
-    'net_geterror',
-    'net_getseparator',
-    'net_getseparatorlength',
-    'net_hostname',
-    'net_incoming_accept',
-    'net_init',
-    'net_inttoip',
-    'net_intversion',
-    'net_ipaddress',
-    'net_iptoint',
-    'net_listen',
-    'net_port',
-    'net_quit',
-    'net_recv',
-    'net_recvfile',
-    'net_recvgraph',
-    'net_recvvar',
-    'net_resolve',
-    'net_send',
-    'net_sendfile',
-    'net_sendgraph',
-    'net_sendrn',
-    'net_sendvar',
-    'net_separator',
-    'net_stat_buffer',
-    'net_version',
-    'pal_clone',
-    'pal_del',
-    'pal_get',
-    'pal_load',
-    'pal_map_assign',
-    'pal_map_getid',
-    'pal_map_remove',
-    'pal_new',
-    'pal_refresh',
-    'pal_save',
-    'pal_set',
-    'pal_unload',
-    'palette_convert',
-    'palette_roll',
-    'pango_render',
-    'path_find',
-    'path_getxy',
-    'path_wall',
-    'pause_song',
-    'pause_wav',
-    'pcx_load',
-    'play_song',
-    'play_wav',
-    'png_load',
-    'png_save',
-    'point_get',
-    'point_set',
-    'pow',
-    'put',
-    'put_pixel',
-    'put_screen',
-    'quicksort',
-    'rand',
-    'rand_seed',
-    'realloc',
-    'regex',
-    'regex_replace',
-    'region_define',
-    'region_out',
-    'reserve_channels',
-    'reset_fli',
-    'resume_song',
-    'resume_wav',
-    'reverse_stereo',
-    'rgb',
-    'rgb_get',
-    'rgba',
-    'rgba_get',
-    'rgbscale',
-    'rm',
-    'rmdir',
-    'rpad',
-    'save',
-    'save_fnt',
-    'save_fpg',
-    'save_map',
-    'save_png',
-    'say',
-    'say_fast',
-    'screen_clear',
-    'screen_get',
-    'screen_put',
-    'set_channel_volume',
-    'set_distance',
-    'set_fps',
-    'set_icon',
-    'set_mode',
-    'set_music_position',
-    'set_panning',
-    'set_position',
-    'set_song_volume',
-    'set_text_color',
-    'set_title',
-    'set_wav_volume',
-    'set_window_pos',
-    'signal',
-    'signal_action',
-    'sin',
-    'sort',
-    'sound_close',
-    'sound_init',
-    'split',
-    'sqrt',
-    'start_fli',
-    'start_scroll',
-    'stop_scroll',
-    'stop_song',
-    'stop_wav',
-    'strcasecmp',
-    'strrev',
-    'substr',
-    'tan',
-    'text_height',
-    'text_width',
-    'time',
-    'trim',
-    'ttf_load',
-    'ttf_loadaa',
-    'ttf_loadx',
-    'ucase',
-    'unload_fnt',
-    'unload_fpg',
-    'unload_map',
-    'unload_song',
-    'unload_wav',
-    'wpad_info',
-    'wpad_info_bb',
-    'wpad_is_ready',
-    'wpad_rumble',
-    'write',
-    'write_float',
-    'write_in_map',
-    'write_int',
-    'write_string',
-    'write_var',
-    'xadvance',
-    'xput',
-    'xput_screen'
-  );
+{$I ubennugddocs.inc}
 
-procedure AddMatching(OutList: TStrings; const Words: array of string; const Prefix: string);
+function BennuCompletionInsertValue(const DisplayValue: string): string;
+var
+  p: Integer;
+begin
+  p := Pos(BENNU_DOC_SEPARATOR, DisplayValue);
+  if p > 0 then
+    Result := Copy(DisplayValue, 1, p - 1)
+  else
+    Result := DisplayValue;
+end;
+
+function ListHasCompletionName(List: TStrings; const AName: string): Boolean;
 var
   i: Integer;
-  w: string;
+begin
+  for i := 0 to List.Count - 1 do
+    if SameText(BennuCompletionInsertValue(List[i]), AName) then
+      Exit(True);
+  Result := False;
+end;
+
+procedure AddCompletionItem(OutList: TStrings; const AName, ADoc, Prefix: string);
+var
+  display: string;
+begin
+  if (Prefix <> '') and not AnsiStartsText(Prefix, AName) then
+    Exit;
+  if ListHasCompletionName(OutList, AName) then
+    Exit;
+  if ADoc <> '' then
+    display := AName + BENNU_DOC_SEPARATOR + ADoc
+  else
+    display := AName;
+  OutList.Add(display);
+end;
+
+procedure AddMatchingWithDoc(OutList: TStrings; const Words: array of string;
+  const FixedDoc, Prefix: string);
+var
+  i: Integer;
 begin
   for i := Low(Words) to High(Words) do
-  begin
-    w := Words[i];
-    if (Prefix = '') or AnsiStartsText(Prefix, w) then
-      if OutList.IndexOf(w) < 0 then
-        OutList.Add(w);
-  end;
+    AddCompletionItem(OutList, Words[i], FixedDoc, Prefix);
 end;
 
 procedure FillBennuCompletionList(OutList: TStrings; const Prefix: string);
+var
+  i: Integer;
 begin
   if OutList = nil then
     Exit;
   OutList.BeginUpdate;
   try
     OutList.Clear;
-    AddMatching(OutList, PRG_RESERVED_WORDS, Prefix);
-    AddMatching(OutList, BENNU_LOCALS, Prefix);
-    AddMatching(OutList, BENNU_CONSTANTS, Prefix);
-    AddMatching(OutList, BENNU_FUNCTIONS, Prefix);
+    AddMatchingWithDoc(OutList, PRG_RESERVED_WORDS, 'language keyword', Prefix);
+    AddMatchingWithDoc(OutList, BENNU_LOCALS, 'process local', Prefix);
+    AddMatchingWithDoc(OutList, BENNU_CONSTANTS, 'constant', Prefix);
+    for i := Low(BENNU_FUNCTION_DOCS) to High(BENNU_FUNCTION_DOCS) do
+      AddCompletionItem(OutList, BENNU_FUNCTION_DOCS[i].Name,
+        BENNU_FUNCTION_DOCS[i].Doc, Prefix);
   finally
     OutList.EndUpdate;
   end;

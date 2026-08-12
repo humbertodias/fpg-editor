@@ -5,10 +5,10 @@ unit ufrmprgeditor;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SynEdit, SynMemo, SynHighlighterCpp, SynCompletion,
-  Forms, Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls, StdActns,
-  StdCtrls, ExtCtrls, LCLType, usynprghl, ubennugdwords, uTools, ufrmprgoptions,
-  LConvEncoding, strutils, uUtils
+  Classes, SysUtils, Types, FileUtil, SynEdit, SynMemo, SynHighlighterCpp,
+  SynCompletion, Forms, Controls, Graphics, Dialogs, Menus, ActnList, ComCtrls,
+  StdActns, StdCtrls, ExtCtrls, LCLType, usynprghl, ubennugdwords, uTools,
+  ufrmprgoptions, LConvEncoding, strutils, uUtils
   ;
 
 
@@ -87,6 +87,9 @@ type
     lastEncoding : String;
     SynCompletion1: TSynCompletion;
     procedure SynCompletion1Execute(Sender: TObject);
+    procedure SynCompletion1CodeCompletion(var Value: string;
+      SourceValue: string; var SourceStart, SourceEnd: TPoint;
+      KeyChar: TUTF8Char; Shift: TShiftState);
   public
     { public declarations }
     found : boolean;
@@ -133,8 +136,12 @@ begin
   SynCompletion1 := TSynCompletion.Create(Self);
   SynCompletion1.Editor := SynMemo1;
   SynCompletion1.CaseSensitive := False;
+  SynCompletion1.Width := 560;
+  SynCompletion1.LongLineHintType := sclpExtendRightOnly;
+  SynCompletion1.LongLineHintTime := 0;
   SynCompletion1.ShortCut := Menus.ShortCut(VK_SPACE, [ssCtrl]);
   SynCompletion1.OnExecute := @SynCompletion1Execute;
+  SynCompletion1.OnCodeCompletion := @SynCompletion1CodeCompletion;
 end;
 
 procedure TfrmPRGEditor.FormDestroy(Sender: TObject);
@@ -144,6 +151,13 @@ end;
 procedure TfrmPRGEditor.SynCompletion1Execute(Sender: TObject);
 begin
   FillBennuCompletionList(SynCompletion1.ItemList, SynCompletion1.CurrentString);
+end;
+
+procedure TfrmPRGEditor.SynCompletion1CodeCompletion(var Value: string;
+  SourceValue: string; var SourceStart, SourceEnd: TPoint;
+  KeyChar: TUTF8Char; Shift: TShiftState);
+begin
+  Value := BennuCompletionInsertValue(Value);
 end;
 
 
