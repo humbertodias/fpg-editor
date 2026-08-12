@@ -53,8 +53,13 @@ make run/win
 
 Release tarballs from `make package/win` produce `fpg-editor-win-*.zip` with `Qt6Pas6.dll`, Qt6 DLLs and platform plugins next to the executable.
 
+* FPG
+
 <img width="868" height="728" alt="image" src="https://github.com/user-attachments/assets/068d89f3-33eb-4848-a3e0-d147e1356602" />
 
+* Auto-complete
+
+<img width="827" height="282" alt="image" src="https://github.com/user-attachments/assets/0b6591f6-a8ac-47a5-ab34-6e80126e6dfd" />
 
 ### Supported Files
 
