@@ -542,7 +542,7 @@ object frmPRGEditor: TfrmPRGEditor
       BorderSpacing.Right = 5
       BorderSpacing.Bottom = 3
       ItemHeight = 0
-      ItemIndex = 0
+      ItemIndex = 3
       Items.Strings = (
         'cp850'
         'iso88591'
@@ -552,7 +552,7 @@ object frmPRGEditor: TfrmPRGEditor
       OnChange = cbCharsetChange
       Style = csDropDownList
       TabOrder = 0
-      Text = 'cp850'
+      Text = 'utf8'
     end
     object lblCharset: TLabel
       Left = 361
@@ -586,7 +586,7 @@ object frmPRGEditor: TfrmPRGEditor
       BorderSpacing.Right = 5
       BorderSpacing.Bottom = 3
       ItemHeight = 0
-      ItemIndex = 0
+      ItemIndex = 3
       Items.Strings = (
         'cp850'
         'iso88591'
@@ -596,7 +596,7 @@ object frmPRGEditor: TfrmPRGEditor
       OnChange = cbConvertChange
       Style = csDropDownList
       TabOrder = 1
-      Text = 'cp850'
+      Text = 'utf8'
     end
   end
   object MainMenu: TMainMenu
