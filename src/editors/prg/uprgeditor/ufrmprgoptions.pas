@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, EditBtn,
-  StdCtrls, ExtCtrls, Buttons, uinifile;
+  StdCtrls, ExtCtrls, Buttons, uinifile, uTools;
 
 type
 
@@ -41,8 +41,8 @@ implementation
 
 procedure Tfrmprgoptions.LoadFromIni;
 begin
-  fneCompilador.FileName := inifile_prg_compiler;
-  fneInterprete.FileName := inifile_prg_interpreter;
+  fneCompilador.FileName := ResolveBennuTool(inifile_prg_compiler);
+  fneInterprete.FileName := ResolveBennuTool(inifile_prg_interpreter);
 end;
 
 procedure Tfrmprgoptions.FormShow(Sender: TObject);

@@ -32,6 +32,8 @@ uses
  function RunExe(Cmd, WorkDir,outputfilename: String): string;overload;
  function ExecuteFile(const FileName, Params, DefaultDir: string; ShowCmd: Integer): THandle;
  function FileDeleteRB( AFileName:string ): boolean;
+ function ResolveBennuTool(const ConfiguredName: string): string;
+ function ShellQuoteIfNeeded(const S: string): string;
 
  function prepare_file_source(dir : string; name : string) : string;
  function NumberTo3Char( number: LongInt ): string;
@@ -48,6 +50,69 @@ uses
  function Find_Color(index, rc, gc, bc: integer; palette : PByte  ): integer;
 
 implementation
+
+function ShellQuoteIfNeeded(const S: string): string;
+begin
+  if (Pos(' ', S) > 0) or (Pos(#9, S) > 0) then
+    Result := '"' + S + '"'
+  else
+    Result := S;
+end;
+
+function ResolveBennuTool(const ConfiguredName: string): string;
+var
+  home, toolName, candidate: string;
+begin
+  Result := Trim(ConfiguredName);
+  if Result = '' then
+    Exit;
+
+  if FileExists(Result) then
+  begin
+    Result := ExpandFileName(Result);
+    Exit;
+  end;
+
+  toolName := ExtractFileName(Result);
+
+  home := GetEnvironmentVariable('BENNUGD_HOME');
+  if home <> '' then
+  begin
+    home := ExcludeTrailingPathDelimiter(home);
+    candidate := home + DirectorySeparator + toolName;
+    if FileExists(candidate) then
+      Exit(candidate);
+    candidate := home + DirectorySeparator + 'bin' + DirectorySeparator + toolName;
+    if FileExists(candidate) then
+      Exit(candidate);
+    {$IFDEF WINDOWS}
+    if ExtractFileExt(toolName) = '' then
+    begin
+      candidate := home + DirectorySeparator + toolName + '.exe';
+      if FileExists(candidate) then
+        Exit(candidate);
+      candidate := home + DirectorySeparator + 'bin' + DirectorySeparator + toolName + '.exe';
+      if FileExists(candidate) then
+        Exit(candidate);
+    end;
+    {$ENDIF}
+  end;
+
+  candidate := FindDefaultExecutablePath(toolName);
+  if candidate <> '' then
+    Exit(candidate);
+
+  {$IFDEF WINDOWS}
+  if ExtractFileExt(toolName) = '' then
+  begin
+    candidate := FindDefaultExecutablePath(toolName + '.exe');
+    if candidate <> '' then
+      Exit(candidate);
+  end;
+  {$ENDIF}
+
+  { Keep configured name so TProcess can still try PATH from the process env. }
+end;
 
 function RunExe(Cmd, WorkDir, outputfilename: String): string;
 var

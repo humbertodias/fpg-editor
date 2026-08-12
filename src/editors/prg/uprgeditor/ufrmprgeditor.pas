@@ -557,15 +557,21 @@ begin
 end;
 
 procedure TfrmPRGEditor.aCompileExecute(Sender: TObject);
+var
+  compilerPath: string;
 begin
-  RunExe(inifile_prg_compiler+' '+FileOpen1.Dialog.FileName, ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
+  compilerPath := ResolveBennuTool(inifile_prg_compiler);
+  RunExe(ShellQuoteIfNeeded(compilerPath)+' '+ShellQuoteIfNeeded(FileOpen1.Dialog.FileName), ExtractFileDir(FileOpen1.Dialog.FileName), GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;
 
 procedure TfrmPRGEditor.aExecuteExecute(Sender: TObject);
+var
+  interpreterPath: string;
 begin
-  RunExe(inifile_prg_interpreter+' '+ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
+  interpreterPath := ResolveBennuTool(inifile_prg_interpreter);
+  RunExe(ShellQuoteIfNeeded(interpreterPath)+' '+ShellQuoteIfNeeded(ExtractFileNameWithoutExt(FileOpen1.Dialog.FileName)) , ExtractFileDir(FileOpen1.Dialog.FileName),GetTempDir(False)+'output.tmp' );
   ListBox1.Items.LoadFromFile(GetTempDir(False)+'output.tmp');
   UpdateConsoleOutput;
 end;
