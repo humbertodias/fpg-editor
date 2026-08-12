@@ -10,8 +10,7 @@ Release archives produced by `make package/*` are **self-contained**: the binary
 
 Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for **modern 64-bit systems**.
 
-[Download the latest release](https://github.com/humbertodias/fpg-editor/releases)
-
+[Download the latest release](https://github.com/humbertodias/fpg-editor/releases) and also the [BennuGD](https://github.com/humbertodias/BennuGD64) compiler
 
 ## Run Instructions
 
