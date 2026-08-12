@@ -53,6 +53,9 @@ make run/win
 
 Release tarballs from `make package/win` produce `fpg-editor-win-*.zip` with `Qt6Pas6.dll`, Qt6 DLLs and platform plugins next to the executable.
 
+<img width="868" height="728" alt="image" src="https://github.com/user-attachments/assets/068d89f3-33eb-4848-a3e0-d147e1356602" />
+
+
 ### Supported Files
 
 #### 1. FPG – Fenix Picture Group
