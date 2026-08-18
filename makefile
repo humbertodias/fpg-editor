@@ -7,8 +7,14 @@ WIDGET = qt6
 # Extra lazbuild flags (e.g. --lazarusdir=... or --opt=-Fl/path)
 LAZ_OPTS ?=
 
+# lazbuild --cpu uses FPC names (aarch64); package archives may use arm64.
+CPU := $(ARCH)
+ifeq ($(ARCH),arm64)
+CPU := aarch64
+endif
+
 # Build commands
-BUILD_CMD = lazbuild --cpu=$(ARCH) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LAZ_OPTS) $(LPI)
+BUILD_CMD = lazbuild --cpu=$(CPU) --widgetset=$(WIDGET) --build-mode=DefaultQT --verbose $(LAZ_OPTS) $(LPI)
 BUNDLE = bash scripts/bundle-qt.sh
 
 .PHONY: all clean build run package build/lin build/mac build/win \

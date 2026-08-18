@@ -38,7 +38,7 @@ Local builds still need Qt6Pas installed on the machine. Release tarballs from `
 make run/mac
 ```
 
-Release tarballs from `make package/mac` ship an `.app` with `Qt6Pas.framework` and Qt6 frameworks embedded (no `/Library/Frameworks` install required).
+Release tarballs from `make package/mac` ship an `.app` with `Qt6Pas.framework` and Qt6 frameworks embedded (no `/Library/Frameworks` install required). CI publishes both **x86_64** (`ARCH=x86_64`) and **Apple Silicon** (`ARCH=arm64`) archives.
 
 <details>
   <summary>qt6 (Windows)</summary>
