@@ -136,6 +136,14 @@ implementation
 uses
   uStreamIO;
 
+procedure AssignPalette(var Dest, Src: array of Byte);
+var
+  I: Integer;
+begin
+  for I := 0 to 767 do
+    Dest[I] := Src[I];
+end;
+
 //procedure Register;
 //begin
 //  {$I uFPG_icon.lrs}
@@ -546,7 +554,7 @@ begin
        begin
          images[index].bitsPerPixel:=bits_per_pixel;
          images[index].CDIVFormat:= (FileFormat= FPG16_CDIV);
-         images[index].bPalette:=Palette;
+         AssignPalette(images[index].bPalette, Palette);
          images[index].SaveToStream(f,lmFont);
          gFPG.Position := (index * 100) div Count;
          gFPG.Repaint;
@@ -557,7 +565,7 @@ begin
     begin
       images[i].bitsPerPixel:=bits_per_pixel;
       images[i].CDIVFormat:= (FileFormat= FPG16_CDIV);
-      images[i].bPalette:=Palette;
+      AssignPalette(images[i].bPalette, Palette);
       images[i].SaveToStream(f,lmFPG);
       gFPG.Position := (i * 100) div Count;
       gFPG.Repaint;
@@ -694,7 +702,7 @@ begin
         fpgGraphic:= TMAPGraphic.Create;
         fpgGraphic.bitsPerPixel:= getBPP;
         fpgGraphic.CDIVFormat:= (FileFormat = FPG16_CDIV);
-        fpgGraphic.bpalette:=palette;
+        AssignPalette(fpgGraphic.bPalette, palette);
         fpgGraphic.Code:=i+1;
         fpgGraphic.fpname:=inttostr(i);
         if charset = 1 then
@@ -754,7 +762,7 @@ begin
         fpgGraphic:= TMAPGraphic.Create;
         fpgGraphic.bitsPerPixel:= getBPP;
         fpgGraphic.CDIVFormat:= (FileFormat = FPG16_CDIV);
-        fpgGraphic.bpalette:=palette;
+        AssignPalette(fpgGraphic.bPalette, palette);
         fpgGraphic.LoadFromStream(f,lmFPG);
 
         if fpgGraphic.code=1001 then
@@ -838,7 +846,7 @@ begin
 
   images[index].bitsPerPixel:=getBPP;
   images[index].CDIVFormat:= (FileFormat = FPG16_CDIV);
-  images[index].bPalette:=Palette;
+  AssignPalette(images[index].bPalette, Palette);
   images[index].SaveToStream(f);
 
   f.Free;
@@ -974,7 +982,7 @@ begin
   // Se crea la imagen resultante
   images[index].bitsPerPixel:=getBPP;
   images[index].CDIVFormat:= (FileFormat= FPG16_CDIV);
-  images[index].bPalette:=Palette;
+  AssignPalette(images[index].bPalette, Palette);
   images[index].CreateBitmap(bmp_src);
 
 end;
@@ -999,7 +1007,7 @@ begin
   // Se crea la imagen resultante
   images[index].bitsPerPixel:=getBPP;
   images[index].CDIVFormat:= (FileFormat= FPG16_CDIV);
-  images[index].bPalette:=Palette;
+  AssignPalette(images[index].bPalette, Palette);
   images[index].CreateBitmap(bmp_src);
 
 end;
