@@ -15,6 +15,7 @@ type
   TCtrlPoint = record
     X, Y: Word;
   end;
+  TCtrlPointArray = array of TCtrlPoint;
 
   TFenixImage = class
     Code: LongWord;
@@ -22,7 +23,7 @@ type
     FPName: string;
     Width, Height: Longint;
     FileOffset: Longint;
-    Points: array of TCtrlPoint;
+    Points: TCtrlPointArray;
     RGBA: TJSUint8ClampedArray;
   end;
 
@@ -237,6 +238,7 @@ end;
 function ReadPoints(R: TReader; Wide: Boolean): TCtrlPointArray;
 var
   N, I: Integer;
+  P: TCtrlPoint;
 begin
   if Wide then
     N := Integer(R.U32)
@@ -247,9 +249,20 @@ begin
   SetLength(Result, N);
   for I := 0 to N - 1 do
   begin
-    Result[I].X := R.U16;
-    Result[I].Y := R.U16;
+    P.X := R.U16;
+    P.Y := R.U16;
+    Result[I] := P;
   end;
+end;
+
+procedure AddPoint(var Points: TCtrlPointArray; X, Y: Longint);
+var
+  P: TCtrlPoint;
+begin
+  P.X := Word(X);
+  P.Y := Word(Y);
+  SetLength(Points, Length(Points) + 1);
+  Points[High(Points)] := P;
 end;
 
 procedure DecodePixels(R: TReader; W, H, Bpp: Integer; Cdiv: Boolean;
@@ -477,17 +490,9 @@ begin
     Img.FPName := IntToStr(I);
     Img.FileOffset := FileOffset;
     if (WidthOff <> 0) or (HeightOff <> 0) then
-    begin
-      SetLength(Img.Points, Length(Img.Points) + 1);
-      Img.Points[High(Img.Points)].X := Word(WidthOff);
-      Img.Points[High(Img.Points)].Y := Word(HeightOff);
-    end;
+      AddPoint(Img.Points, WidthOff, HeightOff);
     if (HorizOff <> 0) or (VertOff <> 0) then
-    begin
-      SetLength(Img.Points, Length(Img.Points) + 1);
-      Img.Points[High(Img.Points)].X := Word(HorizOff);
-      Img.Points[High(Img.Points)].Y := Word(VertOff);
-    end;
+      AddPoint(Img.Points, HorizOff, VertOff);
     SetLength(Glyphs, Length(Glyphs) + 1);
     Glyphs[High(Glyphs)] := Img;
   end;
