@@ -48,6 +48,9 @@ type
 
 implementation
 
+uses
+  uimagedata;
+
 const
   Zooms: array[0..7] of Integer = (1, 2, 3, 4, 6, 8, 12, 16);
 
@@ -373,7 +376,7 @@ procedure TViewer.Paint;
 var
   Img: TFenixImage;
   Ctx: TJSCanvasRenderingContext2D;
-  Data: TJSImageData;
+  Data: TFenixImageData;
   I: Integer;
   Text, Points: string;
   Button: TJSHTMLElement;
@@ -409,7 +412,7 @@ begin
   FView.setAttribute('style', 'width:' + IntToStr(Img.Width * FZoom) + 'px;height:' +
     IntToStr(Img.Height * FZoom) + 'px');
   Ctx := FView.getContextAs2DContext('2d');
-  Data := TJSImageData.new(Img.RGBA, Img.Width, Img.Height);
+  Data := NewImageData(Img.RGBA, Img.Width, Img.Height);
   Ctx.putImageData(Data, 0, 0);
   if FPoints.checked then
   begin
@@ -547,7 +550,7 @@ begin
   Canvas.width := Img.Width;
   Canvas.height := Img.Height;
   Ctx := Canvas.getContextAs2DContext('2d');
-  Ctx.putImageData(TJSImageData.new(Img.RGBA, Img.Width, Img.Height), 0, 0);
+  Ctx.putImageData(NewImageData(Img.RGBA, Img.Width, Img.Height), 0, 0);
   Stem := FName;
   if Pos('.', Stem) > 0 then
     Stem := Copy(Stem, 1, Pos('.', Stem) - 1);
@@ -602,7 +605,7 @@ begin
     Row := I div Cols;
     X := Gap + Col * (CellW + Gap);
     Y := Gap + Row * (CellH + 16 + Gap);
-    Ctx.putImageData(TJSImageData.new(Images[I].RGBA, Images[I].Width, Images[I].Height), X, Y);
+    Ctx.putImageData(NewImageData(Images[I].RGBA, Images[I].Width, Images[I].Height), X, Y);
     Ctx.fillText(IntToStr(Images[I].Code), X, Y + CellH + 2);
   end;
   Stem := FName;

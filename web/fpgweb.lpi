@@ -18,7 +18,7 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="fpgweb.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -28,16 +28,20 @@
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="uviewer.pas"/>
+        <Filename Value="uimagedata.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
+        <Filename Value="uviewer.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit3>
+      <Unit4>
         <Filename Value="index.html"/>
         <IsPartOfProject Value="True"/>
         <CustomData Count="1">
           <Item1 Name="PasJSIsProjectHTMLFile" Value="1"/>
         </CustomData>
-      </Unit3>
+      </Unit4>
     </Units>
     <CustomData Count="2">
       <Item1 Name="Pas2JSProject" Value="1"/>
