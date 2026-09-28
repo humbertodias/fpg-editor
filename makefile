@@ -6,6 +6,9 @@ ARCH = x86_64
 WIDGET = qt6
 # Extra lazbuild flags (e.g. --lazarusdir=... or --opt=-Fl/path)
 LAZ_OPTS ?=
+# Optional full path to pas2js. Otherwise PATH, then .tools/, then a download.
+PAS2JS ?=
+PAS2JS_ZIP_URL ?= https://getpas2js.freepascal.org/downloads/linux/pas2js-linux-x86_64-current.zip
 
 # lazbuild --cpu uses FPC names (aarch64); package archives may use arm64.
 CPU := $(ARCH)
@@ -54,9 +57,25 @@ package/win: build/win
 	$(BUNDLE) win
 
 # Browser viewer. pas2js compiles the editor units via web/fpgweb.lpi.
+# lazbuild resolves CompilerPath "pas2js" relative to web/ unless --compiler is set.
 web:
-	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgcheck.lpi
-	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgweb.lpi
+	@set -eu; \
+	PAS2JS_BIN="$(PAS2JS)"; \
+	if [ -z "$$PAS2JS_BIN" ]; then PAS2JS_BIN=$$(command -v pas2js || true); fi; \
+	if [ -z "$$PAS2JS_BIN" ] && [ -d "$(CURDIR)/.tools/pas2js" ]; then \
+	  PAS2JS_BIN=$$(find "$(CURDIR)/.tools/pas2js" -type f -name pas2js | head -n1); \
+	fi; \
+	if [ -z "$$PAS2JS_BIN" ] || [ ! -x "$$PAS2JS_BIN" ]; then \
+	  mkdir -p "$(CURDIR)/.tools/pas2js"; \
+	  curl -fL -o "$(CURDIR)/.tools/pas2js.zip" "$(PAS2JS_ZIP_URL)"; \
+	  unzip -qo "$(CURDIR)/.tools/pas2js.zip" -d "$(CURDIR)/.tools/pas2js"; \
+	  PAS2JS_BIN=$$(find "$(CURDIR)/.tools/pas2js" -type f -name pas2js | head -n1); \
+	  test -n "$$PAS2JS_BIN"; \
+	  chmod +x "$$PAS2JS_BIN"; \
+	fi; \
+	echo "Using pas2js: $$PAS2JS_BIN"; \
+	lazbuild --compiler="$$PAS2JS_BIN" --build-mode=Default $(LAZ_OPTS) web/fpgcheck.lpi; \
+	lazbuild --compiler="$$PAS2JS_BIN" --build-mode=Default $(LAZ_OPTS) web/fpgweb.lpi; \
 	node web/fpgcheck.js
 
 install/deps:

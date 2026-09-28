@@ -1043,11 +1043,14 @@ procedure TFPG.setDefaultGamut;
 var
  i,j : Byte;
 begin
-  FillByte(Gamuts,576,0);
   for i:=0 to 15 do
   begin
+      Gamuts[i].mode := 0;
+      Gamuts[i].editable := 0;
+      Gamuts[i].unused := 0;
+      for j:=0 to 31 do
+        Gamuts[i].colors[j] := 0;
       gamuts[i].numcolors:=16;
-      //gamuts[i].colors[0]:=(i*16);
       for j:=0 to gamuts[i].numcolors -1 do
       begin
         gamuts[i].colors[j]:=(i*gamuts[i].numcolors)+j;
