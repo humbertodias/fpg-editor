@@ -81,7 +81,7 @@ type
     FFPName: array [0 .. 11] of Char; // Needed for FPG Graphics
     NCPoints: LongInt;
     (* fin Temporalmente publicas*)
-    CPoints :   array[0..high(Word)*2] of Word;
+    CPoints :   array[0..131070] of Word;
     (*Para soporte de Tipografías*)
     Width_Offset  : longint; // Ancho
     Height_Offset : longint; // Alto
@@ -100,6 +100,9 @@ type
     procedure simulate8bppIn32bpp;
     procedure colorToTransparent(color1 : tcolor ;  splitTo16b :boolean = false);
     class function GetFileExtensions: string; override;
+    {$ifdef pas2js}
+    PasPixels: array of Byte;
+    {$endif}
   published
     property CDIVFormat : Boolean read FCDIVFormat write SetFormat default False;
     property bitsPerPixel : Word read FbitsPerPixel write setBitsPerPixel default 32;
@@ -110,7 +113,38 @@ type
     class function test(filename: string): boolean;static ;
   end;
 
+procedure ReadFpgGamuts(S: TStream; var G: array of MAPGamut);
+
 implementation
+
+uses
+  uStreamIO;
+
+procedure ReadFpgGamuts(S: TStream; var G: array of MAPGamut);
+{$ifdef pas2js}
+var
+  Raw: array of Byte;
+  I, O, J: Integer;
+{$endif}
+begin
+{$ifdef pas2js}
+  SetLength(Raw, 576);
+  ReadBytesN(S, Raw, 576);
+  for I := 0 to 15 do
+  begin
+    O := I * 36;
+    G[I].numcolors := Raw[O];
+    G[I].mode := Raw[O + 1];
+    G[I].editable := Raw[O + 2];
+    G[I].unused := Raw[O + 3];
+    for J := 0 to 31 do
+      G[I].colors[J] := Raw[O + 4 + J];
+  end;
+{$else}
+  if Length(G) > 0 then
+    S.Read(G[0], 576);
+{$endif}
+end;
 
 { TMAPGraphic }
 
@@ -131,15 +165,15 @@ begin
   if not FileExists(filename) { *Converted from FileExists*  } then
    Exit;
   try
-   Stream := TFileStream.Create(filename, fmOpenRead);
+   Stream := OpenRead(filename);
   except
    Exit;
   end;
 
   try
-   Stream.Read(tmpMagic, 3);
-   Stream.Read(tmpMSDOSEnd , 4);
-   Stream.Read(tmpVersion, 1);
+   ReadChars(Stream, tmpMagic);
+   ReadBytesN(Stream, tmpMSDOSEnd, 4);
+   tmpVersion := ReadU8(Stream);
   except
    Stream.free;
    Exit;
@@ -196,13 +230,13 @@ end;
 
 procedure TMAPGraphic.LoadFromFile(const Filename: string);
 var
-  f: TFileStream;
+  f: TStream;
 begin
   if not FileExists(Filename) { *Converted from FileExists*  } then
     Exit;
 
   try
-    f := TFileStream.Create(Filename, fmOpenRead);
+    f := OpenRead(Filename);
   except
     Exit;
   end;
@@ -233,9 +267,9 @@ begin
   begin
     if loadmode = lmMap then
     begin
-      Stream.Read(Magic, 3);
-      Stream.Read(MSDOSEnd, 4);
-      Stream.Read(Version, 1);
+      ReadChars(Stream, Magic);
+      ReadBytesN(Stream, MSDOSEnd, 4);
+      Version := ReadU8(Stream);
       FbitsPerPixel := 0;
       FCDIVFormat := False;
       // Ficheros de 1 bit
@@ -284,34 +318,34 @@ begin
         FbitsPerPixel := 32;
       end;
 
-      Stream.Read(tmpWidth, 2);
-      Stream.Read(tmpHeight, 2);
+      tmpWidth := ReadU16(Stream);
+      tmpHeight := ReadU16(Stream);
       Width := tmpWidth;
       Height := tmpHeight;
     end;
 
-    Stream.Read(FCode, 4);
+    FCode := ReadU32(Stream);
 
     if loadmode = lmFPG then
     begin
-       Stream.Read(GraphSize,4);
+       GraphSize := ReadI32(Stream);
     end;
 
-    Stream.Read(FName, 32);
+    ReadChars(Stream, FName);
 
     if loadmode = lmFPG then
     begin
-      Stream.Read(FFPName, 12);
-      Stream.Read(intWidth, 4);
-      Stream.Read(intHeight, 4);
+      ReadChars(Stream, FFPName);
+      intWidth := ReadI32(Stream);
+      intHeight := ReadI32(Stream);
       Width := intWidth;
       Height := intHeight;
     end;
 
     if (loadmode = lmMap) and (FbitsPerPixel = 8) then
     begin
-      Stream.Read(bPalette, 768);
-      Stream.Read(Gamuts, 576);
+      ReadBytesN(Stream, bPalette, 768);
+      ReadFpgGamuts(Stream, Gamuts);
 
       for i := 0 to 767 do
         bPalette[i] := bPalette[i] shl 2;
@@ -319,16 +353,16 @@ begin
     end;
 
     if loadmode = lmFPG then
-        Stream.Read(ncpoints, 4)
+        ncpoints := ReadI32(Stream)
     else begin
-      Stream.Read(tmpNCPoints, 2);
+      tmpNCPoints := ReadU16(Stream);
       ncpoints:= tmpNCPoints;
     end;
 
     // Leemos los puntos de control del bitmap
     if ncpoints > 0  then
     begin
-      Stream.Read(CPoints, ncpoints * 4);
+      ReadWordBytes(Stream, CPoints, ncpoints * 4);
     end;
 
   end;
@@ -338,6 +372,136 @@ begin
 end;
 
 procedure TMAPGraphic.loadDataBitmap(Stream: TStream);
+{$ifdef pas2js}
+var
+  i, j, k, z, lenLineBits, n, o: integer;
+  lineBit: byte;
+  bytesPerPixel: Word;
+  red, green, blue: byte;
+  Line: array of Byte;
+begin
+  PixelFormat := pf32bit;
+  SetSize(Width, Height);
+  bytesPerPixel := FbitsPerPixel div 8;
+  lenLineBits := 0;
+  if FbitsPerPixel = 1 then
+  begin
+    lenLineBits := Width div 8;
+    if (Width mod 8) <> 0 then
+      lenLineBits := lenLineBits + 1;
+  end;
+  if FbitsPerPixel = 8 then
+    SetLength(data8bits, Width * Height);
+  SetLength(PasPixels, Width * Height * 4);
+  n := Width * bytesPerPixel;
+  if n < Width * 4 then
+    n := Width * 4;
+  SetLength(Line, n);
+  for k := 0 to Height - 1 do
+  begin
+    o := k * Width * 4;
+    case FbitsPerPixel of
+      1:
+      begin
+        for j := 0 to lenLineBits - 1 do
+        begin
+          lineBit := ReadU8(Stream);
+          for i := 0 to 7 do
+          begin
+            z := (j * 8) + i;
+            if z < Width then
+            begin
+              if (lineBit and 128) = 128 then
+              begin
+                PasPixels[o + z * 4] := 255;
+                PasPixels[o + z * 4 + 1] := 255;
+                PasPixels[o + z * 4 + 2] := 255;
+                PasPixels[o + z * 4 + 3] := 255;
+              end
+              else
+              begin
+                PasPixels[o + z * 4] := 0;
+                PasPixels[o + z * 4 + 1] := 0;
+                PasPixels[o + z * 4 + 2] := 0;
+                PasPixels[o + z * 4 + 3] := 0;
+              end;
+              lineBit := lineBit shl 1;
+            end
+            else
+              break;
+          end;
+        end;
+      end;
+      8:
+      begin
+        ReadBytesN(Stream, Line, Width * bytesPerPixel);
+        for j := 0 to Width - 1 do
+        begin
+          data8bits[k * Width + j] := Line[j];
+          PasPixels[o + j * 4] := bPalette[Line[j] * 3 + 2];
+          PasPixels[o + j * 4 + 1] := bPalette[Line[j] * 3 + 1];
+          PasPixels[o + j * 4 + 2] := bPalette[Line[j] * 3];
+          PasPixels[o + j * 4 + 3] := 255;
+          if Line[j] = 0 then
+            PasPixels[o + j * 4 + 3] := 0;
+        end;
+      end;
+      16:
+      begin
+        ReadBytesN(Stream, Line, Width * bytesPerPixel);
+        for j := 0 to Width - 1 do
+        begin
+          if FCDIVFormat then
+          begin
+            RGB16toRGB24(Line[j * 2 + 1], Line[j * 2], red, green, blue);
+            PasPixels[o + j * 4] := red;
+            PasPixels[o + j * 4 + 1] := green;
+            PasPixels[o + j * 4 + 2] := blue;
+            PasPixels[o + j * 4 + 3] := 255;
+            if (red = $F8) and (green = 0) and (blue = $F8) then
+              PasPixels[o + j * 4 + 3] := 0;
+          end
+          else
+          begin
+            BGR16toRGB24(Line[j * 2 + 1], Line[j * 2], red, green, blue);
+            PasPixels[o + j * 4] := red;
+            PasPixels[o + j * 4 + 1] := green;
+            PasPixels[o + j * 4 + 2] := blue;
+            PasPixels[o + j * 4 + 3] := 255;
+            if (Line[j * 2 + 1] + Line[j * 2]) = 0 then
+              PasPixels[o + j * 4 + 3] := 0;
+          end;
+        end;
+      end;
+      24:
+      begin
+        ReadBytesN(Stream, Line, Width * bytesPerPixel);
+        for j := 0 to Width - 1 do
+        begin
+          PasPixels[o + j * 4] := Line[j * 3];
+          PasPixels[o + j * 4 + 1] := Line[j * 3 + 1];
+          PasPixels[o + j * 4 + 2] := Line[j * 3 + 2];
+          PasPixels[o + j * 4 + 3] := 255;
+          if (Line[j * 3 + 2] + Line[j * 3 + 1] + Line[j * 3]) = 0 then
+            PasPixels[o + j * 4 + 3] := 0;
+        end;
+      end;
+      else
+      begin
+        n := Width * bytesPerPixel;
+        if n > 0 then
+        begin
+          if Length(Line) < n then
+            SetLength(Line, n);
+          ReadBytesN(Stream, Line, n);
+          for j := 0 to n - 1 do
+            PasPixels[o + j] := Line[j];
+        end;
+      end;
+    end;
+  end;
+end;
+{$else}
 var
   lazBMP: TLazIntfImage;
   p_bytearray: PByteArray;
@@ -465,7 +629,9 @@ begin
   lazBMP.Free;
 
 end;
+{$endif}
 
+{$ifndef pas2js}
 procedure TMAPGraphic.SaveToStream(Stream: TStream);
 begin
   saveToStream(Stream, lmMap);
@@ -675,6 +841,19 @@ begin
   end;
   lazBMP.Free;
 end;
+{$else}
+procedure TMAPGraphic.SaveToStream(Stream: TStream);
+begin
+end;
+
+procedure TMAPGraphic.SaveToStream(Stream: TStream; savemode: byte);
+begin
+end;
+
+procedure TMAPGraphic.writeDataBitmap(Stream: TStream);
+begin
+end;
+{$endif}
 
 function TMAPGraphic.FindColor(index, rc, gc, bc: integer): integer;
 var
@@ -702,6 +881,7 @@ begin
 
 end;
 
+{$ifndef pas2js}
 procedure TMAPGraphic.SaveToFile(const Filename: string);
 var
   f: TFileStream;
@@ -710,6 +890,11 @@ begin
   SaveToStream(f);
   f.Free;
 end;
+{$else}
+procedure TMAPGraphic.SaveToFile(const Filename: string);
+begin
+end;
+{$endif}
 
 
 // Calcula las componentes RGB almacenadas en 2 bytes como BGR
@@ -771,7 +956,14 @@ begin
     magic[1]:='a';
     magic[2]:='p';
   end else begin
+{$ifdef pas2js}
+    if FbitsPerPixel < 10 then
+      strBpp := '0' + IntToStr(FbitsPerPixel)
+    else
+      strBpp := IntToStr(FbitsPerPixel);
+{$else}
     strBpp:= Format('%.2d',[FbitsPerPixel]);
+{$endif}
     magic[1]:=strBpp[1];
     magic[2]:=strBpp[2];
   end;
@@ -792,7 +984,7 @@ var
 begin
   result:='';
   i:=0;
-  while ( FName[i] <>char(0) ) and (i<32) do
+  while ( FName[i] <> #0 ) and (i<32) do
   begin
         result:= result+FName[i];
         i:=i+1;
@@ -806,7 +998,7 @@ var
 begin
   result:='';
   i:=0;
-  while ( FFPName[i] <>char(0) ) and (i<12) do
+  while ( FFPName[i] <> #0 ) and (i<12) do
   begin
         result:= result+FFPName[i];
         i:=i+1;
@@ -825,6 +1017,7 @@ begin
  stringToArray(FFPName,str,12);
 end;
 
+{$ifndef pas2js}
 procedure TMAPGraphic.copyPixels(srcBitmap: TBitmap; x, y : Integer);
 var
   dstLazBitmap: TLazIntfImage;
@@ -977,6 +1170,31 @@ begin
    LoadFromIntfImage(lazBMP_src);
    lazBMP_src.free;
 end;
+{$else}
+procedure TMAPGraphic.copyPixels(srcBitmap: TBitmap; x, y : Integer);
+begin
+end;
+
+procedure TMAPGraphic.CreateBitmap(bmp_src : TBitmap);
+begin
+end;
+
+procedure TMAPGraphic.setAlpha( value: Byte; in_rect : TRect );
+begin
+end;
+
+procedure TMAPGraphic.simulate1bppIn32bpp;
+begin
+end;
+
+procedure TMAPGraphic.simulate8bppIn32bpp;
+begin
+end;
+
+procedure TMAPGraphic.colorToTransparent( color1 : tcolor ;  splitTo16b :boolean = false);
+begin
+end;
+{$endif}
 
 procedure TMAPGraphic.stringToArray(var inarray: array of char; str: string; len: integer);
 var
@@ -985,7 +1203,7 @@ begin
   for i := 0 to len - 1 do
   begin
     if i >= length(str) then
-      inarray[i] := char(0)
+      inarray[i] := #0
     else
       inarray[i] := str[i + 1];
   end;

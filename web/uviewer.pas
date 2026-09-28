@@ -5,12 +5,12 @@ unit uviewer;
 interface
 
 uses
-  JS, SysUtils, Web, ufpgformat;
+  JS, SysUtils, Web, ComCtrls, Dialogs, uStreamIO, uFPG, uMAPGraphic, ufpgformat;
 
 type
   TViewer = class
   private
-    FDoc: TFenixDoc;
+    FDoc: TFpg;
     FName: string;
     FIndex: Integer;
     FZoom: Integer;
@@ -38,7 +38,7 @@ type
     procedure ClearError;
     procedure Render;
     procedure Paint;
-    function Current: TFenixImage;
+    function Current: TMAPGraphic;
     procedure Download(Canvas: TJSHTMLCanvasElement; const AName: string);
     function El(const Tag, ClassName: string): TJSHTMLElement;
     function Btn(const Caption, ClassName: string; Handler: TJSEventHandler): TJSHTMLElement;
@@ -50,6 +50,32 @@ implementation
 
 uses
   uimagedata;
+
+function BitmapPixels(Img: TMAPGraphic): TJSUint8ClampedArray;
+var
+  N, I, O: Integer;
+begin
+  N := Img.Width * Img.Height;
+  Result := TJSUint8ClampedArray.new(N * 4);
+  if (N <= 0) or (Length(Img.PasPixels) < N * 4) then
+    Exit;
+  for I := 0 to N - 1 do
+  begin
+    O := I * 4;
+    Result[O] := Img.PasPixels[O + 2];
+    Result[O + 1] := Img.PasPixels[O + 1];
+    Result[O + 2] := Img.PasPixels[O];
+    Result[O + 3] := Img.PasPixels[O + 3];
+  end;
+end;
+
+function DocLabel(Doc: TFpg): string;
+begin
+  Result := Doc.Magic[0];
+  Result := Result + Doc.Magic[1];
+  Result := Result + Doc.Magic[2];
+  Result := Result + ' ' + IntToStr(Doc.getBPP) + ' bits';
+end;
 
 const
   Zooms: array[0..7] of Integer = (1, 2, 3, 4, 6, 8, 12, 16);
@@ -206,7 +232,6 @@ begin
   if Event <> nil then
     ClearError;
   try
-    CheckDemo;
     Demo := BuildDemo;
     OpenBuffer(Demo.buffer, 'demo.fpg');
   except
@@ -253,26 +278,57 @@ begin
 end;
 
 procedure TViewer.OpenBuffer(Buf: TJSArrayBuffer; const AName: string);
+var
+  Bytes: TJSUint8Array;
+  Raw: array of Byte;
+  I: Integer;
+  Bar: TProgressBar;
+  Loaded: TFpg;
 begin
   ClearError;
+  Bytes := TJSUint8Array.new(Buf);
+  SetLength(Raw, Bytes.length);
+  for I := 0 to Bytes.length - 1 do
+    Raw[I] := Bytes[I];
+  RegisterBrowserFile(AName, Raw);
+  FreeAndNil(FDoc);
+  Bar := TProgressBar.Create;
+  Loaded := TFpg.Create;
   try
-    FDoc := ParseFenix(TJSUint8Array.new(Buf), AName);
-    FName := AName;
-    FIndex := 0;
-    if (Length(FDoc.Images) > 0) and (FDoc.Images[0].Width > 96) then
-      FZoom := 2
-    else if (Length(FDoc.Images) > 0) and (FDoc.Images[0].Width > 32) then
-      FZoom := 4
-    else
-      FZoom := 8;
-    Render;
-  except
-    on E: Exception do
-    begin
-      FDoc := nil;
-      ShowError(E.Message);
+    try
+      if not Loaded.LoadFromFile(AName, Bar) then
+      begin
+        if LastDialogMessage <> '' then
+          ShowError(LastDialogMessage)
+        else
+          ShowError('Não foi possível abrir o arquivo.');
+        FreeAndNil(Loaded);
+      end
+      else
+      begin
+        FDoc := Loaded;
+        Loaded := nil;
+        FName := AName;
+        FIndex := 0;
+        if (FDoc.Count > 0) and (FDoc.images[1].Width > 96) then
+          FZoom := 2
+        else if (FDoc.Count > 0) and (FDoc.images[1].Width > 32) then
+          FZoom := 4
+        else
+          FZoom := 8;
+      end;
       Render;
+    except
+      on E: Exception do
+      begin
+        FreeAndNil(Loaded);
+        FreeAndNil(FDoc);
+        ShowError(E.Message);
+        Render;
+      end;
     end;
+  finally
+    Bar.Free;
   end;
 end;
 
@@ -288,12 +344,12 @@ begin
   FError.textContent := '';
 end;
 
-function TViewer.Current: TFenixImage;
+function TViewer.Current: TMAPGraphic;
 begin
-  if (FDoc = nil) or (FIndex < 0) or (FIndex > High(FDoc.Images)) then
+  if (FDoc = nil) or (FIndex < 0) or (FIndex >= FDoc.Count) then
     Result := nil
   else
-    Result := FDoc.Images[FIndex];
+    Result := FDoc.images[FIndex + 1];
 end;
 
 procedure TViewer.Render;
@@ -301,13 +357,13 @@ var
   Count, I, P: Integer;
   Creator, Name: string;
   Button, Code, Title, Swatch: TJSHTMLElement;
-  Img: TFenixImage;
+  Img: TMAPGraphic;
 begin
   FList.textContent := '';
   FPalette.textContent := '';
   Count := 0;
   if FDoc <> nil then
-    Count := Length(FDoc.Images);
+    Count := FDoc.Count;
   if Count = 0 then
   begin
     FExportPng.setAttribute('disabled', 'disabled');
@@ -329,19 +385,19 @@ begin
   end;
 
   Creator := '';
-  if FDoc.CreatorName <> '' then
-    Creator := ' · ' + FDoc.CreatorName + ' ' + FDoc.CreatorVersion;
+  if FDoc.appName <> '' then
+    Creator := ' · ' + FDoc.appName + ' ' + FDoc.appVersion;
   if Count = 1 then
-    FStatus.textContent := FName + ' · ' + FDoc.LabelText + ' · 1 imagem' + Creator
+    FStatus.textContent := FName + ' · ' + DocLabel(FDoc) + ' · 1 imagem' + Creator
   else
-    FStatus.textContent := FName + ' · ' + FDoc.LabelText + ' · ' + IntToStr(Count) + ' imagens' + Creator;
+    FStatus.textContent := FName + ' · ' + DocLabel(FDoc) + ' · ' + IntToStr(Count) + ' imagens' + Creator;
 
   if Count = 0 then
     FList.textContent := 'Nenhuma imagem neste arquivo.'
   else
-    for I := 0 to High(FDoc.Images) do
+    for I := 0 to FDoc.Count - 1 do
     begin
-      Img := FDoc.Images[I];
+      Img := FDoc.images[I + 1];
       Button := El('button', 'sprite');
       Button.setAttribute('type', 'button');
       Button.setAttribute('data-index', IntToStr(I));
@@ -359,8 +415,8 @@ begin
       FList.appendChild(Button);
     end;
 
-  FPaletteWrap.hidden := FDoc.Palette = nil;
-  if FDoc.Palette <> nil then
+  FPaletteWrap.hidden := not FDoc.loadPalette;
+  if FDoc.loadPalette then
     for I := 0 to 255 do
     begin
       Swatch := El('i', 'swatch');
@@ -374,7 +430,7 @@ end;
 
 procedure TViewer.Paint;
 var
-  Img: TFenixImage;
+  Img: TMAPGraphic;
   Ctx: TJSCanvasRenderingContext2D;
   Data: TFenixImageData;
   I: Integer;
@@ -412,25 +468,25 @@ begin
   FView.setAttribute('style', 'width:' + IntToStr(Img.Width * FZoom) + 'px;height:' +
     IntToStr(Img.Height * FZoom) + 'px');
   Ctx := FView.getContextAs2DContext('2d');
-  Data := NewImageData(Img.RGBA, Img.Width, Img.Height);
+  Data := NewImageData(BitmapPixels(Img), Img.Width, Img.Height);
   Ctx.putImageData(Data, 0, 0);
   if FPoints.checked then
   begin
     Ctx.strokeStyleAsColor := '#ff4d6d';
     Ctx.lineWidth := 1;
-    for I := 0 to High(Img.Points) do
+    for I := 0 to Img.NCPoints - 1 do
     begin
       Ctx.beginPath;
-      Ctx.moveTo(Img.Points[I].X - 2, Img.Points[I].Y + 0.5);
-      Ctx.lineTo(Img.Points[I].X + 3, Img.Points[I].Y + 0.5);
-      Ctx.moveTo(Img.Points[I].X + 0.5, Img.Points[I].Y - 2);
-      Ctx.lineTo(Img.Points[I].X + 0.5, Img.Points[I].Y + 3);
+      Ctx.moveTo(Img.CPoints[I * 2] - 2, Img.CPoints[I * 2 + 1] + 0.5);
+      Ctx.lineTo(Img.CPoints[I * 2] + 3, Img.CPoints[I * 2 + 1] + 0.5);
+      Ctx.moveTo(Img.CPoints[I * 2] + 0.5, Img.CPoints[I * 2 + 1] - 2);
+      Ctx.lineTo(Img.CPoints[I * 2] + 0.5, Img.CPoints[I * 2 + 1] + 3);
       Ctx.stroke;
     end;
   end;
   Points := '';
-  for I := 0 to High(Img.Points) do
-    Points := Points + ' (' + IntToStr(Img.Points[I].X) + ', ' + IntToStr(Img.Points[I].Y) + ')';
+  for I := 0 to Img.NCPoints - 1 do
+    Points := Points + ' (' + IntToStr(Img.CPoints[I * 2]) + ', ' + IntToStr(Img.CPoints[I * 2 + 1]) + ')';
   Text := 'Código ' + IntToStr(Img.Code);
   if Img.Name <> '' then
     Text := Text + ' · ' + Img.Name;
@@ -509,12 +565,12 @@ procedure TViewer.OnKey(Event: TJSEvent);
 var
   Key: string;
 begin
-  if (FDoc = nil) or (Length(FDoc.Images) = 0) then
+  if (FDoc = nil) or (FDoc.Count = 0) then
     Exit;
   Key := TJSKeyboardEvent(Event).Key;
   if (Key = 'ArrowRight') or (Key = 'ArrowDown') then
   begin
-    if FIndex < High(FDoc.Images) then
+    if FIndex < FDoc.Count - 1 then
       Inc(FIndex);
     Paint;
   end
@@ -538,7 +594,7 @@ end;
 
 function TViewer.OnExportPng(Event: TEventListenerEvent): Boolean;
 var
-  Img: TFenixImage;
+  Img: TMAPGraphic;
   Canvas: TJSHTMLCanvasElement;
   Ctx: TJSCanvasRenderingContext2D;
   Stem: string;
@@ -550,7 +606,7 @@ begin
   Canvas.width := Img.Width;
   Canvas.height := Img.Height;
   Ctx := Canvas.getContextAs2DContext('2d');
-  Ctx.putImageData(NewImageData(Img.RGBA, Img.Width, Img.Height), 0, 0);
+  Ctx.putImageData(NewImageData(BitmapPixels(Img), Img.Width, Img.Height), 0, 0);
   Stem := FName;
   if Pos('.', Stem) > 0 then
     Stem := Copy(Stem, 1, Pos('.', Stem) - 1);
@@ -560,20 +616,20 @@ end;
 
 function TViewer.OnExportSheet(Event: TEventListenerEvent): Boolean;
 var
-  Images: array of TFenixImage;
+  Images: array of TMAPGraphic;
   I, Cols, Rows, Gap, CellW, CellH, Col, Row, X, Y: Integer;
   Canvas: TJSHTMLCanvasElement;
   Ctx: TJSCanvasRenderingContext2D;
-  Img: TFenixImage;
+  Img: TMAPGraphic;
   Stem: string;
 begin
   SetLength(Images, 0);
   CellW := 1;
   CellH := 1;
   if FDoc <> nil then
-    for I := 0 to High(FDoc.Images) do
+    for I := 1 to FDoc.Count do
     begin
-      Img := FDoc.Images[I];
+      Img := FDoc.images[I];
       if (Img.Width = 0) or (Img.Height = 0) then
         Continue;
       SetLength(Images, Length(Images) + 1);
@@ -605,7 +661,7 @@ begin
     Row := I div Cols;
     X := Gap + Col * (CellW + Gap);
     Y := Gap + Row * (CellH + 16 + Gap);
-    Ctx.putImageData(NewImageData(Images[I].RGBA, Images[I].Width, Images[I].Height), X, Y);
+    Ctx.putImageData(NewImageData(BitmapPixels(Images[I]), Images[I].Width, Images[I].Height), X, Y);
     Ctx.fillText(IntToStr(Images[I].Code), X, Y + CellH + 2);
   end;
   Stem := FName;

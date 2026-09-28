@@ -12,7 +12,7 @@ Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-edit
 
 [Download the latest release](https://github.com/humbertodias/fpg-editor/releases) and also the [BennuGD](https://github.com/humbertodias/BennuGD64) compiler.
 
-The Qt desktop program cannot run in a browser. [`web/fpgweb.lpi`](web/fpgweb.lpi) is a separate Lazarus **pas2js** project: Lazarus compiles the Pascal sources to `web/fpgweb.js`. Install [pas2js](https://getpas2js.freepascal.org/), open that project and compile it, or run `make web` when `lazbuild` and `pas2js` are on `PATH`. The page is [`web/index.html`](web/index.html), published at <https://humbertodias.github.io/fpg-editor/>.
+The Qt desktop program cannot run in a browser. [`web/fpgweb.lpi`](web/fpgweb.lpi) is a Lazarus **pas2js** project that compiles the editor units [`src/formats/uFPG/uFPG.pas`](src/formats/uFPG/uFPG.pas) and [`src/editors/map/uMap/umapgraphic.pas`](src/editors/map/uMap/umapgraphic.pas) to `web/fpgweb.js`. Install [pas2js](https://getpas2js.freepascal.org/), open that project and compile it, or run `make web` when `lazbuild` and `pas2js` are on `PATH`. The page is [`web/index.html`](web/index.html), published at <https://humbertodias.github.io/fpg-editor/>.
 
 ## Run Instructions
 

@@ -133,6 +133,9 @@ procedure stringToArray(var inarray: array of char; str: string; len: integer);
 
 implementation
 
+uses
+  uStreamIO;
+
 //procedure Register;
 //begin
 //  {$I uFPG_icon.lrs}
@@ -306,7 +309,7 @@ end;
 
 function TFpg.loadHeaderFromFile(fileName : String): Boolean;
 var
-  f : TFileStream;
+  f : TStream;
 begin
   Result := False;
 
@@ -314,7 +317,7 @@ begin
     Exit;
 
   try
-    f := TFileStream.Create(fileName, fmOpenRead);
+    f := OpenRead(fileName);
   except
     Exit;
   end;
@@ -330,16 +333,18 @@ end;
 
 procedure TFpg.loadHeaderFromStream(stream : TStream);
 begin
-  stream.Read(Magic, 3);
-  stream.Read(MSDOSEnd, 4);
-  stream.Read(Version, 1);
+  ReadChars(stream, Magic);
+  ReadBytesN(stream, MSDOSEnd, 4);
+  Version := ReadU8(stream);
 end;
 
 procedure TFpg.saveHeaderToStream(stream : TStream);
 begin
+{$ifndef pas2js}
   stream.Write(Magic, 3);
   stream.Write(MSDOSEnd, 4);
   stream.Write(Version, 1);
+{$endif}
 end;
 
 
@@ -440,6 +445,7 @@ end;
 // Save: Guarda el FPG actual a disco.
 //-----------------------------------------------------------------------------
 
+{$ifndef pas2js}
 procedure TFpg.SaveToFile( gFPG: TProgressBar);
 var
   f: TFileStream;
@@ -575,6 +581,11 @@ begin
   MessageDlg(fmsgInfo,fmsgCorrect,mtInformation,[mbOK],0);
 
 end;
+{$else}
+procedure TFpg.SaveToFile( gFPG: TProgressBar);
+begin
+end;
+{$endif}
 
 function TFpg.isFont: boolean;
 begin
@@ -614,7 +625,7 @@ begin
   //end else
   begin
     try
-      f := TFileStream.Create(str, fmOpenRead);
+      f := OpenRead(str);
     except
       Exit;
     end;
@@ -646,8 +657,8 @@ begin
     if (FileFormat = FPG8_DIV2) OR  (FileFormat = FNT8)
       OR  (FileFormat = FNX8) then
     begin
-      f.Read(palette, 768);
-      f.Read(Gamuts, 576);
+      ReadBytesN(f, palette, 768);
+      ReadFpgGamuts(f, Gamuts);
       //f.Read(tmpArr, 576);
 
       for i := 0 to 767 do
@@ -663,21 +674,21 @@ begin
 
     if isFont then
     begin
-      f.Read(charset,4);
+      charset := ReadI32(f);
       for i :=0 to 255 do
       begin
-        f.Read(tmpInt,4); //width
+        tmpInt := ReadI32(f); //width
         if tmpInt = 0 then
         begin
-           f.Read(tmpInt,4); // height
+           tmpInt := ReadI32(f); // height
            if Magic[2]='x' then
            begin
-             f.Read(tmpInt,4); // widthOffset
-             f.Read(tmpInt,4); // hegithOffset
-             f.Read(tmpInt,4); // horizontalOffset
+             tmpInt := ReadI32(f); // widthOffset
+             tmpInt := ReadI32(f); // hegithOffset
+             tmpInt := ReadI32(f); // horizontalOffset
            end;
-           f.Read(tmpInt,4); // verticalOffset
-           f.Read(tmpInt,4); // fileOffset
+           tmpInt := ReadI32(f); // verticalOffset
+           tmpInt := ReadI32(f); // fileOffset
            continue;
         end;
         fpgGraphic:= TMAPGraphic.Create;
@@ -693,16 +704,16 @@ begin
 
         // asignamos primer read.
         fpgGraphic.Width:=tmpInt;
-        f.Read(tmpInt,4);
+        tmpInt := ReadI32(f);
         fpgGraphic.Height:=tmpInt;
         if Magic[2]='x' then
         begin
-          f.Read(fpgGraphic.Width_Offset,4);
-          f.Read(fpgGraphic.Height_Offset,4);
-          f.Read(fpgGraphic.Horizontal_Offset,4);
+          fpgGraphic.Width_Offset := ReadI32(f);
+          fpgGraphic.Height_Offset := ReadI32(f);
+          fpgGraphic.Horizontal_Offset := ReadI32(f);
         end;
-        f.Read(fpgGraphic.Vertical_Offset,4);
-        f.Read(fpgGraphic.file_Offset,4);
+        fpgGraphic.Vertical_Offset := ReadI32(f);
+        fpgGraphic.file_Offset := ReadI32(f);
         fpgGraphic.CPoints[0]:=fpgGraphic.Width_Offset;
         fpgGraphic.CPoints[1]:=fpgGraphic.Height_Offset;
         fpgGraphic.CPoints[2]:=fpgGraphic.Horizontal_Offset;
@@ -728,7 +739,7 @@ begin
     	(images[i].width  = 0     ) or
     	(images[i].height = 0) ) then continue ;
 
-        f.seek(images[i].file_Offset, soFromBeginning);
+        f.Seek(images[i].file_Offset, soBeginning);
         images[i].LoadFromStream(f,lmFont);
 
         tmpInt64:=tmpInt64+Int64(images[i].width)*images[i].Height * images[i].bitsPerPixel;
@@ -818,6 +829,7 @@ begin
       palette[(i * 3) + 2] shr 3] := i;
 end;
 
+{$ifndef pas2js}
 procedure TFpg.SaveToFile(index: integer; filename: string);
 var
   f: TFileStream;
@@ -831,6 +843,11 @@ begin
 
   f.Free;
 end;
+{$else}
+procedure TFpg.SaveToFile(index: integer; filename: string);
+begin
+end;
+{$endif}
 
 Procedure TFpg.setMagic;
 begin
@@ -893,7 +910,13 @@ begin
 
  source:='';
  FileFormat:=FPG32;
+{$ifdef pas2js}
+ Magic[0] := 'f';
+ Magic[1] := '3';
+ Magic[2] := '2';
+{$else}
  Magic:='f32';
+{$endif}
  MSDOSEnd[0] := 26;
  MSDOSEnd[1] := 13;
  MSDOSEnd[2] := 10;
@@ -926,7 +949,7 @@ begin
   for i := 0 to len - 1 do
   begin
     if i >= length(str) then
-      inarray[i] := char(0)
+      inarray[i] := #0
     else
       inarray[i] := str[i + 1];
   end;

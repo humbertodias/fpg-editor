@@ -53,7 +53,7 @@ package/mac: build/mac
 package/win: build/win
 	$(BUNDLE) win
 
-# Browser viewer. Lazarus compiles web/fpgweb.lpi with pas2js.
+# Browser viewer. pas2js compiles the editor units via web/fpgweb.lpi.
 web:
 	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgcheck.lpi
 	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgweb.lpi

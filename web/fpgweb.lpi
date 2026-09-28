@@ -55,6 +55,7 @@
       <Filename Value="fpgweb"/>
     </Target>
     <SearchPaths>
+      <OtherUnitFiles Value="shim;../src/formats/uFPG;../src/editors/map/uMap"/>
       <UnitOutputDirectory Value="lib/browser"/>
     </SearchPaths>
     <Parsing>
