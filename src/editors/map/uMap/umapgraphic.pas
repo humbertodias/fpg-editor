@@ -102,6 +102,7 @@ type
     class function GetFileExtensions: string; override;
     {$ifdef pas2js}
     PasPixels: array of Byte;
+    class function test(filename: string): boolean; static;
     {$endif}
   published
     property CDIVFormat : Boolean read FCDIVFormat write SetFormat default False;
@@ -110,7 +111,9 @@ type
     property Name : String read getName write setName;
     property FPName : String read getFPName write setFPName;
     property Code : DWord read FCode write FCode default 1;
+    {$ifndef pas2js}
     class function test(filename: string): boolean;static ;
+    {$endif}
   end;
 
 procedure ReadFpgGamuts(S: TStream; var G: array of MAPGamut);
