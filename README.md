@@ -10,7 +10,9 @@ Release archives produced by `make package/*` are **self-contained**: the binary
 
 Forked from the [original FPG Editor](https://code.google.com/archive/p/fpg-editor/downloads) and updated for **modern 64-bit systems**.
 
-[Download the latest release](https://github.com/humbertodias/fpg-editor/releases) and also the [BennuGD](https://github.com/humbertodias/BennuGD64) compiler
+[Download the latest release](https://github.com/humbertodias/fpg-editor/releases) and also the [BennuGD](https://github.com/humbertodias/BennuGD64) compiler.
+
+The Qt desktop program cannot run in a browser. [`web/fpgweb.lpi`](web/fpgweb.lpi) is a separate Lazarus **pas2js** project: Lazarus compiles the Pascal sources to `web/fpgweb.js`. Install [pas2js](https://getpas2js.freepascal.org/), open that project and compile it, or run `make web` when `lazbuild` and `pas2js` are on `PATH`. The page is [`web/index.html`](web/index.html), published at <https://humbertodias.github.io/fpg-editor/>.
 
 ## Run Instructions
 

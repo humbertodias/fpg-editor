@@ -77,6 +77,10 @@ pfpgeditor.res
 
 # executable
 fpg-editor
+
+# pas2js output
+web/fpgweb.js
+web/fpgcheck.js
 fpg-editor.exe
 fpg-editor.ini
 fpg-editor.app

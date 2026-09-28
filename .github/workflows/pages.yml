@@ -1,0 +1,62 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "makefile"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Lazarus
+        uses: ollydev/setup-lazarus@v4
+        with:
+          laz-url: https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%204.8/lazarus-project_4.8.0-0_amd64.deb
+          fpc-url: |
+            https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%204.8/fpc-laz_3.2.2-210709_amd64.deb
+            https://sourceforge.net/projects/lazarus/files/Lazarus%20Linux%20amd64%20DEB/Lazarus%204.8/fpc-src_3.2.2-210709_amd64.deb
+
+      - name: Install pas2js
+        run: |
+          set -euo pipefail
+          curl -fL -o pas2js.zip "https://getpas2js.freepascal.org/downloads/linux/pas2js-linux-x86_64-current.zip"
+          unzip -q pas2js.zip -d "$HOME/pas2js"
+          BIN="$(find "$HOME/pas2js" -type f -name pas2js | head -n1)"
+          test -n "$BIN"
+          sudo ln -sf "$BIN" /usr/local/bin/pas2js
+          pas2js -iV
+
+      - name: Compile web viewer
+        run: make web
+
+      - name: Drop compiler intermediates
+        run: rm -rf web/lib web/fpgcheck.js
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

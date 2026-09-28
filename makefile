@@ -18,7 +18,7 @@ BUILD_CMD = lazbuild --cpu=$(CPU) --widgetset=$(WIDGET) --build-mode=DefaultQT -
 BUNDLE = bash scripts/bundle-qt.sh
 
 .PHONY: all clean build run package build/lin build/mac build/win \
-	run/lin run/mac run/win package/lin package/mac package/win install/deps
+	run/lin run/mac run/win package/lin package/mac package/win install/deps web
 
 # Build targets (Qt6 on all platforms)
 build/lin:
@@ -52,6 +52,12 @@ package/mac: build/mac
 
 package/win: build/win
 	$(BUNDLE) win
+
+# Browser viewer. Lazarus compiles web/fpgweb.lpi with pas2js.
+web:
+	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgcheck.lpi
+	lazbuild --build-mode=Default $(LAZ_OPTS) web/fpgweb.lpi
+	node web/fpgcheck.js
 
 install/deps:
 	sudo apt update
