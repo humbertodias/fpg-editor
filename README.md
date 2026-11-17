@@ -1,5 +1,5 @@
 [![cd](https://github.com/humbertodias/fpg-editor/actions/workflows/cd.yml/badge.svg)](https://github.com/humbertodias/fpg-editor/actions/workflows/cd.yml)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humbertodias/fpg-editor)
+[![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-blue?logo=bookstack)](https://deepwiki.com/humbertodias/fpg-editor)
 ![GitHub all downloads](https://img.shields.io/github/downloads/humbertodias/fpg-editor/total)
 
 # FPG Editor
